@@ -1,0 +1,19 @@
+using Invert.Core;
+
+public class TreeViewItem
+{
+    public TreeViewItem Parent { get; set; }
+
+    public ITreeItem ParentData
+    {
+        get { return Parent == null ? null : Parent.Data as ITreeItem; }
+    }
+
+    public IItem Data { get; set; }
+    public int Index { get; set; }
+    public bool Visible { get; set; }
+    public int Indent { get; set; }
+    public string Icon { get; set; }
+    public bool Highlighted { get; set; }
+    public bool Selected { get; set; }
+}

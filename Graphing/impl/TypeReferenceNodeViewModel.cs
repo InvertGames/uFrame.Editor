@@ -1,0 +1,27 @@
+using System.Collections.Generic;
+
+namespace Invert.Core.GraphDesigner
+{
+    public class TypeReferenceNodeViewModel : DiagramNodeViewModel<TypeReferenceNode>
+    {
+        public TypeReferenceNodeViewModel(TypeReferenceNode graphItemObject, DiagramViewModel diagramViewModel) : base(graphItemObject, diagramViewModel)
+        {
+        }
+
+        public override IEnumerable<string> Tags
+        {
+            get { yield return "Type Reference"; }
+        }
+
+        //public override bool IsEditable
+        //{
+        //    get { return false; }
+        //}
+
+        protected override void DataObjectChanged()
+        {
+            base.DataObjectChanged();
+
+        }
+    }
+}

@@ -1,0 +1,65 @@
+using Invert.Data;
+using Invert.Json;
+
+namespace Invert.Core.GraphDesigner
+{
+    public class FilterStackItem : IDataRecord, IDataRecordRemoved
+    {
+        private string _graphId;
+        private string _filterId;
+        private int _index;
+
+        public IRepository Repository { get; set; }
+        public string Identifier { get; set; }
+
+        public bool Changed { get; set; }
+
+        [JsonProperty]
+        public string GraphId
+        {
+            get { return _graphId; }
+            set
+            {
+                this.Changed("GraphId", ref  _graphId, value);
+            }
+        }
+
+        [JsonProperty]
+        public string FilterId
+        {
+            get { return _filterId; }
+            set
+            {
+                this.Changed("FilterId", ref _filterId, value);
+            }
+        }
+
+        public IGraphData Graph
+        {
+            get { return Repository.GetById<IGraphData>(GraphId); }
+        }
+
+        public IGraphFilter Filter
+        {
+            get { return Repository.GetById<IGraphFilter>(FilterId); }
+        }
+
+        [JsonProperty]
+        public int Index
+        {
+            get { return _index; }
+            set
+            {
+                this.Changed("Index", ref _index, value);
+            }
+        }
+
+        public void RecordRemoved(IDataRecord record)
+        {
+            if (record.Identifier == GraphId || record.Identifier == FilterId)
+            {
+                Repository.Remove(this);
+            }
+        }
+    }
+}
