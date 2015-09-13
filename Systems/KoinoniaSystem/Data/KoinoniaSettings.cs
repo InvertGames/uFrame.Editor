@@ -19,6 +19,7 @@ namespace Invert.Core.GraphDesigner.Unity.KoinoniaSystem
         public IRepository Repository { get; set; }
         public string Identifier { get; set; }
         public bool Changed { get; set; }
+        public IEnumerable<string> ForeignKeys { get { yield break; }}
 
         [JsonProperty]
         public List<string> PackagesToUninstall

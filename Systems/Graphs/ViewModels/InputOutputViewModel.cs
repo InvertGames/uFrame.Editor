@@ -11,7 +11,8 @@ namespace Invert.Core.GraphDesigner
         public override string Name { get; set; }
         public bool IsInput { get; set; }
         public bool IsOutput { get; set; }
-        protected override void DataObjectChanged()
+
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
             if (ReferenceItem != null)

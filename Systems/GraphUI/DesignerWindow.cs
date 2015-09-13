@@ -4,6 +4,7 @@ using System.Linq;
 using Invert.Core.GraphDesigner.Systems.GraphUI;
 using Invert.Core.GraphDesigner.Systems.GraphUI.api;
 using Invert.Core.GraphDesigner.Systems.Wizards.api;
+using Invert.Data;
 using Invert.IOC;
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,10 @@ namespace Invert.Core.GraphDesigner
         IGraphWindow,
         IDrawUFrameWindow,
         ICommandExecuted,
-        INodeItemEvents
+        INodeItemEvents,
+        IDataRecordInserted,
+        IDataRecordRemoved,
+        IDataRecordPropertyChanged
     {
         private DesignerViewModel _designerViewModel;
 
@@ -83,7 +87,7 @@ namespace Invert.Core.GraphDesigner
         {
             get { return Toolbars.ToolbarUI; }
         }
-        
+
         public Workspace Workspace
         {
             get { return WorkspaceService.CurrentWorkspace; }
@@ -104,7 +108,7 @@ namespace Invert.Core.GraphDesigner
 
         private bool _shouldProcessInputFromDiagram = true;
 
-        public void Draw( float width, float height, Vector2 scrollPosition, float scale)
+        public void Draw(float width, float height, Vector2 scrollPosition, float scale)
         {
             DiagramDrawer.IsEditingField = false;
             if (Drawer == null)
@@ -132,36 +136,36 @@ namespace Invert.Core.GraphDesigner
                 Signal<IQueryDesignerWindowOverlayContent>(_ => _.QueryDesignerWindowOverlayContent(overlayItems));
 
                 //Disable diagram input if any modal content presents or if mouse is over overlay content
-                _shouldProcessInputFromDiagram = !modalItems.Any() && overlayItems.All(i=>!i.Drawer.CalculateBounds(diagramRect).Contains(Event.current.mousePosition));
+                _shouldProcessInputFromDiagram = !modalItems.Any() && overlayItems.All(i => !i.Drawer.CalculateBounds(diagramRect).Contains(Event.current.mousePosition));
 
                 Drawer.DrawStretchBox(toolbarTopRect, CachedStyles.Toolbar, 0f);
-      
+
                 Drawer.DoToolbar(toolbarTopRect, this, ToolbarPosition.Left);
                 //drawer.DoToolbar(toolbarTopRect, this, ToolbarPosition.Right);
-                
+
                 Drawer.DrawRect(tabsRect, InvertGraphEditor.Settings.GridLinesColor);
-            
+
                 //Drawer.DoTabs(Drawer,tabsRect, this); 
                 DiagramRect = diagramRect;
-                
+
                 /* 
                  * DRAW DIAGRAM 
                  * Using GUI.color hack to avoid transparent diagram on disabled input (Thanks Unity :( )
                  */
 
                 if (!_shouldProcessInputFromDiagram) Drawer.DisableInput();
-                    
-                    if (DiagramDrawer != null)
-                    {
-                        DiagramDrawer.DrawTabs(Drawer, tabsRect);
-                        DiagramDrawer.DrawBreadcrumbs(Drawer, breadCrumbsRect.y);
-                    }
-                    Drawer.DrawRect(diagramRect, InvertGraphEditor.Settings.BackgroundColor);
 
-                    DiagramRect = diagramRect;
-                
-                    DrawDiagram(Drawer, scrollPosition, scale, diagramRect); 
-            
+                if (DiagramDrawer != null)
+                {
+                    DiagramDrawer.DrawTabs(Drawer, tabsRect);
+                    DiagramDrawer.DrawBreadcrumbs(Drawer, breadCrumbsRect.y);
+                }
+                Drawer.DrawRect(diagramRect, InvertGraphEditor.Settings.BackgroundColor);
+
+                DiagramRect = diagramRect;
+
+                DrawDiagram(Drawer, scrollPosition, scale, diagramRect);
+
                 Drawer.EnableInput();
 
                 /*
@@ -177,9 +181,9 @@ namespace Invert.Core.GraphDesigner
 
                     var colorCache = GUI.color;
 
-                    if (!isMouseOver && !item.DisableTransparency) GUI.color = new Color(colorCache.r, colorCache.g, colorCache.b, colorCache.a/4);
-                    
-                        item.Drawer.Draw(bounds);
+                    if (!isMouseOver && !item.DisableTransparency) GUI.color = new Color(colorCache.r, colorCache.g, colorCache.b, colorCache.a / 4);
+
+                    item.Drawer.Draw(bounds);
 
                     GUI.color = colorCache;
                 }
@@ -195,21 +199,21 @@ namespace Invert.Core.GraphDesigner
                     var modalBackgroundRect = new Rect().Cover(breadCrumbsRect, tabsRect, diagramRect);
                     var modalContentRect = new Rect().WithSize(800, 600).CenterInsideOf(modalBackgroundRect);
                     var activeModal = modalItems.OrderBy(i => i.ZIndex).Last();
-                    
+
                     Drawer.DisableInput();
-                    
-                    foreach (var source in modalItems.OrderBy(i => i.ZIndex).Except(new []{activeModal}))
+
+                    foreach (var source in modalItems.OrderBy(i => i.ZIndex).Except(new[] { activeModal }))
                     {
                         source.Drawer(modalContentRect);
                     }
-                    
+
                     Drawer.EnableInput();
 
                     Drawer.DrawRect(modalBackgroundRect, new Color(0, 0, 0, 0.8f));
 
                     activeModal.Drawer(modalContentRect);
                 }
-                
+
 
                 DrawToolip(toolbarTopRect);
 
@@ -222,8 +226,8 @@ namespace Invert.Core.GraphDesigner
                 DiagramRect = diagramRect;
                 DrawDiagram(Drawer, scrollPosition, scale, diagramRect);
             }
-            
-            InvertApplication.SignalEvent<IDesignerWindowEvents>(_ => _.AfterDrawDesignerWindow(new Rect(0,0,width,height)));
+
+            InvertApplication.SignalEvent<IDesignerWindowEvents>(_ => _.AfterDrawDesignerWindow(new Rect(0, 0, width, height)));
             InvertApplication.SignalEvent<IDesignerWindowEvents>(_ => _.DrawComplete());
         }
 
@@ -234,7 +238,7 @@ namespace Invert.Core.GraphDesigner
             {
                 var tooltipHeight = Drawer.CalculateTextHeight(tooltip, CachedStyles.BreadcrumbTitleStyle, 350);
 
-                var infoRect = 
+                var infoRect =
                     new Rect().WithSize(350, Math.Max(80, tooltipHeight + 60)).AlignTopRight(alignmentRect).Below(alignmentRect).Pad(0, 15, 15, 0);
 
                 var imageRect =
@@ -255,12 +259,12 @@ namespace Invert.Core.GraphDesigner
             if (diagram == null) return;
             try
             {
-              
+                
                 DiagramDrawer = new DiagramDrawer(new DiagramViewModel(diagram));
                 DiagramDrawer.Dirty = true;
                 //DiagramDrawer.Data.ApplyFilter();
                 DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
-            
+
             }
             catch (Exception ex)
             {
@@ -289,6 +293,7 @@ namespace Invert.Core.GraphDesigner
 
         public void RefreshContent()
         {
+
             if (Workspace == null) return;
             if (Workspace.CurrentGraph == null) return;
             LoadDiagram(Workspace.CurrentGraph);
@@ -299,11 +304,12 @@ namespace Invert.Core.GraphDesigner
                 //Doing this on Load does not handle shit like renaming
                 DiagramViewModel.NavigationViewModel.Refresh();
             }
-            
-            if (DiagramDrawer != null)
-            {
-                DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
-            }
+
+            //if (DiagramDrawer != null)
+            //{
+
+            //    DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
+            //}
         }
 
         public void SwitchDiagram(IGraphData data)
@@ -317,13 +323,14 @@ namespace Invert.Core.GraphDesigner
 
 
         private CachedLineItem[] _cachedLines;
-        private Vector2 _cachedScroll; 
-        private Vector2 _cachedScreen; 
-        
+        private Vector2 _cachedScroll;
+        private Vector2 _cachedScreen;
+        private List<IDataRecord> _changedRecords;
+
         private bool DrawDiagram(IPlatformDrawer drawer, Vector2 scrollPosition, float scale, Rect diagramRect)
         {
 
-                var screen = new Vector2(Screen.width, Screen.height);
+            var screen = new Vector2(Screen.width, Screen.height);
 
 
             if (DiagramDrawer == null)
@@ -362,7 +369,7 @@ namespace Invert.Core.GraphDesigner
                         {
                             lines.Add(new CachedLineItem()
                             {
-                                Lines = new []{new Vector3(x, diagramRect.y),new Vector3(x, diagramRect.x + diagramRect.height + scrollPosition.y + 85)},
+                                Lines = new[] { new Vector3(x, diagramRect.y), new Vector3(x, diagramRect.x + diagramRect.height + scrollPosition.y + 85) },
                                 Color = color
                             });
                         }
@@ -385,7 +392,7 @@ namespace Invert.Core.GraphDesigner
 
                             lines.Add(new CachedLineItem()
                             {
-                                Lines = new []{new Vector3(diagramRect.x, y),new Vector3(diagramRect.x + diagramRect.width + scrollPosition.x, y)},
+                                Lines = new[] { new Vector3(diagramRect.x, y), new Vector3(diagramRect.x + diagramRect.width + scrollPosition.x, y) },
                                 Color = color
                             });
                         }
@@ -400,7 +407,7 @@ namespace Invert.Core.GraphDesigner
 
                 for (int i = 0; i < _cachedLines.Length; i++)
                 {
-                    Drawer.DrawLine(_cachedLines[i].Lines,_cachedLines[i].Color);
+                    Drawer.DrawLine(_cachedLines[i].Lines, _cachedLines[i].Color);
                 }
 
             }
@@ -410,8 +417,8 @@ namespace Invert.Core.GraphDesigner
                 DiagramDrawer.Bounds = new Rect(0f, 0f, diagramRect.width, diagramRect.height);
 
                 DiagramDrawer.Draw(drawer, 1f);
-                
-                if(_shouldProcessInputFromDiagram) InvertApplication.SignalEvent<IDesignerWindowEvents>(_ => _.ProcessInput());
+
+                if (_shouldProcessInputFromDiagram) InvertApplication.SignalEvent<IDesignerWindowEvents>(_ => _.ProcessInput());
                 InvertApplication.SignalEvent<IDesignerWindowEvents>(_ => _.AfterDrawGraph(DiagramDrawer.Bounds));
             }
             return false;
@@ -419,15 +426,115 @@ namespace Invert.Core.GraphDesigner
 
         public void CommandExecuted(ICommand command)
         {
-            if (DiagramDrawer != null)
+            if (refresh)
             {
-                DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
+                RefreshContent();
+                refresh = false;
             }
+            //if (DiagramDrawer != null)
+            //{
+            //    DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
+            //}
         }
 
         public void Renamed(IDiagramNodeItem nodeItem, string editText, string name)
         {
             RefreshContent();
+        }
+
+        public List<IDataRecord> ChangedRecords
+        {
+            get { return _changedRecords ?? (_changedRecords = new List<IDataRecord>()); }
+            set { _changedRecords = value; }
+        }
+
+        public void RecordInserted(IDataRecord record)
+        {
+            refresh = true;
+            //if (record is IGraphItem)
+            //{
+            //    refresh = true;
+            //    return;
+            //}
+            //if (DiagramDrawer == null) return;
+            //if (DiagramDrawer.DiagramViewModel == null) return;
+            //RefreshDrawers(record);
+          
+        }
+
+        public bool refresh = false;
+        public void RecordRemoved(IDataRecord record)
+        {
+            refresh = true;
+            //if (record is IGraphItem)
+            //{
+            //    refresh = true;
+            //    return;
+            //}
+            //if (DiagramDrawer == null) return;
+            //if (DiagramDrawer.DiagramViewModel == null) return;
+            //RefreshDrawers(record);
+            //if (DiagramDrawer.DiagramViewModel.GraphItems == null) return;
+
+            //DiagramDrawer.DiagramViewModel.RecordRemoved(record);
+
+            //foreach (var item in DiagramDrawer.DiagramViewModel.GraphItems.OfType<IDataRecordRemoved>())
+            //{
+            //    item.RecordRemoved(record);
+            //}
+        }
+
+        public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
+        {
+            refresh = true;
+            return;
+            //if (record is IGraphItem || record is Workspace || record is WorkspaceGraph || record is InvertGraph)
+            //{
+            //    refresh = true;
+            //    return;
+            //}
+            if (DiagramDrawer == null) return;
+            if (DiagramDrawer.DiagramViewModel == null) return;
+            RefreshDrawers(record);
+            return;
+            if (DiagramDrawer.DiagramViewModel.GraphItems == null) return;
+
+            DiagramDrawer.DiagramViewModel.PropertyChanged(record, name, previousValue, nextValue);
+
+            foreach (var item in DiagramDrawer.DiagramViewModel.GraphItems.OfType<IDataRecordPropertyChanged>())
+            {
+                item.PropertyChanged(record, name, previousValue, nextValue);
+            }
+        }
+
+        private void RefreshDrawers(IDataRecord record)
+        {
+
+            if (DiagramDrawer == null || DiagramDrawer.Children == null) return;
+            RefreshDrawers(DiagramDrawer.Children, record);
+        }
+
+        private void RefreshDrawers(List<IDrawer> drawers, IDataRecord record)
+        {
+
+            foreach (var item in drawers)
+            {
+                if (item.ViewModelObject == null) continue;
+                var dataObject = item.ViewModelObject.DataObject as IDataRecord;
+                if (dataObject == null) continue;
+                if (dataObject.IsNear(record))
+                    item.ViewModelObject.DataObject = item.ViewModelObject.DataObject;
+                //if (item.ViewModelObject != null && item.ViewModelObject.DataObject == record)
+                //{
+                //    item.Children.Clear();
+                //    item.ViewModelObject.ContentItems.Clear();
+                //    item.ViewModelObject.DataObjectChanged();
+                //    InvertApplication.Log("Refreshing " + item.GetType().Name);
+                //    //item.Refresh(InvertGraphEditor.PlatformDrawer,item.Bounds.position,true);
+                //}
+                RefreshDrawers(item.Children, record);
+            }
+
         }
     }
 }

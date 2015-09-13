@@ -62,7 +62,12 @@ namespace Invert.Core.GraphDesigner
 
         public virtual void Draw(IPlatformDrawer platform, float scale)
         {
-
+            //if (ViewModelObject != null && ViewModelObject.IsDirty)
+            //{
+            //    Refresh(platform);
+            //    ViewModelObject.IsDirty = false;
+            //}
+               
         }
 
         public virtual void Refresh(IPlatformDrawer platform)

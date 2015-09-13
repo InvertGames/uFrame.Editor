@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,11 +10,11 @@ using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class DiagramViewModel : Invert.Core.GraphDesigner.ViewModel
+    public class DiagramViewModel : Invert.Core.GraphDesigner.ViewModel, IDataRecordInserted, IDataRecordRemoved, IDataRecordPropertyChanged
     {
         private ObservableCollection<GraphItemViewModel> _graphItems = new ObservableCollection<GraphItemViewModel>();
         private IEnumerable<IDiagramContextCommand> _diagramContextCommands;
-        
+
         private InspectorViewModel _inspectorViewModel;
         private GraphDesignerNavigationViewModel _navigationViewModel;
 
@@ -75,7 +76,7 @@ namespace Invert.Core.GraphDesigner
         }
         public IEnumerable<GraphItemViewModel> SelectedGraphItems
         {
-            get { return AllViewModels.Where(p=>p.IsSelected); }
+            get { return AllViewModels.Where(p => p.IsSelected); }
         }
 
         public void NavigateTo(IDiagramNode node)
@@ -165,7 +166,7 @@ namespace Invert.Core.GraphDesigner
         //    }
         //}
 
-        protected override void DataObjectChanged()
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
             GraphItems.Clear();
@@ -192,11 +193,13 @@ namespace Invert.Core.GraphDesigner
             }
         }
         public Dictionary<string, IFilterItem> FilterItems { get; set; }
-        public void Load()
+
+
+        public void Load(bool async = false)
         {
             GraphItems.Clear();
             //GraphItems.Add(InspectorViewModel);
-            var connectors = new List<ConnectorViewModel>();
+          
             if (GraphData == null)
             {
                 Debug.Log("GraphData Null");
@@ -215,18 +218,72 @@ namespace Invert.Core.GraphDesigner
                 }
                 dictionary.Add(item.NodeId, item);
             }
-                
-            FilterItems = dictionary;
-            
-            CurrentNodes = GraphData.CurrentFilter.FilterNodes.Distinct().ToArray();
 
+            FilterItems = dictionary;
+
+            CurrentNodes = GraphData.CurrentFilter.FilterNodes.Distinct().ToArray();
+           // var graphItems = new List<GraphItemViewModel>();
+           //// var time = DateTime.Now;
+           // foreach (var item in CurrentNodes)
+           // {
+
+           //     // Get the ViewModel for the data
+           //     //InvertApplication.Log("B-A" + DateTime.Now.Subtract(time).TotalSeconds.ToString());
+           //     var mapping = InvertApplication.Container.RelationshipMappings[item.GetType(), typeof(ViewModel)];
+           //     if (mapping == null) continue;
+           //     var vm = Activator.CreateInstance(mapping, item, this) as GraphItemViewModel;
+           //     //var vm = 
+           //     //    InvertApplication.Container.ResolveRelation<ViewModel>(item.GetType(), item, this) as
+           //     //        GraphItemViewModel;
+           //     //InvertApplication.Log("B-B" + DateTime.Now.Subtract(time).TotalSeconds.ToString());
+           //     if (vm == null)
+           //     {
+           //         if (InvertGraphEditor.Platform.MessageBox("Node Error", string.Format("Couldn't find view-model for {0} would you like to remove this item?", item.GetType()), "Yes", "No"))
+           //         {
+           //             CurrentRepository.Remove(item);
+           //         }
+           //         continue;
+           //     }
+           //     vm.DiagramViewModel = this;
+           //     GraphItems.Add(vm);
+           //     // Clear the connections on the view-model
+           //     vm.Connectors.Clear();
+           //     vm.GetConnectors(vm.Connectors);
+           //     connectors.AddRange(vm.Connectors);
+           // }
+            NavigationViewModel.Refresh();
+            //if (async)
+            //{
+                InvertApplication.SignalEvent<ITaskHandler>(_ => _.BeginBackgroundTask(AddGraphItems()));
+            //}
+            //else
+            //{
+                //var e = AddGraphItems();
+                //while (e.MoveNext())
+                //{
+                    
+                //}
+            //}
+           
+
+        }
+
+        public IEnumerator AddGraphItems()
+        {
+            var connectors = new List<ConnectorViewModel>();
+            // var time = DateTime.Now;
             foreach (var item in CurrentNodes)
             {
-                
+                yield return new TaskProgress(string.Format("Loading..."), 95f);
                 // Get the ViewModel for the data
-                var vm =
-                    InvertApplication.Container.ResolveRelation<ViewModel>(item.GetType(), item, this) as
-                        GraphItemViewModel;
+                //InvertApplication.Log("B-A" + DateTime.Now.Subtract(time).TotalSeconds.ToString());
+                var mapping = InvertApplication.Container.RelationshipMappings[item.GetType(), typeof(ViewModel)];
+                if (mapping == null) continue;
+                var vm = Activator.CreateInstance(mapping, item, this) as GraphItemViewModel;
+                //var vm = 
+                //    InvertApplication.Container.ResolveRelation<ViewModel>(item.GetType(), item, this) as
+                //        GraphItemViewModel;
+                //InvertApplication.Log("B-B" + DateTime.Now.Subtract(time).TotalSeconds.ToString());
                 if (vm == null)
                 {
                     if (InvertGraphEditor.Platform.MessageBox("Node Error", string.Format("Couldn't find view-model for {0} would you like to remove this item?", item.GetType()), "Yes", "No"))
@@ -242,39 +299,31 @@ namespace Invert.Core.GraphDesigner
                 vm.GetConnectors(vm.Connectors);
                 connectors.AddRange(vm.Connectors);
             }
-
-            NavigationViewModel.Refresh();
-
-
-//            foreach (var filter in new[] { GraphData.RootFilter }.Concat(this.GraphData.GetFilterPath()))
-//            {
-//
-//
-//                var name = first ? filter.Name : "< " + filter.Name;
-//                dictionary.Add(filter, platform.CalculateSize(name, first ? CachedStyles.GraphTitleLabel : CachedStyles.ItemTextEditingStyle));
-//                first = false;
-//            }
-
-
+         
             RefreshConnectors(connectors);
-            
+            yield break;
         }
-
         public InspectorViewModel InspectorViewModel
         {
-            get { return _inspectorViewModel ?? (_inspectorViewModel = new InspectorViewModel()
+            get
             {
-                DiagramViewModel = this
-            }); }
+                return _inspectorViewModel ?? (_inspectorViewModel = new InspectorViewModel()
+                    {
+                        DiagramViewModel = this
+                    });
+            }
             set { _inspectorViewModel = value; }
-        }    
-        
+        }
+
         public GraphDesignerNavigationViewModel NavigationViewModel
         {
-            get { return _navigationViewModel ?? (_navigationViewModel = new GraphDesignerNavigationViewModel()
+            get
             {
-                DiagramViewModel = this
-            }); }
+                return _navigationViewModel ?? (_navigationViewModel = new GraphDesignerNavigationViewModel()
+                    {
+                        DiagramViewModel = this
+                    });
+            }
             set { _navigationViewModel = value; }
         }
 
@@ -321,7 +370,7 @@ namespace Invert.Core.GraphDesigner
                     inputs.Add(item);
                 }
             }
-          
+
             foreach (var output in outputs)
             {
                 foreach (var input in inputs)
@@ -360,7 +409,7 @@ namespace Invert.Core.GraphDesigner
                 if (startConnector == null || endConnector == null) continue;
 
                 var vm = endConnector.ConnectorFor.DataObject as IDiagramNodeItem;
-                
+
 
                 startConnector.HasConnections = true;
                 endConnector.HasConnections = true;
@@ -499,7 +548,7 @@ namespace Invert.Core.GraphDesigner
                 }
                 else
                 {
-                    
+
                     GraphData.PushFilter(SelectedNode.GraphItemObject as IGraphFilter);
                     GraphData.UpdateLinks();
                 }
@@ -528,7 +577,7 @@ namespace Invert.Core.GraphDesigner
             {
                 InspectorViewModel.TargetViewModel = null;
             }
-        
+
             foreach (var item in AllViewModels.ToArray())
             {
                 var ivm = item as ItemViewModel;
@@ -539,7 +588,7 @@ namespace Invert.Core.GraphDesigner
                         ivm.EndEditing();
                         break;
                     }
-                    
+
                 }
                 var nvm = item as DiagramNodeViewModel;
                 if (nvm != null)
@@ -554,7 +603,7 @@ namespace Invert.Core.GraphDesigner
 
 
                 if (item.IsSelected)
-                item.IsSelected = false;
+                    item.IsSelected = false;
             }
 
 
@@ -585,7 +634,7 @@ namespace Invert.Core.GraphDesigner
             }
 
             DeselectAll();
-          
+
             //InvertGraphEditor.ExecuteCommand(_ => { });
         }
 
@@ -594,7 +643,7 @@ namespace Invert.Core.GraphDesigner
             if (viewModelObject == null) return;
 
             InspectorViewModel.TargetViewModel = viewModelObject;
-            
+
             if (viewModelObject.IsSelected)
             {
                 return;
@@ -612,7 +661,7 @@ namespace Invert.Core.GraphDesigner
             return GraphData.CurrentFilter.GetImportableItems();
         }
 
-      
+
         //public void UpgradeProject()
         //{
         //    InvertApplication
@@ -643,8 +692,8 @@ namespace Invert.Core.GraphDesigner
             if (string.IsNullOrEmpty(newNodeData.Name))
                 newNodeData.Name =
                     CurrentRepository.GetUniqueName("New" + newNodeData.GetType().Name.Replace("Data", ""));
-       
-            return GraphData.CurrentFilter.ShowInFilter(newNodeData,position);
+            
+            return GraphData.CurrentFilter.ShowInFilter(newNodeData, position);
         }
 
         public IEnumerable<object> ContextObjects
@@ -673,7 +722,7 @@ namespace Invert.Core.GraphDesigner
                     yield return nodeItem.DataObject;
 
                 }
-             
+
             }
         }
 
@@ -709,7 +758,7 @@ namespace Invert.Core.GraphDesigner
 
         public void ShowQuickAdd()
         {
-            
+
             //var mousePosition = LastMouseEvent.MouseDownPosition;
             //var items = InvertApplication.Plugins.OfType<IPrefabNodeProvider>().SelectMany(p => p.PrefabNodes(CurrentRepository)).ToArray();
 
@@ -733,6 +782,21 @@ namespace Invert.Core.GraphDesigner
         }
 
         public void UpgradeProject()
+        {
+
+        }
+
+        public void RecordInserted(IDataRecord record)
+        {
+            
+        }
+
+        public void RecordRemoved(IDataRecord record)
+        {
+            
+        }
+
+        public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
             
         }

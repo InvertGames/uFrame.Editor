@@ -33,7 +33,7 @@ namespace Invert.Core.GraphDesigner
         {
             base.Loaded(container);
 
-            Signal<ITaskHandler>(_ => _.BeginBackgroundTask(ValidateDatabase()));
+            //Signal<ITaskHandler>(_ => _.BeginBackgroundTask(ValidateDatabase()));
           
         }
 

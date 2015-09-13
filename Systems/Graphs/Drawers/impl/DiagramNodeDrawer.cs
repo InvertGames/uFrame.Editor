@@ -60,21 +60,21 @@ namespace Invert.Core.GraphDesigner
             base.DataContextChanged();
 
             // ViewModel.ContentItems.CollectionChanged += ContentItemsOnCollectionChangedWith;
-            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+            //ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName == "IsDirty")
-            {
-                if (ViewModel.IsDirty)
-                {
-                    this.RefreshContent();
+            //if (propertyChangedEventArgs.PropertyName == "IsDirty")
+            //{
+            //    if (ViewModel.IsDirty)
+            //    {
+            //        this.RefreshContent();
 
-                    ViewModel.IsDirty = false;
-                }
+            //        ViewModel.IsDirty = false;
+            //    }
 
-            }
+            //}
         }
 
         private void ContentItemsOnCollectionChangedWith(object sender, NotifyCollectionChangedEventArgs changeargs)

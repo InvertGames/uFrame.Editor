@@ -33,7 +33,7 @@ namespace Invert.Core.GraphDesigner
         public override Vector2 Position { get; set; }
         public override string Name { get; set; }
 
-        protected override void DataObjectChanged()
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
             AddPropertyFields();

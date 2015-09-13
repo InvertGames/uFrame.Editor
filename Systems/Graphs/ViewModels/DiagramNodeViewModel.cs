@@ -22,7 +22,7 @@ namespace Invert.Core.GraphDesigner
 
         }
 
-        protected override void DataObjectChanged()
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
         }
@@ -31,7 +31,7 @@ namespace Invert.Core.GraphDesigner
         {
 
             base.CreateContent();
-
+            if (IsCollapsed) return;
             foreach (var item in GraphItem.DisplayedItems)
             {
                 var vm = GetDataViewModel(item);
@@ -120,6 +120,33 @@ namespace Invert.Core.GraphDesigner
                 this.IsCollapsed = !IsCollapsed;
             });
             IsExternal = GraphItemObject.Graph.Identifier != DiagramViewModel.GraphData.Identifier;
+        }
+
+        public override void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
+        {
+            base.PropertyChanged(record, name, previousValue, nextValue);
+         
+            foreach (var item in ContentItems) item.PropertyChanged(record,name,previousValue,nextValue);
+        }
+
+        public override void RecordInserted(IDataRecord record)
+        {
+            base.RecordInserted(record);
+            if (record is IFilterItem)
+            {
+                IsDirty = true;
+            }
+            foreach (var item in ContentItems) item.RecordInserted(record);
+        }
+
+        public override void RecordRemoved(IDataRecord record)
+        {
+            base.RecordRemoved(record);
+            if (record is IFilterItem)
+            {
+                IsDirty = true;
+            }
+            foreach (var item in ContentItems) item.RecordRemoved(record);
         }
 
         public bool IsExternal { get; set; }
@@ -288,13 +315,15 @@ namespace Invert.Core.GraphDesigner
             get { return ContentItems.Count > 0; }
         }
 
-        protected override void DataObjectChanged()
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
             ContentItems.Clear();
 
             //IsLocal = DiagramViewModel == null || DiagramViewModel.CurrentRepository.NodeItems.Contains(GraphItemObject);
+            //var time = DateTime.Now;
             CreateContent();
+            //InvertApplication.Log(this.GetType().Name + ": " + DateTime.Now.Subtract(time).TotalSeconds.ToString());
             if (GraphItemObject.IsEditing)
             {
                 BeginEditing();

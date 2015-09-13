@@ -48,6 +48,6 @@ namespace Invert.Core.GraphDesigner.Unity.KoinoniaSystem.Data
         public IRepository Repository { get; set; }
         public string Identifier { get; set; }
         public bool Changed { get; set; }
-
+        public IEnumerable<string> ForeignKeys { get { yield break; } }
     }
 }

@@ -303,7 +303,7 @@ namespace Invert.Core.GraphDesigner
             // Draw all of our drawers
 
            
-            foreach (var drawer in _cachedChildren)
+            foreach (var drawer in CachedChildren)
             {
                 if (drawer.Dirty)
                 {
@@ -609,10 +609,10 @@ namespace Invert.Core.GraphDesigner
             _cachedPaths = dictionary;
 
             Children.Clear();
-            DiagramViewModel.Load();
+            DiagramViewModel.Load(hardRefresh);
             Children.Add(SelectionRectHandler);
             Dirty = true;
-            _cachedChildren = Children.OrderBy(p => p.ZOrder).ToArray();
+            //_cachedChildren = Children.OrderBy(p => p.ZOrder).ToArray();
         }
 
         public void Save()
@@ -700,6 +700,16 @@ namespace Invert.Core.GraphDesigner
         }
 
         public static bool IsEditingField { get; set; }
+
+        public IEnumerable<IDrawer> CachedChildren
+        {
+            get
+            {
+                return Children.OrderBy(p => p.ZOrder);
+                return _cachedChildren;
+            }
+            //set { _cachedChildren = value; }
+        }
 
         //    if (CurrentEvent.keyCode == KeyCode.Return)
         //    {
