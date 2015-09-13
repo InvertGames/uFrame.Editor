@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Linq;
 using Invert.Json;
 
 namespace Invert.Data
 {
     public static class DataRecordPropertyChangedExtensions
     {
-
+        public static bool IsNear(this IDataRecord record, IDataRecord to)
+        {
+            return record.Identifier == to.Identifier || record.ForeignKeys.Contains(to.Identifier);
+        }
         public static TType Copy<TType>(this TType record) where TType : class, IDataRecord
         {
             var result = InvertJsonExtensions.DeserializeObject<TType>((string)InvertJsonExtensions.SerializeObject(record).ToString()) as TType;

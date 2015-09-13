@@ -10,7 +10,7 @@ namespace Invert.Core.GraphDesigner
         private IToolbarCommand[] _allCommands;
         private WorkspaceService _workspaceService;
 
-        protected override void DataObjectChanged()
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
             //Tabs = Data.OpenGraphs;

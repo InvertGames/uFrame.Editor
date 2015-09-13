@@ -138,6 +138,12 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
 
     public bool Changed { get; set; }
 
+    public IEnumerable<string> ForeignKeys
+    {
+        get { yield return NodeId; }
+
+    }
+
     public virtual bool IsSelectable { get { return true; } }
 
     [NodeProperty, JsonProperty]

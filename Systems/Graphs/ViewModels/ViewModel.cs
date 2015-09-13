@@ -19,6 +19,7 @@ namespace Invert.Core.GraphDesigner
             {
                 _dataObject = value;
                 DataObjectChanged();
+                
             }
         }
 
@@ -26,7 +27,8 @@ namespace Invert.Core.GraphDesigner
         {
             get { return ((IGraphItem) DataObject).Identifier; }
         }
-        protected virtual void DataObjectChanged()
+
+        public virtual void DataObjectChanged()
         {
             
         }

@@ -225,7 +225,7 @@ namespace Invert.Core.GraphDesigner
 
         public void CommandExecuted(ICommand command)
         {
-            InvertGraphEditor.DesignerWindow.RefreshContent();
+            //InvertGraphEditor.DesignerWindow.RefreshContent();
         }
 
         public void Show(DiagramViewModel diagramViewModel,ConnectorViewModel startConnector, Vector2 position)

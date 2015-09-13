@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Invert.Data;
 using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
@@ -13,7 +14,7 @@ namespace Invert.Core.GraphDesigner
         }
     }
 
-    public abstract class GraphItemViewModel : ViewModel
+    public abstract class GraphItemViewModel : ViewModel,IDataRecordInserted, IDataRecordRemoved, IDataRecordPropertyChanged
     {
         public virtual bool IsNewLine { get; set; }
         public string Comments
@@ -24,7 +25,17 @@ namespace Invert.Core.GraphDesigner
                 
             }
         }
-        
+
+        public override object DataObject
+        {
+            get { return base.DataObject; }
+            set
+            {
+                base.DataObject = value;
+                IsDirty = true;
+            }
+        }
+
         public abstract Vector2 Position { get; set; }
         public abstract string Name { get; set; }
 
@@ -80,6 +91,37 @@ namespace Invert.Core.GraphDesigner
         public override string ToString()
         {
             return GetHashCode().ToString();
+        }
+
+        public virtual void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
+        {
+            var a = DataObject as IDataRecord;
+            if (a != null && a.IsNear(record))
+            {
+                DataObjectChanged();
+                IsDirty = true;
+            }
+        }
+
+        public virtual void RecordRemoved(IDataRecord record)
+        {
+            var a = DataObject as IDataRecord;
+            if (a != null && a.IsNear(record))
+            {
+                DataObjectChanged();
+                IsDirty = true;
+            }
+        }
+
+        public virtual void RecordInserted(IDataRecord record)
+        {
+            var a = DataObject as IDataRecord;
+            if (a != null && a.IsNear(record))
+            {
+                DataObjectChanged();
+                IsDirty = true;
+            }
+
         }
 
         public bool IsDirty

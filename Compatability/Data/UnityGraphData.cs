@@ -187,6 +187,11 @@ public class UnityGraphData: ScriptableObject, IGraphData, ISerializationCallbac
     }
 
     public bool Changed { get; set; }
+    public IEnumerable<string> ForeignKeys
+    {
+        get { yield break; }
+    }
+
 
     public ElementDiagramSettings Settings
     {

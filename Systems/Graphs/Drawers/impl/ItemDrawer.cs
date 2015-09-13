@@ -122,7 +122,7 @@ namespace Invert.Core.GraphDesigner
             // Calculate the size of the label and add the padding * 2 for left and right
             CachedName = ItemViewModel.Name;
             
-            if (hardRefresh)
+            if (hardRefresh || _cachedFlags == null)
             {
                 _cachedFlags = Flags.Where(p => p.IsChecked(ViewModelObject.DataObject)).ToArray();
                 _textSize = platform.CalculateTextSize(CachedName, CachedStyles.ItemTextEditingStyle);// TextStyle.CalcSize(new GUIContent(ItemViewModel.Name));

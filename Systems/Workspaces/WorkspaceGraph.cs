@@ -1,4 +1,5 @@
-﻿using Invert.Data;
+﻿using System.Collections.Generic;
+using Invert.Data;
 using Invert.Json;
 
 namespace Invert.Core.GraphDesigner
@@ -32,6 +33,16 @@ namespace Invert.Core.GraphDesigner
         public string Identifier { get; set; }
 
         public bool Changed { get; set; }
+
+        public IEnumerable<string> ForeignKeys
+        {
+            get
+            {
+                yield return GraphId;
+                yield return WorkspaceId;
+            }
+        }
+
         public void RecordRemoved(IDataRecord record)
         {
             if (record.Identifier == GraphId || record.Identifier == WorkspaceId)

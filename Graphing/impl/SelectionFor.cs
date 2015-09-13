@@ -88,6 +88,7 @@ namespace Invert.Core.GraphDesigner
                     Repository.Remove(SelectedValue);
                    
                 }
+
                 return;
             }
             var selected = SelectedValue;
@@ -101,8 +102,9 @@ namespace Invert.Core.GraphDesigner
                 selectedItem.NodeId = this.NodeId;
                 selectedItem.ItemId = this.Identifier;
                 selectedItem.ValueId = item.Identifier;
-            }
 
+            }
+            
         }
 
         public override IEnumerable<IDataRecord> GetAllowed()

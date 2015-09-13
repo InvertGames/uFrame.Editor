@@ -18,7 +18,7 @@ namespace Invert.Core.GraphDesigner
         //    get { return false; }
         //}
 
-        protected override void DataObjectChanged()
+        public override void DataObjectChanged()
         {
             base.DataObjectChanged();
 

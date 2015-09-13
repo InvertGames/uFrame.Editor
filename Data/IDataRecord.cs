@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Invert.Data
 {
     public interface IDataRecord : IValueItem
@@ -5,5 +7,7 @@ namespace Invert.Data
         IRepository Repository { get; set; }
         
         bool Changed { get; set; }
+
+        IEnumerable<string> ForeignKeys { get; } 
     }
 }

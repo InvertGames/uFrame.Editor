@@ -32,6 +32,11 @@ namespace Invert.Core.GraphDesigner
 
         public bool Changed { get; set; }
 
+        public IEnumerable<string> ForeignKeys
+        {
+            get { yield break; }
+        }
+
         public virtual bool ImportedOnly
         {
             get { return false; }

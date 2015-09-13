@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Invert.Data;
 using Invert.Json;
 
@@ -10,6 +11,11 @@ namespace Invert.Core.GraphDesigner
         public IRepository Repository { get; set; }
         public string Identifier { get; set; }
         public bool Changed { get; set; }
+
+        public IEnumerable<string> ForeignKeys
+        {
+            get { yield return ParentIdentifier; }
+        }
 
         [JsonProperty]
         public string ParentIdentifier
