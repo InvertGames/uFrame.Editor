@@ -17,11 +17,6 @@ namespace Invert.Core.GraphDesigner.Unity.WindowsSystem
             container.RegisterDrawer<HelloWorldWindowViewModel,HelloWorldWindowDrawer>();
         }
 
-        [MenuItem("uFrame Dev/Window System Tester/Open Normal Window In The Center")]
-        public static void OpenNormalWindowInTheCenter()
-        {
-            InvertApplication.SignalEvent<IOpenWindow>(w => w.OpenWindow(new HelloWorldWindowViewModel()));
-        }
 
         public void QueryContextMenu(ICommandUI ui, object obj)
         {

@@ -121,7 +121,7 @@ namespace Invert.Core.GraphDesigner
             }
             config.Database = db;
             config.Title = title;
-
+            if (!Configurations.ContainsKey(config.Identifier))
             Configurations.Add(config.Identifier, config);
             return config;
         }

@@ -200,6 +200,11 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                 });
         }
 
+        public override decimal LoadPriority
+        {
+            get { return 100; }
+        }
+
         public void QueryToolbarCommands(ToolbarUI ui)
         {
 
