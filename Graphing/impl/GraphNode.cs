@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Invert.Data;
 using Invert.Json;
-using uFrame.Serialization;
 using UnityEngine;
 namespace Invert.Core.GraphDesigner
 {

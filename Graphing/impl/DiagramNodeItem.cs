@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Invert.Data;
 using Invert.Json;
-using uFrame.Serialization;
 using UnityEngine;
 
 public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
