@@ -57,7 +57,7 @@ namespace Invert.Core.GraphDesigner
 
         private bool _isSelected = false;
         private List<ConnectorViewModel> _connectors;
-        private ObservableCollection<GraphItemViewModel> _contentItems;
+        private readonly ObservableCollection<GraphItemViewModel> _contentItems = new ObservableCollection<GraphItemViewModel>();
 
         public const string IsSelectedProperty = "IsSelected";
 
@@ -95,32 +95,17 @@ namespace Invert.Core.GraphDesigner
 
         public virtual void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
-            var a = DataObject as IDataRecord;
-            if (a != null && a.IsNear(record))
-            {
-                DataObjectChanged();
-                IsDirty = true;
-            }
+            
         }
 
         public virtual void RecordRemoved(IDataRecord record)
         {
-            var a = DataObject as IDataRecord;
-            if (a != null && a.IsNear(record))
-            {
-                DataObjectChanged();
-                IsDirty = true;
-            }
+            
         }
 
         public virtual void RecordInserted(IDataRecord record)
         {
-            var a = DataObject as IDataRecord;
-            if (a != null && a.IsNear(record))
-            {
-                DataObjectChanged();
-                IsDirty = true;
-            }
+            
 
         }
 
@@ -152,8 +137,8 @@ namespace Invert.Core.GraphDesigner
 
         public ObservableCollection<GraphItemViewModel> ContentItems
         {
-            get { return _contentItems ?? (_contentItems = new ObservableCollection<GraphItemViewModel>()); }
-            set { _contentItems = value; }
+            get { return _contentItems; }
+        
         }
 
         public virtual Type InputConnectorType { get; set; }

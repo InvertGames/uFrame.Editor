@@ -21,7 +21,7 @@ namespace Invert.Core.GraphDesigner
         {
             base.Refresh(platform, position,hardRefresh);
 
-            if (hardRefresh)
+            if (hardRefresh || string.IsNullOrEmpty(_cachedItemName) || string.IsNullOrEmpty(_cachedTypeName))
             {
                 _cachedItemName = TypedItemViewModel.Name;
                 _cachedTypeName = TypedItemViewModel.RelatedType;

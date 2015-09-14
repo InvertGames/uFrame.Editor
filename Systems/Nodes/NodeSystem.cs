@@ -48,7 +48,7 @@ namespace Invert.Core.GraphDesigner
                 }
                 
             }
-            InvertApplication.Log(obj.GetType().Name);
+
             var diagram = obj as DiagramViewModel;
             if (diagram != null)
             {

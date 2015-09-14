@@ -29,7 +29,7 @@ namespace Invert.Core.GraphDesigner
 
         protected virtual void DataContextChanged()
         {
-
+            
         }
 
         public GraphItemViewModel ViewModelObject

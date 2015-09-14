@@ -705,7 +705,7 @@ namespace Invert.Core.GraphDesigner
         {
             get
             {
-                return Children.OrderBy(p => p.ZOrder);
+                //return Children.OrderBy(p => p.ZOrder);
                 return _cachedChildren;
             }
             //set { _cachedChildren = value; }
@@ -733,11 +733,21 @@ namespace Invert.Core.GraphDesigner
                     if (drawer == null) InvertApplication.Log("Drawer is null");
        
                     Children.Add(drawer);
-                  
-        
+
+                    _cachedChildren = Children.OrderBy(p => p.ZOrder).ToArray();
                     drawer.Refresh((IPlatformDrawer)InvertGraphEditor.PlatformDrawer);
                 
                 }
+            if (changeArgs.OldItems != null && changeArgs.OldItems.Count > 0)
+            {
+                var c = Children.Count;
+                Children.RemoveAll(p => changeArgs.OldItems.Contains(p.ViewModelObject));
+                var d = Children.Count;
+                if (c != d)
+                {
+                    _cachedChildren = Children.OrderBy(p => p.ZOrder).ToArray();
+                }
+            }
         }
 #if UNITY_EDITOR
         private bool UpgradeOldProject()

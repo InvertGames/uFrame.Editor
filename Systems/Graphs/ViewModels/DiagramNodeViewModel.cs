@@ -25,13 +25,17 @@ namespace Invert.Core.GraphDesigner
         public override void DataObjectChanged()
         {
             base.DataObjectChanged();
+            DiagramViewModel.ClearConnectors(Connectors);
+            GetConnectors(Connectors);
+            DiagramViewModel.AddConnectors(Connectors);
+            DiagramViewModel.RefreshConnectors();
         }
 
         protected override void CreateContent()
         {
 
             base.CreateContent();
-            if (IsCollapsed) return;
+     
             foreach (var item in GraphItem.DisplayedItems)
             {
                 var vm = GetDataViewModel(item);
@@ -44,6 +48,9 @@ namespace Invert.Core.GraphDesigner
                 vm.DiagramViewModel = DiagramViewModel;
                 ContentItems.Add(vm);
             }
+
+         
+
             AddPropertyFields();
         }
 
@@ -125,28 +132,50 @@ namespace Invert.Core.GraphDesigner
         public override void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
             base.PropertyChanged(record, name, previousValue, nextValue);
-         
-            foreach (var item in ContentItems) item.PropertyChanged(record,name,previousValue,nextValue);
+
+            if (record == DataObject || record.IsNear(DataObject as IDataRecord))
+            {
+                DataObjectChanged();
+                return;
+            }
+            
+            //foreach (var item in ContentItems)
+            //{
+            //    if (item.DataObject == record)
+            //    {
+            //        DataObjectChanged();
+            //    }
+            //}
+
+          
         }
 
         public override void RecordInserted(IDataRecord record)
         {
             base.RecordInserted(record);
-            if (record is IFilterItem)
+            var nodeItem = record as IDiagramNodeItem;
+            if (nodeItem != null && nodeItem.NodeId == this.GraphItemObject.NodeId)
             {
-                IsDirty = true;
+              
+                    DataObjectChanged();
+                    return;
+           
             }
-            foreach (var item in ContentItems) item.RecordInserted(record);
+          
+           
         }
 
         public override void RecordRemoved(IDataRecord record)
         {
             base.RecordRemoved(record);
-            if (record is IFilterItem)
+            foreach (var item in ContentItems)
             {
-                IsDirty = true;
+                if (item.DataObject == record)
+                {
+                    DataObjectChanged();
+                    return;
+                }
             }
-            foreach (var item in ContentItems) item.RecordRemoved(record);
         }
 
         public bool IsExternal { get; set; }
@@ -258,11 +287,7 @@ namespace Invert.Core.GraphDesigner
                     {
                         item.OutputConnector.Disabled = true;
                         item.OutputConnector.ConnectorFor = this;
-
                     }
-
-
-
                 }
             }
 
@@ -297,6 +322,7 @@ namespace Invert.Core.GraphDesigner
                 DiagramViewModel.FilterItems[GraphItemObject.Identifier].Collapsed = value;
                 OnPropertyChanged("IsCollapsed");
                 IsDirty = true;
+                DataObjectChanged();
             }
         }
 
@@ -322,7 +348,11 @@ namespace Invert.Core.GraphDesigner
 
             //IsLocal = DiagramViewModel == null || DiagramViewModel.CurrentRepository.NodeItems.Contains(GraphItemObject);
             //var time = DateTime.Now;
-            CreateContent();
+            //if (!IsCollapsed)
+            //{
+                CreateContent();
+            //}
+            
             //InvertApplication.Log(this.GetType().Name + ": " + DateTime.Now.Subtract(time).TotalSeconds.ToString());
             if (GraphItemObject.IsEditing)
             {

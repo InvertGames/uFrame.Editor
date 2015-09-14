@@ -24,7 +24,8 @@ namespace Invert.Core.GraphDesigner
             StartConnector = startConnector;
             PossibleConnections = new List<ConnectorViewModel>();
             //InvertApplication.Log("YUP YUP YUP");
-            foreach (var connector in diagramViewModel.GraphItems.OfType<ConnectorViewModel>())
+            var items = diagramViewModel.GraphItems.OfType<ConnectorViewModel>().ToArray();
+            foreach (var connector in items)
             {
                 foreach (var strategy in InvertGraphEditor.ConnectionStrategies)
                 {

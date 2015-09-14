@@ -53,11 +53,16 @@ namespace Invert.Core.GraphDesigner
             }
             if (!(command is IFileSyncCommand)) return;
             var items = Container.Resolve<IRepository>().AllOf<IDataRecord>().ToArray();
-
-            var gensNow = InvertGraphEditor.GetAllCodeGenerators(
-                Container.Resolve<DatabaseService>().CurrentConfiguration, items)
-                .ToDictionary(p => Path.GetFileName(p.Filename), x => new GenFileInfo(Path.Combine(Application.dataPath, x.RelativeFullPathName), x));
-
+            var gensNow = new Dictionary<string, GenFileInfo>();
+            foreach (var p in InvertGraphEditor.GetAllCodeGenerators(
+                Container.Resolve<DatabaseService>().CurrentConfiguration, items))
+            {
+                var key = Path.GetFileName(p.Filename);
+                if (!gensNow.ContainsKey(key))
+                    gensNow.Add(key, new GenFileInfo(Path.Combine(Application.dataPath, p.RelativeFullPathName), p));
+            }
+             
+       
             foreach (var item in Gens)
             {
                 if (!gensNow.ContainsKey(item.Key))
@@ -118,9 +123,15 @@ namespace Invert.Core.GraphDesigner
             if (!(command is IFileSyncCommand)) return;
             IsRename = command is ApplyRenameCommand;
             var items = Container.Resolve<IRepository>().AllOf<IDataRecord>().ToArray();
-            Gens = InvertGraphEditor.GetAllCodeGenerators(
-                Container.Resolve<DatabaseService>().CurrentConfiguration, items)
-                .ToDictionary(p => Path.GetFileName(p.Filename), x => new GenFileInfo(Path.Combine(Application.dataPath, x.RelativeFullPathName), x));
+            Gens = new Dictionary<string, GenFileInfo>();
+            foreach (var p in InvertGraphEditor.GetAllCodeGenerators(
+                Container.Resolve<DatabaseService>().CurrentConfiguration, items))
+            {
+                var key = Path.GetFileName(p.Filename);
+                if (!Gens.ContainsKey(key))
+                Gens.Add(key,new GenFileInfo(Path.Combine(Application.dataPath, p.RelativeFullPathName), p));
+            }
+             
 
 
 

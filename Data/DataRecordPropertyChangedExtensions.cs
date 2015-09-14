@@ -8,6 +8,7 @@ namespace Invert.Data
     {
         public static bool IsNear(this IDataRecord record, IDataRecord to)
         {
+            if (to == null) return false;
             return record.Identifier == to.Identifier || record.ForeignKeys.Contains(to.Identifier);
         }
         public static TType Copy<TType>(this TType record) where TType : class, IDataRecord

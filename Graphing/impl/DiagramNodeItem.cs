@@ -196,14 +196,27 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
         get { return _name; }
         set
         {
-            var oldName = _name;
-            if (AutoFixName)
-                _name = Regex.Replace(value, @"[^a-zA-Z0-9_\.]+", "");
+            //var oldName = _name;
+            //if (string.IsNullOrEmpty(value))
+            //{
+            //    _name = "NewName";
+            //    _name = value;
+            //}
+            if (!string.IsNullOrEmpty(value))
+                _name = value;
             else
             {
-                _name = value;
+                _name = "RenameMe";
             }
-            this.Changed("Name", ref oldName, value);
+
+            if (AutoFixName)
+                _name = Regex.Replace(_name, @"[^a-zA-Z0-9_\.]+", "");
+            //else
+            //{
+            //    _name = value;
+            //}
+
+            this.Changed("Name", ref _name, value);
         }
     }
 

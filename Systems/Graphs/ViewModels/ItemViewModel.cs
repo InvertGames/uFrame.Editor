@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Invert.Data;
 using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
@@ -79,6 +80,11 @@ namespace Invert.Core.GraphDesigner
                 NodeItem.IsEditing = value;
                 IsDirty = true;
             }
+        }
+
+        public override void RecordInserted(IDataRecord record)
+        {
+            base.RecordInserted(record);
         }
 
         //public override Func<IDiagramNodeItem, IDiagramNodeItem, bool> InputValidator

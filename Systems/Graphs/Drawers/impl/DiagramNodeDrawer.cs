@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -58,34 +59,44 @@ namespace Invert.Core.GraphDesigner
         protected override void DataContextChanged()
         {
             base.DataContextChanged();
-
-            // ViewModel.ContentItems.CollectionChanged += ContentItemsOnCollectionChangedWith;
-            //ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+          
+            Children.Clear();
+            // Anything after its initialized will be manually done
+            //Refresh(InvertGraphEditor.Platform);
+            RefreshContent();
+            if (!ViewModel.IsCollapsed)
+            foreach (var item in ViewModel.ContentItems)
+            {
+                var model = item as GraphItemViewModel;
+                if (model != null)
+                    Children.Add(CreateChild(model));
+            }
+  
+            this.ViewModel.ContentItems.CollectionChanged += ContentItemsOnCollectionChangedWith;
         }
 
-        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void ContentItemsOnCollectionChangedWith(object sender, NotifyCollectionChangedEventArgs changeArgs)
         {
-            //if (propertyChangedEventArgs.PropertyName == "IsDirty")
-            //{
-            //    if (ViewModel.IsDirty)
-            //    {
-            //        this.RefreshContent();
-
-            //        ViewModel.IsDirty = false;
-            //    }
-
-            //}
+            if (changeArgs.Action == NotifyCollectionChangedAction.Reset)
+            {
+                RefreshContent();
+            }
+            if (changeArgs.NewItems != null && !ViewModel.IsCollapsed)
+            {
+                foreach (var item in changeArgs.NewItems)
+                {
+                    var model = item as GraphItemViewModel;
+                    if (model != null)
+                        Children.Add(CreateChild(model));
+                }
+            }
+            if (changeArgs.OldItems != null)
+            {
+                Children.RemoveAll(p => changeArgs.OldItems.Contains(p.ViewModelObject));
+            }
+            Refresh(InvertGraphEditor.PlatformDrawer);
         }
-
-        private void ContentItemsOnCollectionChangedWith(object sender, NotifyCollectionChangedEventArgs changeargs)
-        {
-            //this.RefreshContent();
-        }
-        private void ContentItemsOnCollectionChangedWith(NotifyCollectionChangedEventArgs changeargs)
-        {
-            //this.RefreshContent();
-        }
-
+   
         void IDrawer.OnMouseDown(MouseEvent mouseEvent)
         {
             
@@ -174,7 +185,7 @@ namespace Invert.Core.GraphDesigner
 
             foreach (var item in ViewModel.ContentItems)
             {
-                var drawer = InvertGraphEditor.Container.CreateDrawer(item);
+                var drawer = CreateChild(item);
 
                 if (drawer == null)
                 {
@@ -182,12 +193,23 @@ namespace Invert.Core.GraphDesigner
                         item.GetType().Name));
                     continue;
                 }
-                    
-                drawer.ParentDrawer = drawer;
+                
+            
                 drawers.Add(drawer);
             }
         }
 
+        private IDrawer CreateChild(GraphItemViewModel item)
+        {
+            
+            var drawer = InvertGraphEditor.Container.CreateDrawer(item);
+            if (drawer != null)
+            {
+                drawer.ParentDrawer = this;
+            }
+            
+            return drawer;
+        }
 
 
         public override void Draw(IPlatformDrawer platform, float scale)
@@ -301,13 +323,15 @@ namespace Invert.Core.GraphDesigner
 
         protected virtual void DrawChildren(IPlatformDrawer platform, float scale)
         {
-            foreach (var item in Children)
+            
+            for (int index = 0; index < Children.Count; index++)
             {
-                if (item.Dirty)
-                {
-                    Refresh((IPlatformDrawer)platform,item.Bounds.position,false);
-                    item.Dirty = false;
-                }
+                var item = Children[index];
+//if (item.Dirty)
+                //{
+                //    Refresh((IPlatformDrawer)platform,item.Bounds.position,false);
+                //    item.Dirty = false;
+                //}
                 item.Draw(platform, scale);
             }
         }
@@ -459,10 +483,10 @@ namespace Invert.Core.GraphDesigner
                     ParentDrawer = this
                 });
             }
-            if (!ViewModel.IsCollapsed)
-            {
-                GetContentDrawers(drawers);
-            }
+            //if (!ViewModel.IsCollapsed)
+            //{
+            //    //GetContentDrawers(drawers);
+            //}
             Children = drawers;
         }
 
@@ -485,12 +509,12 @@ namespace Invert.Core.GraphDesigner
                 _cachedTag = string.Join(" | ", ViewModel.Tags.ToArray());
             }
 
-            if (Children == null || Children.Count < 1)
-            {
-             
-                RefreshContent();
+            //if (Children == null || Children.Count < 1)
+            //{
+            // //Children.Clear();
+            //   RefreshContent();
             
-            }
+            //}
 
             var startY = ViewModel.Position.y;
             // Now lets stretch all the content drawers to the maximum width

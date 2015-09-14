@@ -6,6 +6,7 @@ using Invert.Core.GraphDesigner.Systems.GraphUI.api;
 using Invert.Core.GraphDesigner.Systems.Wizards.api;
 using Invert.Data;
 using Invert.IOC;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -259,7 +260,7 @@ namespace Invert.Core.GraphDesigner
             if (diagram == null) return;
             try
             {
-                
+
                 DiagramDrawer = new DiagramDrawer(new DiagramViewModel(diagram));
                 DiagramDrawer.Dirty = true;
                 //DiagramDrawer.Data.ApplyFilter();
@@ -296,20 +297,25 @@ namespace Invert.Core.GraphDesigner
 
             if (Workspace == null) return;
             if (Workspace.CurrentGraph == null) return;
-            LoadDiagram(Workspace.CurrentGraph);
 
-            if (DiagramViewModel != null)
+            if (Workspace.CurrentGraph != DiagramDrawer.DiagramViewModel.DataObject)
+                LoadDiagram(Workspace.CurrentGraph);
+            else
             {
-                //TODO Micah, please check if it is valid to refresh it here
-                //Doing this on Load does not handle shit like renaming
-                DiagramViewModel.NavigationViewModel.Refresh();
+                if (DiagramViewModel != null)
+                {
+                    //TODO Micah, please check if it is valid to refresh it here
+                    //Doing this on Load does not handle shit like renaming
+                    DiagramViewModel.NavigationViewModel.Refresh();
+                }
+
+                if (DiagramDrawer != null)
+                {
+                    DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
+                }
             }
 
-            //if (DiagramDrawer != null)
-            //{
 
-            //    DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
-            //}
         }
 
         public void SwitchDiagram(IGraphData data)
@@ -428,9 +434,11 @@ namespace Invert.Core.GraphDesigner
         {
             if (refresh)
             {
-                RefreshContent();
                 refresh = false;
-            }
+                RefreshContent();
+               
+            } 
+
             //if (DiagramDrawer != null)
             //{
             //    DiagramDrawer.Refresh(InvertGraphEditor.PlatformDrawer);
@@ -450,80 +458,101 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordInserted(IDataRecord record)
         {
-            refresh = true;
-            //if (record is IGraphItem)
+            if (DiagramDrawer == null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
+
+            DiagramViewModel.RecordInserted(record);
+            //if (record is IDiagramNodeItem)
             //{
             //    refresh = true;
-            //    return;
             //}
-            //if (DiagramDrawer == null) return;
-            //if (DiagramDrawer.DiagramViewModel == null) return;
-            //RefreshDrawers(record);
-          
+
         }
 
         public bool refresh = false;
         public void RecordRemoved(IDataRecord record)
         {
-            refresh = true;
-            //if (record is IGraphItem)
+            if (DiagramDrawer == null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
+            DiagramViewModel.RecordRemoved(record);
+            
+           
+            //if (record is IDiagramNode)
             //{
             //    refresh = true;
-            //    return;
             //}
-            //if (DiagramDrawer == null) return;
-            //if (DiagramDrawer.DiagramViewModel == null) return;
-            //RefreshDrawers(record);
-            //if (DiagramDrawer.DiagramViewModel.GraphItems == null) return;
-
-            //DiagramDrawer.DiagramViewModel.RecordRemoved(record);
-
-            //foreach (var item in DiagramDrawer.DiagramViewModel.GraphItems.OfType<IDataRecordRemoved>())
+            //else
             //{
-            //    item.RecordRemoved(record);
+            //   RefreshByData(record);
             //}
+           
         }
 
         public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
-            refresh = true;
-            return;
-            //if (record is IGraphItem || record is Workspace || record is WorkspaceGraph || record is InvertGraph)
-            //{
-            //    refresh = true;
-            //    return;
-            //}
-            if (DiagramDrawer == null) return;
-            if (DiagramDrawer.DiagramViewModel == null) return;
-            RefreshDrawers(record);
-            return;
-            if (DiagramDrawer.DiagramViewModel.GraphItems == null) return;
-
-            DiagramDrawer.DiagramViewModel.PropertyChanged(record, name, previousValue, nextValue);
-
-            foreach (var item in DiagramDrawer.DiagramViewModel.GraphItems.OfType<IDataRecordPropertyChanged>())
+            if (DiagramDrawer ==null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
+            DiagramViewModel.PropertyChanged(record, name, previousValue, nextValue);
+            if (record is Workspace || record is InvertGraph)
             {
-                item.PropertyChanged(record, name, previousValue, nextValue);
+                refresh = true;
+                return;
             }
+            
+            //RefreshByData(record);
         }
 
-        private void RefreshDrawers(IDataRecord record)
+        private void RefreshByData(IDataRecord record)
         {
-
-            if (DiagramDrawer == null || DiagramDrawer.Children == null) return;
-            RefreshDrawers(DiagramDrawer.Children, record);
-        }
-
-        private void RefreshDrawers(List<IDrawer> drawers, IDataRecord record)
-        {
-
-            foreach (var item in drawers)
+            List<IDrawer> drawers = new List<IDrawer>();
+            LoopDrawers((drawer, vm, data) =>
             {
+                if (record.IsNear(data))
+                {
+                    drawer.Children.Clear();
+                    vm.DataObjectChanged();
+                    // drawer.Refresh(InvertGraphEditor.PlatformDrawer);
+                    drawers.Add(drawer);
+                    //InvertApplication.Log(string.Format("Refreshed {0}", drawer.GetType().Name));
+                }
+            });
+            RefreshDrawerList(drawers);
+        }
+
+        private void RefreshDrawerList(List<IDrawer> drawers)
+        {
+            if (drawers.Count < 1) return;
+            foreach (var drawer in drawers)
+            {
+                drawer.Refresh(InvertGraphEditor.PlatformDrawer, drawer.Bounds.position, true);
+            }
+            foreach (var drawer in drawers)
+            {
+                drawer.OnLayout();
+            }
+           RefreshConnections();
+        }
+
+        private void RefreshConnections()
+        {
+            DiagramDrawer.Children.RemoveAll(p => p is ConnectorDrawer);
+            DiagramDrawer.Children.RemoveAll(p => p is ConnectionDrawer);
+            DiagramDrawer.DiagramViewModel.RefreshConnectors();
+        }
+
+        private void LoopDrawers(Action<IDrawer, GraphItemViewModel, IDataRecord> action)
+        {
+            if (DiagramDrawer == null || DiagramDrawer.Children == null) return;
+            LoopDrawers(DiagramDrawer.Children, action);
+        }
+
+        private void LoopDrawers(List<IDrawer> drawers, Action<IDrawer, GraphItemViewModel, IDataRecord> action)
+        {
+            for (int index = 0; index < drawers.Count; index++)
+            {
+                var item = drawers[index];
                 if (item.ViewModelObject == null) continue;
                 var dataObject = item.ViewModelObject.DataObject as IDataRecord;
-                if (dataObject == null) continue;
-                if (dataObject.IsNear(record))
-                    item.ViewModelObject.DataObject = item.ViewModelObject.DataObject;
+                var vm = item.ViewModelObject as GraphItemViewModel;
+                if (dataObject != null && vm != null && item != null)
+                    action(item, vm, dataObject);
                 //if (item.ViewModelObject != null && item.ViewModelObject.DataObject == record)
                 //{
                 //    item.Children.Clear();
@@ -532,9 +561,8 @@ namespace Invert.Core.GraphDesigner
                 //    InvertApplication.Log("Refreshing " + item.GetType().Name);
                 //    //item.Refresh(InvertGraphEditor.PlatformDrawer,item.Bounds.position,true);
                 //}
-                RefreshDrawers(item.Children, record);
+                LoopDrawers(item.Children, action);
             }
-
         }
     }
 }
