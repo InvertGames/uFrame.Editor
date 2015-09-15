@@ -55,6 +55,8 @@ public class SystemTypeInfo : ITypeInfo
         get { return SystemType.FullName; }
     }
 
+    public string Namespace { get { return SystemType.Namespace; } }
+
     public virtual IEnumerable<IMemberInfo> GetMembers()
     {
         if (Other != null)
@@ -101,4 +103,10 @@ public class SystemTypeInfo : ITypeInfo
         }
         return info.FullName == FullName;
     }
+
+    public string Title { get { return TypeName; } }
+    public string Group { get { return Namespace; } }
+    public string SearchTag { get { return FullName; } }
+    public string Description { get; set; }
+    public string Identifier { get {return FullName;} set {}}
 }

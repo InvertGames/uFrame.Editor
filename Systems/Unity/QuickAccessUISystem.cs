@@ -53,13 +53,16 @@ namespace Invert.Core.GraphDesigner.Unity
             PlatformDrawer.DrawImage(searchIconRect, "SearchIcon", true);
             if (EditorGUI.EndChangeCheck())
             {
+               
                 if (string.IsNullOrEmpty(SearchCriteria))
                 {
                     TreeModel.Predicate = null;
                 }
                 else
                 {
-                    TreeModel.Predicate = i => i.Title.Contains(SearchCriteria);
+                     var sc = SearchCriteria.ToLower();
+                    TreeModel.Predicate =
+                        i => i.Title != null && (i.Title.ToLower().Contains(sc) || i.Title.ToLower() == sc);
                 }
                 TreeModel.IsDirty = true;
             }

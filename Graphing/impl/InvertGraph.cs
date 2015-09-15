@@ -501,9 +501,10 @@ namespace Invert.Core.GraphDesigner
                 ClearInput(input);
             }
 
-            var connect = Repository.Create<ConnectionData>();
+            var connect = new ConnectionData();
             connect.OutputIdentifier = output.Identifier;
             connect.InputIdentifier = input.Identifier;
+            Repository.Add(connect);
             output.OnConnectedToInput(input);
             input.OnConnectedFromOutput(output);
         }

@@ -19,7 +19,8 @@ namespace Invert.Core.GraphDesigner
         INodeItemEvents,
         IDataRecordInserted,
         IDataRecordRemoved,
-        IDataRecordPropertyChanged
+        IDataRecordPropertyChanged,
+        IDataRecordManagerRefresh
     {
         private DesignerViewModel _designerViewModel;
 
@@ -36,7 +37,7 @@ namespace Invert.Core.GraphDesigner
         {
             get { return InvertGraphEditor.PlatformDrawer; }
         }
-
+        
         public DesignerViewModel Designer
         {
             get
@@ -432,6 +433,10 @@ namespace Invert.Core.GraphDesigner
 
         public void CommandExecuted(ICommand command)
         {
+            if (command is UndoCommand || command is RedoCommand)
+            {
+                refresh = true;
+            }
             if (refresh)
             {
                 refresh = false;
@@ -563,6 +568,11 @@ namespace Invert.Core.GraphDesigner
                 //}
                 LoopDrawers(item.Children, action);
             }
+        }
+
+        public void ManagerRefreshed(IDataRecordManager manager)
+        {
+            RefreshContent();
         }
     }
 }

@@ -144,8 +144,16 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordRemoved(IDataRecord record)
         {
+            if (record == null) return;
+
             if (record.Identifier == OutputIdentifier || record.Identifier == InputIdentifier)
                 Repository.Remove(this);
+
+            if (OutputIdentifier != null && InputIdentifier != null)
+            {
+                if (InputIdentifier.StartsWith(record.Identifier) || OutputIdentifier.StartsWith(record.Identifier)) 
+                    Repository.Remove(this);
+            }
         }
     }    
 }

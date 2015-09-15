@@ -148,6 +148,7 @@ public class TreeViewModel
                 item.Icon = treeData == null || !treeData.Children.Any() ? "DotIcon" : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
                 item.Highlighted = false;
                 item.Selected = SelectedIndex == item.Index;
+                if (data.Title == null) continue;
                 if (data.Title.Length > LargestString.Length) LargestString = data.Title;
                 if (item.Visible && item.Indent > MaxIdentLevel) MaxIdentLevel = item.Indent;
             }
@@ -186,7 +187,7 @@ public class TreeViewModel
                 }
 
                 item.Icon = treeData == null ? "DotIcon" : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
-
+                if (data.Title == null) continue;
                 if (data.Title.Length > LargestString.Length) LargestString = data.Title;
                 if (item.Visible && item.Indent > MaxIdentLevel) MaxIdentLevel = item.Indent;
 

@@ -35,7 +35,7 @@ namespace Invert.Core.GraphDesigner
         {
 
             base.CreateContent();
-     
+
             foreach (var item in GraphItem.DisplayedItems)
             {
                 var vm = GetDataViewModel(item);
@@ -49,7 +49,7 @@ namespace Invert.Core.GraphDesigner
                 ContentItems.Add(vm);
             }
 
-         
+
 
             AddPropertyFields();
         }
@@ -138,7 +138,7 @@ namespace Invert.Core.GraphDesigner
                 DataObjectChanged();
                 return;
             }
-            
+
             //foreach (var item in ContentItems)
             //{
             //    if (item.DataObject == record)
@@ -147,7 +147,7 @@ namespace Invert.Core.GraphDesigner
             //    }
             //}
 
-          
+
         }
 
         public override void RecordInserted(IDataRecord record)
@@ -156,13 +156,19 @@ namespace Invert.Core.GraphDesigner
             var nodeItem = record as IDiagramNodeItem;
             if (nodeItem != null && nodeItem.NodeId == this.GraphItemObject.NodeId)
             {
-              
+
+                DataObjectChanged();
+                return;
+
+            }
+            foreach (var item in ContentItems)
+            {
+                if (record.IsNear(item.DataObject as IDataRecord))
+                {
                     DataObjectChanged();
                     return;
-           
+                }
             }
-          
-           
         }
 
         public override void RecordRemoved(IDataRecord record)
@@ -170,7 +176,7 @@ namespace Invert.Core.GraphDesigner
             base.RecordRemoved(record);
             foreach (var item in ContentItems)
             {
-                if (item.DataObject == record)
+                if (record.IsNear(item.DataObject as IDataRecord))
                 {
                     DataObjectChanged();
                     return;
@@ -350,9 +356,9 @@ namespace Invert.Core.GraphDesigner
             //var time = DateTime.Now;
             //if (!IsCollapsed)
             //{
-                CreateContent();
+            CreateContent();
             //}
-            
+
             //InvertApplication.Log(this.GetType().Name + ": " + DateTime.Now.Subtract(time).TotalSeconds.ToString());
             if (GraphItemObject.IsEditing)
             {
@@ -574,7 +580,7 @@ namespace Invert.Core.GraphDesigner
         {
             if (!IsEditable) return;
             if (!IsEditing) return;
-            InvertApplication.Execute(new ApplyRenameCommand() {Item = GraphItemObject, Name = editText, Old = GraphItemObject.Name});
+            InvertApplication.Execute(new ApplyRenameCommand() { Item = GraphItemObject, Name = editText, Old = GraphItemObject.Name });
 
             Dirty = true;
         }
@@ -641,7 +647,7 @@ namespace Invert.Core.GraphDesigner
 
         }
 
-      
+
         public void BeginEditing()
         {
             if (!IsEditable) return;

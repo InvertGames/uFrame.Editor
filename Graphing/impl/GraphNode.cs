@@ -570,7 +570,11 @@ namespace Invert.Core.GraphDesigner
 
         public string Group
         {
-            get { return Graph.Name; }
+            get
+            {
+                if (Graph == null) return Name;
+                return Graph.Name;
+            }
         }
 
         [Browsable(false)]

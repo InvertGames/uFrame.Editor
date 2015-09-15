@@ -6,7 +6,7 @@ namespace Invert.Core.GraphDesigner
 {
     public class SelectionFor<TFor, TValue> : GenericSlot
         where TValue : InputSelectionValue, new()
-        where TFor : class, IDataRecord
+        where TFor : class, IValueItem
     {
         public override bool AllowMultipleInputs
         {
@@ -78,7 +78,7 @@ namespace Invert.Core.GraphDesigner
             }
             return item.Identifier;
         }
-        public override void SetInput(IDataRecord item)
+        public override void SetInput(IValueItem item)
         {
             base.SetInput(item);
             if (item == null)
@@ -107,7 +107,7 @@ namespace Invert.Core.GraphDesigner
             
         }
 
-        public override IEnumerable<IDataRecord> GetAllowed()
+        public override IEnumerable<IValueItem> GetAllowed()
         {
             yield break;
         }

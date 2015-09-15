@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
@@ -12,7 +13,7 @@ namespace Invert.Core.GraphDesigner
             return a != b;
         }
 
-        public virtual void SetInput(IDataRecord item)
+        public virtual void SetInput(IValueItem item)
         {
             if (!AllowMultipleInputs || item == null)
             {
@@ -31,7 +32,7 @@ namespace Invert.Core.GraphDesigner
             cd.InputIdentifier = Identifier;
             cd.OutputIdentifier = item.Identifier;
         }
-        public virtual void SetOutput(IDataRecord item)
+        public virtual void SetOutput(IValueItem item)
         {
             if (!AllowMultipleInputs)
             {
@@ -50,9 +51,9 @@ namespace Invert.Core.GraphDesigner
             cd.InputIdentifier = item.Identifier;
             cd.OutputIdentifier = Identifier;
         }
-        public virtual IEnumerable<IDataRecord> GetAllowed()
+        public virtual IEnumerable<IValueItem> GetAllowed()
         {
-            return Repository.AllOf<IDataRecord>();
+            return Repository.AllOf<IDataRecord>().Cast<IValueItem>();
         }
 
         public virtual bool AllowSelection

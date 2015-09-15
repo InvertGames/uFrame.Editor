@@ -14,6 +14,8 @@ namespace Invert.Core.GraphDesigner
         IDataRecordRemoved, 
         IDataRecordPropertyBeforeChange,
         IDataRecordPropertyChanged,
+        IDataRecordRemoving,
+        IDataRecordManagerRefresh,
         IChangeDatabase,
         IToolbarQuery,
         IContextMenuQuery,
@@ -234,6 +236,22 @@ namespace Invert.Core.GraphDesigner
             command.Configuration.Namespace = command.Namespace;
             command.Configuration.CodeOutputPath = command.CodePath;
             command.Configuration.Database.Commit();
+        }
+
+        public void RecordRemoving(IDataRecord record)
+        {
+            InvertApplication.SignalEvent<IDataRecordRemoving>(_ =>
+            {
+                if (_ != this) _.RecordRemoving(record);
+            }); 
+        }
+
+        public void ManagerRefreshed(IDataRecordManager manager)
+        {
+            InvertApplication.SignalEvent<IDataRecordManagerRefresh>(_ =>
+            {
+                if (_ != this) _.ManagerRefreshed(manager);
+            }); 
         }
     }
 }

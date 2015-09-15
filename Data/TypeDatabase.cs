@@ -24,7 +24,7 @@ namespace Invert.Data
         }
         public void Signal<TEventType>(Action<TEventType> perform)
         {
-            foreach (var item in Repositories)
+            foreach (var item in Repositories.ToArray())
             {
                 if (typeof (TEventType).IsAssignableFrom(item.Key))
                 {

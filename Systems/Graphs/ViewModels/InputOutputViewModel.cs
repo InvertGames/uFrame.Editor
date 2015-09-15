@@ -75,7 +75,7 @@ namespace Invert.Core.GraphDesigner
             }));
             menu.ConvertAndAdd(ReferenceItem.GetAllowed().OfType<IItem>(), _ =>
             {
-                var item = _ as IDataRecord;
+                var item = _ as IValueItem;
                 if (item == null) return;
                 if (IsInput)
                 {

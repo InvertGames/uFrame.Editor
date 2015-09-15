@@ -129,6 +129,11 @@ namespace Invert.Core.GraphDesigner
 
         public void CommandExecuted(ICommand command)
         {
+            if (command is SaveCommand)
+            {
+                Signal<ITaskHandler>(_ => _.BeginBackgroundTask(ValidateGraph()));
+                return;
+            }
             if (!ConstantValidation) return;
             if (command is SaveAndCompileCommand) return;
             if (ShouldRevalidate)

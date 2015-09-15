@@ -85,6 +85,19 @@ namespace Invert.Core.GraphDesigner
         public override void RecordInserted(IDataRecord record)
         {
             base.RecordInserted(record);
+            if (record.IsNear(DataObject as IDataRecord))
+            {
+                NodeViewModel.DataObjectChanged();
+            }
+        }
+
+        public override void RecordRemoved(IDataRecord record)
+        {
+            base.RecordRemoved(record);
+            if (record.IsNear(DataObject as IDataRecord))
+            {
+                NodeViewModel.DataObjectChanged();
+            }
         }
 
         //public override Func<IDiagramNodeItem, IDiagramNodeItem, bool> InputValidator

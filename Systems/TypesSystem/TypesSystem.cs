@@ -9,6 +9,7 @@ namespace Invert.Core.GraphDesigner
     public class TypesSystem : DiagramPlugin
         , IContextMenuQuery
         , IExecuteCommand<SelectTypeCommand>
+        , IQueryTypes
     {
         public override void Loaded(UFrameContainer container)
         {
@@ -56,13 +57,11 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-
+        public List<SelectionMenuItem> CachedItems = null;
         public void Execute(SelectTypeCommand command)
         {
             
             var menu = new SelectionMenu();
-            var types = GetRelatedTypes(command).ToArray();
-
             if (command.AllowNone)
             {
                 menu.AddItem(new SelectionMenuItem("", "None", () =>
@@ -71,65 +70,111 @@ namespace Invert.Core.GraphDesigner
                 }));
             }
 
-            var categories = types.Where(_=>!string.IsNullOrEmpty(_.Group)).Select(_ => _.Group).Distinct().Select(_ => new SelectionMenuCategory()
+           // var types = GetRelatedTypes(command).ToArray();
+            foreach (var item in GetRelatedTypes(command))
             {
-                Title = _
-            });
-
-            foreach (var category in categories)
-            {
-                menu.AddItem(category);
-                var category1 = category;
-                foreach (var type in types.Where(_=>_.Group == category1.Title))
+                var type1 = item;
+                if (command.Filter == null || command.Filter(item))
                 {
-                    var type1 = type;
-                    menu.AddItem(new SelectionMenuItem(type, () =>
+                    menu.AddItem(new SelectionMenuItem(item, () =>
                     {
-                        command.ItemViewModel.RelatedType = type1.Name;
-                    }),category);
+                        var record = type1 as IDataRecord;
+                        if (record != null)
+                        {
+                            command.ItemViewModel.RelatedType = record.Identifier;
+                        }
+                        else
+                        {
+                            command.ItemViewModel.RelatedType = type1.TypeName;
+                        }
+                    }));
                 }
+                
             }
+            //if (command.AllowNone)
+            //{
+            //    menu.AddItem(new SelectionMenuItem("", "None", () =>
+            //    {
+            //        command.ItemViewModel.RelatedType = null;
+            //    }));
+            //}
 
-            foreach (var source in types.Where(_=>string.IsNullOrEmpty(_.Group)))
-            {
-                var type1 = source;
-                menu.AddItem(new SelectionMenuItem(type1, () =>
-                {
-                    command.ItemViewModel.RelatedType = type1.Name;
-                }));
-            }
+            //var categories = types.Where(_=>!string.IsNullOrEmpty(_.Group)).Select(_ => _.Group).Distinct().Select(_ => new SelectionMenuCategory()
+            //{
+            //    Title = _
+            //});
+
+            //foreach (var category in categories)
+            //{
+            //    menu.AddItem(category);
+            //    var category1 = category;
+            //    foreach (var type in types.Where(_=>_.Group == category1.Title))
+            //    {
+            //        var type1 = type;
+                    
+            //        menu.AddItem(new SelectionMenuItem(type, () =>
+            //        {
+            //            var record = type1 as IDataRecord;
+            //            if (record != null)
+            //            {
+            //                command.ItemViewModel.RelatedType = record.Identifier;
+            //            }
+            //            else
+            //            {
+            //                command.ItemViewModel.RelatedType = type.TypeName;
+            //            }
+                       
+            //        }),category);
+            //    }
+            //}
+
+            //foreach (var source in types.Where(_=>string.IsNullOrEmpty(_.Group)))
+            //{
+            //    var type1 = source;
+            //    menu.AddItem(new SelectionMenuItem(type1, () =>
+            //    {
+            //        var record = type1 as IDataRecord;
+            //        if (record != null)
+            //        {
+            //            command.ItemViewModel.RelatedType = record.Identifier;
+            //        }
+            //        else
+            //        {
+            //            command.ItemViewModel.RelatedType = type1.TypeName;
+            //        }
+            //    }));
+            //}
 
             Signal<IShowSelectionMenu>(_=>_.ShowSelectionMenu(menu));
 //
 //
 //            InvertGraphEditor.WindowManager.InitItemWindow(types.ToArray(),,command.AllowNone);
         }
-        public virtual IEnumerable<GraphTypeInfo> GetRelatedTypes(SelectTypeCommand command)
+        public virtual IEnumerable<ITypeInfo> GetRelatedTypes(SelectTypeCommand command)
         {
             if (command.AllowNone)
             {
-                yield return new GraphTypeInfo() { Name = null, Group = "", Label = "[ None ]" };
+                yield return new SystemTypeInfo(typeof(void));
             }
-            if (command.IncludePrimitives)
-            {
-                var itemTypes = InvertGraphEditor.TypesContainer.ResolveAll<GraphTypeInfo>();
-                foreach (var elementItemType in itemTypes)
-                {
-                    yield return elementItemType;
-                }
-            }
-            foreach (var item in command.AdditionalTypes)
-            {
-                yield return item;
-            }
-  
-            if (command.PrimitiveOnly) yield break;
 
-            foreach (var item in Repository.AllOf<IClassTypeNode>())
+            var queriedTypes = new List<ITypeInfo>();
+            Signal<IQueryTypes>(_=>_.QueryTypes(queriedTypes));
+
+            foreach (var item in queriedTypes)
+                yield return item;
+        }
+
+        public void QueryTypes(List<ITypeInfo> typeInfo)
+        {
+            foreach (var item in Repository.AllOf<IClassTypeNode>().OfType<ITypeInfo>())
             {
-                if (item.Graph != null)
-                yield return new GraphTypeInfo() { Name = item.Identifier, Group = item.Graph.Name, Label = item.Name };
+                typeInfo.Add(item);
             }
         }
+    }
+
+    public interface IQueryTypes
+    {
+        void QueryTypes(List<ITypeInfo> typeInfo);
     }
 }

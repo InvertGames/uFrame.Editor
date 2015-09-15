@@ -384,6 +384,7 @@ namespace Invert.Core.GraphDesigner
                                 ConnectorA = output,
                                 ConnectorB = input,
                                 Color = strategy.ConnectionColor,
+                                DataObject = output.DataObject, 
                                 Remove = (a) =>
                                 {
                                     //a.Remove(a);
@@ -415,6 +416,7 @@ namespace Invert.Core.GraphDesigner
                     ConnectorA = endConnector,
                     ConnectorB = startConnector,
                     Color = startConnector.Color,
+                    DataObject = connection,
                     Remove = (a) =>
                     {
                         GraphData.RemoveConnection(a.ConnectorB.DataObject as IConnectable, a.ConnectorA.DataObject as IConnectable);

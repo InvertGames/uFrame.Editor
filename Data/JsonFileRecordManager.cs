@@ -14,12 +14,45 @@ namespace Invert.Data
         private HashSet<string> _removed;
 
         public string RootPath { get; set; }
-
+        private bool _isCommiting = false;
         public void Initialize(IRepository repository)
         {
             Repository = repository;
-          
+           // Watcher = new FileSystemWatcher(DirectoryInfo.FullName, "*.json");
+         //   Watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+         //| NotifyFilters.FileName | NotifyFilters.DirectoryName | ;
+            //Watcher.EnableRaisingEvents = true;
+            //Watcher.Changed += (sender, args) =>
+            //{
+            //    if (!_isCommiting)
+            //    {
+            //        _cached = null;
+            //        _loadedCached = false;
+            //        Repository.Signal<IDataRecordManagerRefresh>(_ => _.ManagerRefreshed(this));
+            //    }
+            //};
+            //Watcher.Created += (sender, args) =>
+            //{
+            //    if (!_isCommiting)
+            //    {
+            //        _cached = null;
+            //        _loadedCached = false;
+            //        Repository.Signal<IDataRecordManagerRefresh>(_=>_.ManagerRefreshed(this));
+            //    }
+            //};
+            
+            //Watcher.Deleted += (sender, args) =>
+            //{
+            //    if (!_isCommiting)
+            //    {
+            //        _cached = null;
+            //        _loadedCached = false;
+            //        Repository.Signal<IDataRecordManagerRefresh>(_=>_.ManagerRefreshed(this));
+            //    }
+            //};
         }
+
+        public FileSystemWatcher Watcher { get; set; }
 
         public Type For { get; set; }
 
@@ -112,6 +145,7 @@ namespace Invert.Data
 
         public void Commit()
         {
+            _isCommiting = true;
             if (!DirectoryInfo.Exists)
             {
                 DirectoryInfo.Create();
@@ -121,7 +155,8 @@ namespace Invert.Data
                 var filename = Path.Combine(RecordsPath, item.Key + ".json");
                 if (Removed.Contains(item.Key))
                 {
-                    File.Delete(filename);
+                    if (File.Exists(filename))
+                        File.Delete(filename);
                 }
                 else
                 {
@@ -130,13 +165,15 @@ namespace Invert.Data
                         var json = InvertJsonExtensions.SerializeObject(item.Value);
                         File.WriteAllText(filename, json.ToString(true));
                     }
-                    item.Value.Changed = false;
+                    item.Value.Changed = false; 
                 }
             }
+            _isCommiting = false;
         }
 
         public void Remove(IDataRecord item)
         {
+            Repository.Signal<IDataRecordRemoving>(_ => _.RecordRemoving(item));
             Removed.Add(item.Identifier);
             Repository.Signal<IDataRecordRemoved>(_ => _.RecordRemoved(item));
         }
