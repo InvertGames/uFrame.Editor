@@ -199,7 +199,7 @@ namespace Invert.Core.GraphDesigner
                 if (modalItems.Any())
                 {
                     var modalBackgroundRect = new Rect().Cover(breadCrumbsRect, tabsRect, diagramRect);
-                    var modalContentRect = new Rect().WithSize(800, 600).CenterInsideOf(modalBackgroundRect);
+                    var modalContentRect = new Rect().WithSize(800, 500).CenterInsideOf(modalBackgroundRect);
                     var activeModal = modalItems.OrderBy(i => i.ZIndex).Last();
 
                     Drawer.DisableInput();
@@ -464,7 +464,10 @@ namespace Invert.Core.GraphDesigner
         public void RecordInserted(IDataRecord record)
         {
             if (DiagramDrawer == null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
-
+            if (record is FilterStackItem || record is WorkspaceGraph || record is FilterItem)
+            {
+                refresh = true;
+            }
             DiagramViewModel.RecordInserted(record);
             //if (record is IDiagramNodeItem)
             //{
@@ -477,6 +480,12 @@ namespace Invert.Core.GraphDesigner
         public void RecordRemoved(IDataRecord record)
         {
             if (DiagramDrawer == null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
+
+            if (record is FilterStackItem || record is WorkspaceGraph)
+            {
+                refresh = true;
+            }
+
             DiagramViewModel.RecordRemoved(record);
             
            
@@ -495,7 +504,7 @@ namespace Invert.Core.GraphDesigner
         {
             if (DiagramDrawer ==null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
             DiagramViewModel.PropertyChanged(record, name, previousValue, nextValue);
-            if (record is Workspace || record is InvertGraph)
+            if (record is Workspace || record is InvertGraph || record is FilterStackItem)
             {
                 refresh = true;
                 return;

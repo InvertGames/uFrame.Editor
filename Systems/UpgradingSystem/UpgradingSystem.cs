@@ -20,12 +20,12 @@ namespace Invert.Core.GraphDesigner
 
         public void QueryToolbarCommands(ToolbarUI ui)
         {
-            ui.AddCommand(new ToolbarItem()
-            {
-                Command = new Import16Command(),
-                Position = ToolbarPosition.BottomRight,
-                Title = "Upgrade 1.6 Graph"
-            });
+            //ui.AddCommand(new ToolbarItem()
+            //{
+            //    Command = new Import16Command(),
+            //    Position = ToolbarPosition.BottomRight,
+            //    Title = "Upgrade 1.6 Graph"
+            //});
         }
         public IRepository Repository { get; set; }
 

@@ -232,7 +232,7 @@ namespace Invert.Core.GraphDesigner
 
             DrawBeforeBackground(platform,boxRect);
 
-            
+ 
             
             platform.DrawStretchBox(boxRect, CachedStyles.NodeBackground, 18);
 
@@ -288,7 +288,7 @@ namespace Invert.Core.GraphDesigner
             {
                 platform.DrawStretchBox(boxRect, CachedStyles.BoxHighlighter5, 20);
             }
-
+    
             if ( ViewModel.Issues != null)
             {
                 for (int index = 0; index < ViewModel.Issues.Length; index++)

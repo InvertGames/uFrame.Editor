@@ -202,7 +202,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
 
         public override decimal LoadPriority
         {
-            get { return 100; }
+            get { return 1000; }
         }
 
         public void QueryToolbarCommands(ToolbarUI ui)
@@ -211,7 +211,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             if (WorkspaceService.Workspaces.Count() < 8)
             {
                 ui.AddCommand(new ToolbarItem()
-                {
+                { 
                     Command = new LambdaCommand("Workspaces", () => EnableWizard = true),
                     Title = "Workspace:",
                     Description = "Click to manage your workspaces."

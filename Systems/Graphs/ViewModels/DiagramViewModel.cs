@@ -801,6 +801,11 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordInserted(IDataRecord record)
         {
+            if (record is ConnectionData)
+            {
+                RefreshConnectors();
+                return;
+            }
             //if (record == GraphData)
             //{
             //    Load(true);

@@ -65,12 +65,12 @@ public class GraphSystem : DiagramPlugin
         //    Order = -1
         //});
 
-        ui.AddCommand(new ToolbarItem()
-        {
-            Title = "Import Graph",
-            Position = ToolbarPosition.BottomRight,
-            Command = new AddGraphToWorkspace()
-        });
+        //ui.AddCommand(new ToolbarItem()
+        //{
+        //    Title = "Import Graph",
+        //    Position = ToolbarPosition.BottomRight,
+        //    Command = new AddGraphToWorkspace()
+        //});
     }
 
     public void Execute(CreateGraphMenuCommand command)

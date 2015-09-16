@@ -7,6 +7,8 @@ using Invert.Core.GraphDesigner;
 using Invert.Core.GraphDesigner.Systems;
 using Invert.Core.GraphDesigner.Systems.GraphUI;
 using Invert.Core.GraphDesigner.Systems.GraphUI.api;
+using Invert.Data;
+using Invert.IOC;
 using UnityEngine;
 
 namespace Assets.UnderConstruction.Editor
@@ -55,20 +57,21 @@ namespace Assets.UnderConstruction.Editor
                     ZIndex = 1,
                     Drawer = (rect) =>
                     {
-                        try
-                        {
+                    //    try
+                    //    {
                             DrawGraphManagementWizard(rect);
-                        }
-                        catch (Exception ex)
-                        {
-                            EnableGraphManagementhWizard = false;
-                            Debug.LogError(ex);
-                        }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                      //      EnableGraphManagementhWizard = false;
+                    //        Debug.LogError(ex);
+                        //}
                     }
                 });
             }
         }
-
+        [Inject]
+        public IRepository Repository { get; set; }
         private void DrawGraphManagementWizard(Rect obj)
         {
             var listRect = obj.RightHalf().PadSides(2);
@@ -77,7 +80,9 @@ namespace Assets.UnderConstruction.Editor
 
             var actions = new List<ActionItem>();
             Signal<IQueryGraphsActions>(_=>_.QueryGraphsAction(actions));
-            DrawGraphsList(listRect,WorkspaceService.CurrentWorkspace.Graphs.ToList());
+
+            DrawGraphsList(listRect, Repository.AllOf<IGraphData>().ToList());
+     
             Signal<IDrawActionsPanel>(_=>_.DrawActionsPanel(PlatformDrawer,actionRect,actions, (i, m) =>
             {
                 SelectedAction = i;
@@ -111,7 +116,7 @@ namespace Assets.UnderConstruction.Editor
              
             PlatformDrawer.DrawLabel(headerRect, string.Format("{0} Graphs", WorkspaceService.CurrentWorkspace.Title), CachedStyles.WizardSubBoxTitleStyle, DrawingAlignment.TopCenter);
 
-            var unpaddedItemRect = bounds.Below(headerRect).WithHeight(100);
+            var unpaddedItemRect = bounds.Below(headerRect).WithHeight(50);
 
             var databasesListItems = items.ToArray();
          
@@ -120,17 +125,19 @@ namespace Assets.UnderConstruction.Editor
             
             _scrollPos = GUI.BeginScrollView(position, _scrollPos, usedRect);
 
-            foreach (var db in databasesListItems)
+            foreach (var db in databasesListItems.OrderBy(p=>p.Name))
             {
 
-
+                var db1 = db;
                 PlatformDrawer.DrawStretchBox(unpaddedItemRect,CachedStyles.WizardListItemBoxStyle,2);
                 PlatformDrawer.DoButton(unpaddedItemRect.TopHalf(),"",CachedStyles.ClearItemStyle, () =>
                 {
-                    Execute(new NavigateToNodeCommand()
+                    Execute(new LambdaCommand("Open Graph", () =>
                     {
-                        Node = db.RootFilter as IDiagramNode
-                    });
+                        WorkspaceService.CurrentWorkspace.AddGraph(db1);
+                        WorkspaceService.CurrentWorkspace.CurrentGraphId = db1.Identifier;
+                        EnableGraphManagementhWizard = false;
+                    }));
                 });
                 
                 var itemRect = unpaddedItemRect.PadSides(15);
@@ -153,14 +160,15 @@ namespace Assets.UnderConstruction.Editor
 
                     Execute(new LambdaCommand("Open Graph", () =>
                     {
-                        WorkspaceService.CurrentWorkspace.CurrentGraphId = db.Identifier;
+                        WorkspaceService.CurrentWorkspace.AddGraph(db1);
+                        WorkspaceService.CurrentWorkspace.CurrentGraphId = db1.Identifier;
                         EnableGraphManagementhWizard = false;
                     }));
                     //DatabaseListWindow.Init(new Vector2(Screen.currentResolution.width / 2 - 200, Screen.currentResolution.height/2- 300));
 
                 });
                 //PlatformDrawer.DoButton(configButton, "Config", ElementDesignerStyles.ButtonStyle, () => { /* CONFIG DATABASE */ });
-                PlatformDrawer.DoButton(deleteButton, "Delete", ElementDesignerStyles.ButtonStyle, () => { /* SHOW DATABASE IN EXPLORER */ });
+                //PlatformDrawer.DoButton(deleteButton, "Delete", ElementDesignerStyles.ButtonStyle, () => { /* SHOW DATABASE IN EXPLORER */ });
                 //PlatformDrawer.DoButton(exportButton, "Export", ElementDesignerStyles.ButtonStyle, () => { /* SHOW DATABASE IN EXPLORER */ });
 
                 unpaddedItemRect = unpaddedItemRect.Below(unpaddedItemRect).Translate(0,1);
@@ -173,6 +181,7 @@ namespace Assets.UnderConstruction.Editor
         {
 
             var config = WorkspaceService.CurrentConfiguration;
+            if (config == null) return;
             foreach (var item in config.GraphTypes)
             {
                 items.Add(new ActionItem()

@@ -60,7 +60,7 @@ namespace Invert.Core.GraphDesigner.Unity
             {
                 if (_sectionTitleColor == null)
                 {
-                    return (_sectionTitleColor = GetColorPref("_sectionTitleColor", new Color(0.35f, 0.35f, 0.35f))).Value;
+                    return (_sectionTitleColor = GetColorPref("_sectionTitleColor", new Color(0.78f, 0.78f, 0.78f))).Value;
                 }
                 return _sectionTitleColor.Value;
             }

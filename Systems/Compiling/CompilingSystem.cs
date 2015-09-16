@@ -9,6 +9,7 @@ namespace Invert.Core.GraphDesigner
 {
     public class CompilingSystem : DiagramPlugin
         , IToolbarQuery
+        , IContextMenuQuery
         , IExecuteCommand<SaveAndCompileCommand>
        
     {
@@ -128,6 +129,27 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-      
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        {
+            var node = obj as DiagramNodeViewModel;
+            if (node != null)
+            {
+                var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
+                var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, new [] {node.DataObject as IDataRecord}).ToArray();
+                foreach (var file in fileGenerators)
+                {
+                    var file1 = file;
+                    ui.AddCommand(new ContextMenuItem()
+                    {
+                        Title = "Open " + Path.GetFileName(file.AssetPath),
+                        Command = new LambdaCommand("Open File", () =>
+                        {
+                            InvertApplication.Log(file1.AssetPath);
+                            InvertGraphEditor.Platform.OpenScriptFile(file1.AssetPath);
+                        })
+                    });
+                }
+            }
+        }
     }
 }

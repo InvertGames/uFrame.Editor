@@ -31,7 +31,8 @@ namespace Invert.Core.GraphDesigner {
                 if (item == graph.RootFilter) continue;
                 graph.PushFilter(item);
             }
-            nodeCommand.Node.IsSelected = true;
+            if (nodeCommand.Select)
+                nodeCommand.Node.IsSelected = true;
         }
 
         public override void Loaded(UFrameContainer container)

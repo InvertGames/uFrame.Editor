@@ -78,9 +78,13 @@ namespace Invert.Core.GraphDesigner
 
         public void AddGraph(IGraphData data)
         {
-            var workspaceGraph = Repository.Create<WorkspaceGraph>();
-            workspaceGraph.GraphId = data.Identifier;
-            workspaceGraph.WorkspaceId = Identifier;
+            if (Graphs.All(p => p.Identifier != data.Identifier))
+            {
+                var workspaceGraph = Repository.Create<WorkspaceGraph>();
+                workspaceGraph.GraphId = data.Identifier;
+                workspaceGraph.WorkspaceId = Identifier;
+            }
+            
 
         }
 

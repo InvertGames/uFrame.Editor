@@ -14,6 +14,7 @@ namespace Invert.Core.GraphDesigner
         //ICommandProgressEvent,
         IExecuteCommand<ValidateDatabaseCommand>,
         IDataRecordInserted,
+        IDataRecordRemoved,
         ICommandExecuted,
         IQueryErrors
     {
@@ -171,5 +172,13 @@ namespace Invert.Core.GraphDesigner
         }
 
         public bool ShouldRevalidate { get; set; }
+        public void RecordRemoved(IDataRecord record)
+        {
+            var node = record as IDiagramNode;
+            if (node != null)
+            {
+                ErrorNodes.Remove(node);
+            }
+        }
     }
 }

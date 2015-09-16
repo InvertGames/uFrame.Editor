@@ -5,7 +5,11 @@ namespace Invert.Core.GraphDesigner
 {
     public class RepoService : DiagramPlugin
     {
-        public IRepository Repository { get; set; }
+        
+        public IRepository Repository
+        {
+            get { return Container.Resolve<IRepository>(); }
+        }
 
         public override void Initialize(UFrameContainer container)
         {
@@ -16,7 +20,6 @@ namespace Invert.Core.GraphDesigner
         public override void Loaded(UFrameContainer container)
         {
             base.Loaded(container);
-            Repository = container.Resolve<IRepository>();
         }
     }
 }

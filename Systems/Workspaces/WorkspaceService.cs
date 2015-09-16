@@ -52,11 +52,17 @@ namespace Invert.Core.GraphDesigner
 
         }
 
+        public override decimal LoadPriority
+        {
+            get { return -5;  }
+        }
+
         public WorkspaceConfiguration CurrentConfiguration
         {
             get
             {
                 if (Configurations == null || CurrentWorkspace == null) return null;
+                if (!Configurations.ContainsKey(CurrentWorkspace.GetType())) return null;
                 return Configurations[CurrentWorkspace.GetType()];
             }
         }
@@ -87,8 +93,10 @@ namespace Invert.Core.GraphDesigner
         public void Execute(OpenWorkspaceCommand command)
         {
             if (command.Workspace == CurrentWorkspace) return;
+            if (command.Workspace == null) return;
+
             CurrentWorkspace = command.Workspace;
-            InvertGraphEditor.Prefs.SetString("LastLoadedWorkspace", command.Workspace.Identifier);
+             InvertGraphEditor.Prefs.SetString("LastLoadedWorkspace", command.Workspace.Identifier);
             Signal<IWorkspaceChanged>(_ => _.WorkspaceChanged(CurrentWorkspace));
         }
 
