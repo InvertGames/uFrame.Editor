@@ -28,9 +28,10 @@ namespace Invert.Core.GraphDesigner
             }
             if (item == null) return;
             
-            var cd = Repository.Create<ConnectionData>();
+            var cd = new ConnectionData();
             cd.InputIdentifier = Identifier;
             cd.OutputIdentifier = item.Identifier;
+            Repository.Add(cd);
         }
         public virtual void SetOutput(IValueItem item)
         {
@@ -47,9 +48,10 @@ namespace Invert.Core.GraphDesigner
             }
 
 
-            var cd = Repository.Create<ConnectionData>();
+            var cd = new ConnectionData();
             cd.InputIdentifier = item.Identifier;
             cd.OutputIdentifier = Identifier;
+            Repository.Add(cd);
         }
         public virtual IEnumerable<IValueItem> GetAllowed()
         {

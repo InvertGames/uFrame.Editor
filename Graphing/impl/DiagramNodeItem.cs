@@ -66,9 +66,10 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
             {
                 if (f == null)
                 {
-                    f = Repository.Create<FlagItem>();
+                    f = new FlagItem();
                     f.ParentIdentifier = this.Identifier;
                     f.Name = flag;
+                    Repository.Add(f);
                 }
             }
         }

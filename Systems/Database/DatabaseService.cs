@@ -116,9 +116,13 @@ namespace Invert.Core.GraphDesigner
 
             if (config == null)
             {
-                config = db.Create<uFrameDatabaseConfig>();
-                config.CodeOutputPath = "Code";
-                config.Namespace = title;
+                config = new uFrameDatabaseConfig
+                {
+                    CodeOutputPath = "Code",
+                    Namespace = title
+                };
+
+                db.Add(config);
                 db.Commit();
             }
             config.Database = db;

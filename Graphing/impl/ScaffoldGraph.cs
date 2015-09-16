@@ -29,6 +29,7 @@ public class ScaffoldGraph : InvertGraph
         var item = Repository.Create<TNodeItem>();
         item.Name = name;
         item.Node = CurrentNode;
+        
         if (type != null)
         {
             var typedItem = item as ITypedItem;

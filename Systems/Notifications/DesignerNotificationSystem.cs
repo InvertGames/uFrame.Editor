@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Invert.Core.GraphDesigner.Unity.Notifications
 {
 
-    public class DesignerNotificationSystem : DiagramPlugin, INotify, IDesignerWindowEvents
+    public class DesignerNotificationSystem : DiagramPlugin, INotify, IDesignerWindowEvents, IToolbarQuery
     {
         private List<NotificationItem> _items;
         private IStyleProvider _styleProvider;
@@ -112,8 +112,6 @@ namespace Invert.Core.GraphDesigner.Unity.Notifications
             foreach (var item in Items.ToArray())
             {
 
-                
-
                 var unpaddedItemRect = firstUnpaddedItemRect.AboveAll(firstUnpaddedItemRect, item.Index);
 
                 if (item.TimeLeft > item.Time - 400)
@@ -130,6 +128,12 @@ namespace Invert.Core.GraphDesigner.Unity.Notifications
                         continue;
                     }
                     item.AnimatedX = Mathf.Lerp(400, 0, item.TimeLeft/400);
+                }
+
+
+                if (!item.RequireClose)
+                {
+                    item.TimeLeft -= _deltaTime;
                 }
                 //else item.AnimatedX = 0;
                 
@@ -196,7 +200,22 @@ namespace Invert.Core.GraphDesigner.Unity.Notifications
             public bool RequireClose { get; set; }
             public NotifyActionItem[] Actions { get; set; }
         }
-    
+
+        public void QueryToolbarCommands(ToolbarUI ui)
+        {
+            ui.AddCommand(new ToolbarItem()
+            {
+                Title = "Test",
+                Command = new LambdaCommand("Test5", () =>
+                {
+                    Signal<INotify>(_ => _.NotifyWithActions("Hohoho", NotificationIcon.Info,new NotifyActionItem()
+                    {
+                        Title = "Do",
+                        Action = () => { }
+                    }));
+                })
+            });
+        }
     }
 
     

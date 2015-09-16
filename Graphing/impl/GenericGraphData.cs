@@ -15,9 +15,10 @@ public class GenericGraphData<T> : InvertGraph where T : IGraphFilter, new()
             
         };
         Repository.Add(filterItem);
-        var item = Repository.Create<FilterItem>();
+        var item = new FilterItem();
         item.NodeId = filterItem.Identifier;
         item.FilterId = filterItem.Identifier;
+        Repository.Add(item);
         return filterItem;
     }
 }

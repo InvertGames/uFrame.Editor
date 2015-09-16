@@ -130,7 +130,8 @@ namespace Invert.Core.GraphDesigner
                 var filterId = item.Key;
                 foreach (KeyValuePair<string, JSONNode> positionItem in item.Value.AsObject)
                 {
-                    var filterItem = Repository.Create<FilterItem>();
+                    
+                    var filterItem = new FilterItem();
                     filterItem.FilterId = filterId;
                     filterItem.NodeId = positionItem.Key;
 
@@ -139,6 +140,8 @@ namespace Invert.Core.GraphDesigner
                     InvertApplication.Log("Importing position ");
                     filterItem.Position = new Vector2(x, y);
                     filterItem.Collapsed = true;
+
+                    Repository.Add(filterItem);
                 }
 
 

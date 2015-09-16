@@ -98,11 +98,13 @@ namespace Invert.Core.GraphDesigner
             }
             else
             {
-                var selectedItem = Repository.Create<TValue>();
+
+
+                var selectedItem = new TValue();
                 selectedItem.NodeId = this.NodeId;
                 selectedItem.ItemId = this.Identifier;
                 selectedItem.ValueId = item.Identifier;
-
+                Repository.Add(selectedItem);
             }
             
         }

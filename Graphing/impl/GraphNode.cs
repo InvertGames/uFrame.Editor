@@ -237,9 +237,10 @@ namespace Invert.Core.GraphDesigner
                 {
                     if (f == null)
                     {
-                        f = Repository.Create<FlagItem>();
+                        f = new FlagItem();
                         f.ParentIdentifier = this.Identifier;
                         f.Name = flag;
+                        Repository.Add(f);
                     }
                 }
             }
@@ -515,9 +516,10 @@ namespace Invert.Core.GraphDesigner
                 }
                 if (!found && FilterExtensions.AllowedFilterNodes.ContainsKey(GetType()))
                 {
-                    var filterItem = Repository.Create<FilterItem>();
+                    var filterItem = new FilterItem();
                     filterItem.FilterId = Identifier;
                     filterItem.NodeId = Identifier;
+                    Repository.Add(filterItem);
                     yield return filterItem;
                 }
             }

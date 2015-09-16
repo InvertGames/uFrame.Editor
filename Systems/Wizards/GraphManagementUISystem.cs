@@ -81,7 +81,10 @@ namespace Assets.UnderConstruction.Editor
             var actions = new List<ActionItem>();
             Signal<IQueryGraphsActions>(_=>_.QueryGraphsAction(actions));
 
-            DrawGraphsList(listRect, Repository.AllOf<IGraphData>().ToList());
+            DrawGraphsList(listRect, Repository.AllOf<IGraphData>()
+                .OrderBy(_ => WorkspaceService.CurrentWorkspace != null && !WorkspaceService.CurrentWorkspace.Graphs.Contains(_))
+                .ThenBy(_=>_.Name)
+                .ToList());
      
             Signal<IDrawActionsPanel>(_=>_.DrawActionsPanel(PlatformDrawer,actionRect,actions, (i, m) =>
             {
@@ -125,11 +128,18 @@ namespace Assets.UnderConstruction.Editor
             
             _scrollPos = GUI.BeginScrollView(position, _scrollPos, usedRect);
 
-            foreach (var db in databasesListItems.OrderBy(p=>p.Name))
+            foreach (var db in databasesListItems)
             {
 
                 var db1 = db;
+                var isGraphInWorkspace = WorkspaceService.CurrentWorkspace != null && WorkspaceService.CurrentWorkspace.Graphs.Contains(db1);
+                var cColor = GUI.color;
+                var mColor = new Color(cColor.r, cColor.g, cColor.b, 0.3f);
+                if (!isGraphInWorkspace) GUI.color = mColor;
+
                 PlatformDrawer.DrawStretchBox(unpaddedItemRect,CachedStyles.WizardListItemBoxStyle,2);
+               
+                if(isGraphInWorkspace)
                 PlatformDrawer.DoButton(unpaddedItemRect.TopHalf(),"",CachedStyles.ClearItemStyle, () =>
                 {
                     Execute(new LambdaCommand("Open Graph", () =>
@@ -149,15 +159,17 @@ namespace Assets.UnderConstruction.Editor
                 //(PlatformDrawer as UnityDrawer).DrawInfo(infoRect, string.Format("Namespace: {0}\nPath: {1}", db.GraphConfiguration.Namespace ?? "-", db.GraphConfiguration.FullPath));
 
 
-                var openButton = new Rect().WithSize(80,25).InnerAlignWithBottomRight(itemRect);
+                var openButton = new Rect().WithSize(80,25).InnerAlignWithBottomRight(itemRect).AlignHorisonallyByCenter(itemRect);
                 var configButton = openButton.LeftOf(openButton).Translate(-2,0);
                 var exportButton = openButton.LeftOf(configButton).Translate(-2, 0);
                 var deleteButton = openButton.LeftOf(exportButton).Translate(-2, 0);
 
-                PlatformDrawer.DoButton(openButton,"Open",ElementDesignerStyles.ButtonStyle, () =>
-                {
-                    /* OPEN DATABASE */
 
+                GUI.color = cColor;
+                PlatformDrawer.DoButton(openButton,isGraphInWorkspace ? "Open" : "Import" , ElementDesignerStyles.ButtonStyle, () =>
+                {
+                    
+                    /* OPEN DATABASE */
                     Execute(new LambdaCommand("Open Graph", () =>
                     {
                         WorkspaceService.CurrentWorkspace.AddGraph(db1);
@@ -170,7 +182,7 @@ namespace Assets.UnderConstruction.Editor
                 //PlatformDrawer.DoButton(configButton, "Config", ElementDesignerStyles.ButtonStyle, () => { /* CONFIG DATABASE */ });
                 //PlatformDrawer.DoButton(deleteButton, "Delete", ElementDesignerStyles.ButtonStyle, () => { /* SHOW DATABASE IN EXPLORER */ });
                 //PlatformDrawer.DoButton(exportButton, "Export", ElementDesignerStyles.ButtonStyle, () => { /* SHOW DATABASE IN EXPLORER */ });
-
+               
                 unpaddedItemRect = unpaddedItemRect.Below(unpaddedItemRect).Translate(0,1);
 
             }

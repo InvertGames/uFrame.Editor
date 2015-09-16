@@ -153,13 +153,14 @@ namespace Invert.Core.GraphDesigner
         public override void RecordInserted(IDataRecord record)
         {
             base.RecordInserted(record);
-            var nodeItem = record as IDiagramNodeItem;
-            if (nodeItem != null && nodeItem.NodeId == this.GraphItemObject.NodeId)
+            var nodeItem = DataObject as IDiagramNode;
+            if (nodeItem != null)
             {
-
-                DataObjectChanged();
-                return;
-
+                if (record.IsNear(nodeItem))
+                {
+                    DataObjectChanged();
+                    return;
+                }
             }
             foreach (var item in ContentItems)
             {
@@ -174,6 +175,16 @@ namespace Invert.Core.GraphDesigner
         public override void RecordRemoved(IDataRecord record)
         {
             base.RecordRemoved(record);
+
+            var nodeItem = DataObject as IDiagramNode;
+            if (nodeItem != null)
+            {
+                if (record.IsNear(nodeItem))
+                {
+                    DataObjectChanged();
+                    return;
+                }
+            }
             foreach (var item in ContentItems)
             {
                 if (record.IsNear(item.DataObject as IDataRecord))

@@ -112,12 +112,15 @@ namespace Invert.Core.GraphDesigner
 
         public void PushFilter(IGraphFilter filter)
         {
-            var filterStack = Repository.Create<FilterStackItem>();
+            var filterStack = new FilterStackItem();
             filterStack.GraphId = this.Identifier;
             filterStack.FilterId = filter.Identifier;
             filterStack.Index = FilterStack.Count();
+
+            Repository.Add(filterStack);
             // Reset the lazy filter stack
             _filterStack = null;
+
 
         }
 
@@ -514,9 +517,10 @@ namespace Invert.Core.GraphDesigner
             if (output == null) throw new ArgumentNullException("output");
             if (input == null) throw new ArgumentNullException("input");
 
-            var connect = Repository.Create<ConnectionData>();
+            var connect = new ConnectionData();
             connect.OutputIdentifier = output;
             connect.InputIdentifier = input;
+            Repository.Add(connect);
         }
 
         /// <summary>
