@@ -111,8 +111,8 @@ namespace Invert.Core.GraphDesigner
                         size.height = rect.y + rect.height;
                     }
                 }
-                size.height += 400f;
-                size.width += 400f;
+                size.height += ((float)Screen.height/2);
+                size.width += ((float)Screen.width / 2);
 #if UNITY_EDITOR
                 if (size.height < Screen.height)
                 {
@@ -297,7 +297,7 @@ namespace Invert.Core.GraphDesigner
             IsLoading = false;
             RefreshConnectors();
             //AddConnectors(connectors);
-            
+            InvertApplication.SignalEvent<IGraphLoaded>(_=>_.GraphLoaded());
             yield break;
         }
         public InspectorViewModel InspectorViewModel
@@ -897,5 +897,10 @@ namespace Invert.Core.GraphDesigner
                 item.PropertyChanged(record, name, previousValue, nextValue);
             }
         }
+    }
+
+    public interface IGraphLoaded
+    {
+        void GraphLoaded();
     }
 }

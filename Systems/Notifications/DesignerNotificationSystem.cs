@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Invert.Core.GraphDesigner.Unity.Notifications
 {
 
-    public class DesignerNotificationSystem : DiagramPlugin, INotify, IDesignerWindowEvents, IToolbarQuery
+    public class DesignerNotificationSystem : DiagramPlugin, INotify, IDesignerWindowEvents
     {
         private List<NotificationItem> _items;
         private IStyleProvider _styleProvider;
@@ -201,21 +201,7 @@ namespace Invert.Core.GraphDesigner.Unity.Notifications
             public NotifyActionItem[] Actions { get; set; }
         }
 
-        public void QueryToolbarCommands(ToolbarUI ui)
-        {
-            ui.AddCommand(new ToolbarItem()
-            {
-                Title = "Test",
-                Command = new LambdaCommand("Test5", () =>
-                {
-                    Signal<INotify>(_ => _.NotifyWithActions("Hohoho", NotificationIcon.Info,new NotifyActionItem()
-                    {
-                        Title = "Do",
-                        Action = () => { }
-                    }));
-                })
-            });
-        }
+      
     }
 
     

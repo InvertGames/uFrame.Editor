@@ -29,7 +29,7 @@ namespace Invert.Core.GraphDesigner.Unity.Wizards
             var headerRect = bounds.WithHeight(40);
             var iconRect = bounds.WithSize(41, 41);
             
-            var descriptionRect = headerRect.Below(headerRect).WithHeight(descriptionHeight);
+            var descriptionRect = headerRect.Below(headerRect).Translate(0,-22).WithHeight(descriptionHeight);
             var inspectorRect = bounds.Below(descriptionRect).Clip(bounds);
             var executeButtonRect = new Rect()
                 .WithSize(100, 30)

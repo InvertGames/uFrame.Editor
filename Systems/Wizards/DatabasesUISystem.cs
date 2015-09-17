@@ -98,7 +98,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
 
                 Drawer.DrawLabel(titleRect,db.GraphConfiguration.Title,CachedStyles.WizardSubBoxTitleStyle,DrawingAlignment.TopLeft);
 
-                var infoRect = itemRect.Below(titleRect).WithHeight(30);
+                var infoRect = itemRect.Below(titleRect).WithHeight(50);
                 (Drawer as UnityDrawer).DrawInfo(infoRect,string.Format("Namespace: {0}\nPath: {1}",db.GraphConfiguration.Namespace ?? "-",db.GraphConfiguration.FullPath));
 
 

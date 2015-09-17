@@ -3,7 +3,7 @@ using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class ErrorInfo
+    public class ErrorInfo : IItem
     {
         protected bool Equals(ErrorInfo other)
         {
@@ -25,10 +25,41 @@ namespace Invert.Core.GraphDesigner
                 return ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^ (Message != null ? Message.GetHashCode() : 0);
             }
         }
+
         public IDataRecord Record { get; set; }
         public string Identifier { get; set; }
         public string Message { get; set; }
         public Action AutoFix { get; set; }
         public ValidatorType Siverity { get; set; }
+
+        public GraphNode SourceNode
+        {
+            get
+            {
+                return Record as GraphNode;
+            }
+        }
+
+        public string Title
+        {
+            get
+            {
+                //GraphNode
+                //GenericSlot
+                string name = null;
+
+                if (SourceNode != null)
+                {
+                    var filter = SourceNode.Filter;
+                    if (filter != null)
+                    name = filter.Name ;
+                }
+                return name == null ? Message : string.Format("{0} : {1}",name,Message);
+            }
+        }
+
+        public string Group { get; private set; }
+        public string SearchTag { get; private set; }
+        public string Description { get; set; }
     }
 }

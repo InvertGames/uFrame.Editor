@@ -403,6 +403,9 @@ namespace Invert.Core.GraphDesigner.Unity
         public static bool WhiteLabels = true;
         public virtual void DrawInspector(PropertyFieldViewModel d, GUIStyle labelStyle)
         {
+            var labelWidth = 140;
+            var labelWidtho = GUILayout.Width(labelWidth);
+
             var colorCache = GUI.color;
             GUI.color = Color.white;
             if (d.InspectorType == InspectorType.GraphItems)
@@ -456,12 +459,12 @@ namespace Invert.Core.GraphDesigner.Unity
             {
                 if (d.InspectorType == InspectorType.TextArea)
                 {
-                    EditorGUILayout.LabelField(d.Name);
+                    EditorGUILayout.LabelField(d.Name,labelWidtho);
                     SetTooltipForRect(GUILayoutUtility.GetLastRect(),d.InspectorTip);
                     EditorGUI.BeginChangeCheck();
                     d.CachedValue = EditorGUILayout.TextArea((string)d.CachedValue, GUILayout.Height(50));
                     if (EditorGUI.EndChangeCheck())
-                    {
+                    { 
                         d.Setter(d.CachedValue);
                         
                     }
@@ -505,128 +508,131 @@ namespace Invert.Core.GraphDesigner.Unity
                 }
 
             }
-            else if (d.Type == typeof(int))
+            else
             {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.IntField((int)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
+                if (d.Type == typeof(int))
                 {
-                    d.Setter(d.CachedValue);
-                }
-            }
-            else if (d.Type == typeof(float))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.FloatField((float)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.IntField((int)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                    d.Setter(d.CachedValue);
-                }
-            }
-            else if (d.Type == typeof(Vector2))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.Vector2Field(string.Empty,(Vector3)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    d.Setter(d.CachedValue);
-                }
-            }
-
-            else if (d.Type == typeof(Vector3))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.Vector3Field(string.Empty ,(Vector3)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    d.Setter(d.CachedValue);
-                }
-
-            }
-            else if (d.Type == typeof(Color))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.ColorField((Color)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    d.Setter(d.CachedValue);
-                }
-
-            }
-            else if (d.Type == typeof(Vector4))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.Vector4Field(string.Empty, (Vector4)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    d.Setter(d.CachedValue);
-                }
-            }
-            else if (d.Type == typeof(bool))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.Toggle((bool)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    d.Setter(d.CachedValue);
-                }
-            }
-            else if (typeof(Enum).IsAssignableFrom(d.Type))
-            {
-                EditorGUI.BeginChangeCheck();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(d.Name, labelStyle);
-                d.CachedValue = EditorGUILayout.EnumPopup( (Enum)d.CachedValue);
-                GUILayout.EndHorizontal();
-                SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    InvertApplication.Execute(() =>
+                    if (EditorGUI.EndChangeCheck())
                     {
                         d.Setter(d.CachedValue);
-                    });
-                    
+                    }
                 }
-            }
-            else if (d.Type == typeof(Type))
-            {
-                //InvertGraphEditor.WindowManager.InitTypeListWindow();
+                else if (d.Type == typeof(float))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.FloatField((float)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        d.Setter(d.CachedValue);
+                    }
+                }
+                else if (d.Type == typeof(Vector2))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.Vector2Field(string.Empty,(Vector3)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        d.Setter(d.CachedValue);
+                    }
+                }
+
+                else if (d.Type == typeof(Vector3))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.Vector3Field(string.Empty ,(Vector3)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        d.Setter(d.CachedValue);
+                    }
+
+                }
+                else if (d.Type == typeof(Color))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.ColorField((Color)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        d.Setter(d.CachedValue);
+                    }
+
+                }
+                else if (d.Type == typeof(Vector4))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.Vector4Field(string.Empty, (Vector4)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        d.Setter(d.CachedValue);
+                    }
+                }
+                else if (d.Type == typeof(bool))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.Toggle((bool)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        d.Setter(d.CachedValue);
+                    }
+                }
+                else if (typeof(Enum).IsAssignableFrom(d.Type))
+                {
+                    EditorGUI.BeginChangeCheck();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(d.Name, labelStyle, labelWidtho);
+                    d.CachedValue = EditorGUILayout.EnumPopup( (Enum)d.CachedValue);
+                    GUILayout.EndHorizontal();
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        InvertApplication.Execute(() =>
+                        {
+                            d.Setter(d.CachedValue);
+                        });
+                    
+                    }
+                }
+                else if (d.Type == typeof(Type))
+                {
+                    //InvertGraphEditor.WindowManager.InitTypeListWindow();
+                }
             }
 
             GUI.color = colorCache;
