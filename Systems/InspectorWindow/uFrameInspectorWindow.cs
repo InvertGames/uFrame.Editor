@@ -64,10 +64,5 @@ public class uFrameIssuesWindow : EditorWindow
         GUILayout.EndArea();
 
     }
-
-    public void Update()
-    {
-        Repaint();
-    }
 }
 

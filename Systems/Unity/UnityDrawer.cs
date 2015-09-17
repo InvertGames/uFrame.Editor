@@ -220,7 +220,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public void DrawNodeHeader(Rect boxRect, object backgroundStyle, bool isCollapsed, float scale, object image)
         {
-            if(image != null) (backgroundStyle as GUIStyle).ForAllStates(image as Texture2D);
+            if(image != null) (backgroundStyle as GUIStyle).ForNormalState(image as Texture2D);
 
             Rect adjustedBounds;
             if (isCollapsed)
@@ -404,7 +404,7 @@ namespace Invert.Core.GraphDesigner.Unity
         public virtual void DrawInspector(PropertyFieldViewModel d, GUIStyle labelStyle)
         {
             var labelWidth = 140;
-            var labelWidtho = GUILayout.Width(labelWidth);
+            var labelWidtho = GUILayout.ExpandWidth(true);
 
             var colorCache = GUI.color;
             GUI.color = Color.white;

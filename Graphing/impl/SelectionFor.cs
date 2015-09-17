@@ -8,6 +8,9 @@ namespace Invert.Core.GraphDesigner
         where TValue : InputSelectionValue, new()
         where TFor : class, IValueItem
     {
+
+        private TFor _item;
+
         public override bool AllowMultipleInputs
         {
             get { return false; }
@@ -24,7 +27,7 @@ namespace Invert.Core.GraphDesigner
             {
                 //if (typeof (IConnectable).IsAssignableFrom(typeof (TFor)))
                 //{
-                return this.InputFrom<TFor>() ?? SelectedItem;
+                return _item ?? (_item = this.InputFrom<TFor>() ?? SelectedItem);
                 //}
                 return SelectedItem;
             }
@@ -81,6 +84,8 @@ namespace Invert.Core.GraphDesigner
         public override void SetInput(IValueItem item)
         {
             base.SetInput(item);
+            _item = null;
+
             if (item == null)
             {
                 if (SelectedValue != null)

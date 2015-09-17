@@ -63,7 +63,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             Signal<IDrawActionDialog>(_ => _.DrawActionDialog(Drawer, databasesActionInspectorBounds,SelectedItem,()=> SelectedItem = null));
             Signal<IDrawDatabasesList>(_ => _.DrawDatabasesList(Drawer, databasesListBounds, items));
 
-            Drawer.DoButton(closeButtonBounds, "Close", ElementDesignerStyles.ButtonStyle, () => EnableWizard = false);
+            Drawer.DoButton(closeButtonBounds, "Close", ElementDesignerStyles.DarkButtonStyle, () => EnableWizard = false);
         }
 
         public void DrawDatabasesList(IPlatformDrawer Drawer, Rect bounds, List<DatabasesListItem> items)
@@ -106,12 +106,12 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                 var configButton = openButton.LeftOf(openButton).Translate(-2,0);
                 var showButton = configButton.WithWidth(120).InnerAlignWithBottomLeft(itemRect);
 
-                Drawer.DoButton(openButton,"Open",ElementDesignerStyles.ButtonStyle, () =>
+                Drawer.DoButton(openButton, "Open", ElementDesignerStyles.DarkButtonStyle, () =>
                 {
                     Signal<IChangeDatabase>(_=>_.ChangeDatabase(db.GraphConfiguration));
                 });
                 var db1 = db;
-                Drawer.DoButton(configButton, "Config", ElementDesignerStyles.ButtonStyle, () =>
+                Drawer.DoButton(configButton, "Config", ElementDesignerStyles.DarkButtonStyle, () =>
                 {
                     SelectedItem = new ActionItem()
                     {
@@ -127,7 +127,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                         Verb = "Apply"
                     };
                 });
-                Drawer.DoButton(showButton, "Show In Explorer", ElementDesignerStyles.ButtonStyle, () =>
+                Drawer.DoButton(showButton, "Show In Explorer", ElementDesignerStyles.DarkButtonStyle, () =>
                 {
                     EditorUtility.RevealInFinder(db1.GraphConfiguration.FullPath);
                 });

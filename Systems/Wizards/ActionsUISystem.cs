@@ -52,10 +52,10 @@ namespace Invert.Core.GraphDesigner.Unity.Wizards
 
             if ( cancel != null)
             {
-                platform.DoButton(executeButtonRect.InnerAlignWithBottomLeft(bounds), "Cancel", ElementDesignerStyles.ButtonStyle, cancel);
+                platform.DoButton(executeButtonRect.InnerAlignWithBottomLeft(bounds), "Cancel", ElementDesignerStyles.DarkButtonStyle, cancel);
             }
 
-            platform.DoButton(executeButtonRect, string.IsNullOrEmpty(item.Verb) ? "Create" : item.Verb, ElementDesignerStyles.ButtonStyle, () =>
+            platform.DoButton(executeButtonRect, string.IsNullOrEmpty(item.Verb) ? "Create" : item.Verb, ElementDesignerStyles.DarkButtonStyle, () =>
             {
                 InvertApplication.Execute(item.Command);
             });

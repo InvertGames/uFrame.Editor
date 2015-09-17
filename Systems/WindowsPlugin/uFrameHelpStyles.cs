@@ -41,6 +41,12 @@ public static class uFrameHelpStyles
             = style.onActive.background = style.onHover.background = style.onFocused.background = texture;
         return style;
     }
+   
+    public static GUIStyle ForNormalState(this GUIStyle style, Texture2D texture)
+    {
+        style.normal.background =  texture;
+        return style;
+    }
 
 
     public static GUIStyle WithFont(this GUIStyle style, string fontName, int fontSize)

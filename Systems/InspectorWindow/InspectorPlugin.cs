@@ -44,10 +44,10 @@ public class InspectorPlugin : DiagramPlugin
 
     public void DrawInspector(Rect rect)
     {
-
+        var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
+      //  d.DrawStretchBox(rect, CachedStyles.WizardListItemBoxStyle, 10);     
         if (Groups == null || !Groups.Any())
         {
-                var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
                 var textRect = rect;
                 var cacheColor = GUI.color;
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.4f);
@@ -61,7 +61,6 @@ public class InspectorPlugin : DiagramPlugin
             {
                 foreach (var item in group)
                 {
-                    var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
                     d.DrawInspector(item, EditorStyles.label);
                 }
             }
@@ -82,7 +81,6 @@ public class InspectorPlugin : DiagramPlugin
                 .GroupBy(p => p.Graph.Name)
                 .OrderBy(p => p.Key).ToArray();
 
-        
     }
 
     public IGrouping<string, GenericNode>[] Items { get; set; }
