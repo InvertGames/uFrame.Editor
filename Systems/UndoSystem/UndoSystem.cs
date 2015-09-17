@@ -199,7 +199,7 @@ namespace Invert.Core.GraphDesigner
                 {
                     Title = "Undo",
                     Command = new UndoCommand(),
-                    Position = ToolbarPosition.Right,
+                    Position = ToolbarPosition.BottomRight,
                     Order = -2
                 });
             }
@@ -210,7 +210,7 @@ namespace Invert.Core.GraphDesigner
                 {
                     Title = "Redo",
                     Command = new RedoCommand(),
-                    Position = ToolbarPosition.Right,
+                    Position = ToolbarPosition.BottomRight,
                     Order = -1
 
                 });

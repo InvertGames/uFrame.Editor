@@ -27,9 +27,9 @@ namespace Invert.Core.GraphDesigner.Unity
 
         static UnityPlatformPlugin()
         {
-            InvertApplication.CachedAssemblies.Add(typeof (UnityPlatformPlugin).Assembly);
-            InvertApplication.CachedAssemblies.Add(typeof(Vector3).Assembly);
-            InvertApplication.TypeAssemblies.Add(typeof(Vector3).Assembly);
+            InvertApplication.CachedAssembly(typeof (UnityPlatformPlugin).Assembly);
+            InvertApplication.CachedAssembly(typeof(Vector3).Assembly);
+            InvertApplication.CachedTypeAssembly(typeof(Vector3).Assembly);
             InvertGraphEditor.Prefs = new UnityPlatformPreferences();
             InvertApplication.Logger = new UnityPlatform();
             InvertGraphEditor.Platform = new UnityPlatform();
