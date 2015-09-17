@@ -85,7 +85,7 @@ namespace Invert.Core.GraphDesigner
                         }
                         else
                         {
-                            command.ItemViewModel.RelatedType = type1.TypeName;
+                            command.ItemViewModel.RelatedType = type1.FullName;
                         }
                     }));
                 }

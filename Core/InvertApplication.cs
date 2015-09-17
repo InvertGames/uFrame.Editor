@@ -20,10 +20,15 @@ namespace Invert.Core
         private static ICorePlugin[] _plugins;
         private static IDebugLogger _logger;
         private static Dictionary<Type, IEventManager> _eventManagers;
+        private static List<Assembly> _typeAssemblies;
 
         public static List<Assembly> CachedAssemblies { get; set; }
-        
-        public static List<Assembly> TypeAssemblies { get; set; }
+
+        public static List<Assembly> TypeAssemblies
+        {
+            get { return _typeAssemblies ?? (_typeAssemblies = new List<Assembly>()); }
+            set { _typeAssemblies = value; }
+        }
 
         static InvertApplication()
         {
@@ -31,10 +36,10 @@ namespace Invert.Core
             {
                 typeof (int).Assembly, typeof (List<>).Assembly
             };
-            TypeAssemblies = new List<Assembly>
-            {
-                typeof (int).Assembly, typeof (List<>).Assembly
-            };
+            //TypeAssemblies = new List<Assembly>
+            //{
+            //    typeof (int).Assembly, typeof (List<>).Assembly
+            //};
             //CachedAssemblies.Add(typeof(ICollection<>).Assembly); 
             //foreach (var assembly in Assembly.GetEntryAssembly().GetReferencedAssemblies())
             //{
@@ -46,7 +51,7 @@ namespace Invert.Core
                 // Debug.WriteLine(assembly.FullName);
                 if (assembly.FullName.StartsWith("Invert"))
                 {
-                    CachedAssemblies.Add(assembly);
+                    CachedAssembly(assembly);
                 }
             }
         }
@@ -61,7 +66,7 @@ namespace Invert.Core
             {
                 var assembly = Assembly.LoadFrom(plugin);
                 assembly = AppDomain.CurrentDomain.Load(assembly.GetName());
-                InvertApplication.CachedAssemblies.Add(assembly);
+                InvertApplication.CachedAssembly(assembly);
             }
         }
         public static UFrameContainer Container
@@ -97,7 +102,7 @@ namespace Invert.Core
                 yield return type;
             if (includeAbstract)
             {
-                foreach (var assembly in CachedAssemblies.Distinct())
+                foreach (var assembly in CachedAssemblies)
                 {
                     //if (!assembly.FullName.StartsWith("Invert")) continue;
                     foreach (var t in assembly
@@ -111,7 +116,7 @@ namespace Invert.Core
             else
             {
                 var items = new List<Type>();
-                foreach (var assembly in CachedAssemblies.Distinct())
+                foreach (var assembly in CachedAssemblies)
                 {
                     //if (!assembly.FullName.StartsWith("Invert")) continue;
                     try
@@ -178,7 +183,7 @@ namespace Invert.Core
         {
             if (string.IsNullOrEmpty(name)) return null;
 
-            foreach (var assembly in TypeAssemblies)
+            foreach (var assembly in CachedAssemblies)
             {
                 try
                 {
@@ -511,6 +516,19 @@ namespace Invert.Core
             {
                 LogError(string.Format("{0} is NULL!!", s ?? "YUP it "));
             }
+        }
+
+        public static void CachedAssembly(Assembly assembly)
+        {
+            if (CachedAssemblies.Contains(assembly)) return;
+            CachedAssemblies.Add(assembly);
+        }
+
+        public static void CachedTypeAssembly(Assembly assembly)
+        {
+
+            if (TypeAssemblies.Contains(assembly)) return;
+            TypeAssemblies.Add(assembly);
         }
     }
 }

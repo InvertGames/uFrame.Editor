@@ -17,7 +17,7 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
         {
             if (string.IsNullOrEmpty(RelatedType)) return null;
 
-            return InvertApplication.FindTypeByName(RelatedType);
+            return InvertApplication.FindType(RelatedType) ?? InvertApplication.FindTypeByName(RelatedType);
         }
     }
 
@@ -103,7 +103,7 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
 
     public void RemoveType()
     {
-        this.RelatedType = typeof(string).Name;
+        this.RelatedType = typeof(string).FullName;
     }
 
 
@@ -160,7 +160,7 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
             {
                 return relatedNode;
             }
-            return new SystemTypeInfo(InvertApplication.FindTypeByName(RelatedType));
+            return new SystemTypeInfo(Type ?? InvertApplication.FindTypeByName(RelatedType));
         }
      
     }

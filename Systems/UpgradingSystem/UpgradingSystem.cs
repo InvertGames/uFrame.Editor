@@ -8,9 +8,15 @@ using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
+    public class FixTypes : Command
+    {
+        
+    }
     public class UpgradingSystem : DiagramPlugin
         , IExecuteCommand<Import16Command>
+        , IExecuteCommand<FixTypes>
         , IToolbarQuery
+        
     {
         public void Execute(Import16Command command)
         {
@@ -25,7 +31,13 @@ namespace Invert.Core.GraphDesigner
             //    Command = new Import16Command(),
             //    Position = ToolbarPosition.BottomRight,
             //    Title = "Upgrade 1.6 Graph"
-            //});
+            //}); 
+            ui.AddCommand(new ToolbarItem()
+            {
+                Command = new FixTypes(),
+                Position = ToolbarPosition.BottomRight,
+                Title = "Fix Types"
+            });
         }
         public IRepository Repository { get; set; }
 
@@ -80,6 +92,7 @@ namespace Invert.Core.GraphDesigner
                 }
                 if (result is ITypedItem)
                 {
+                    // TODO Find type and replace it will fullname
                     ((ITypedItem)result).RelatedType = node["ItemType"].Value;
                 }
 
@@ -160,5 +173,17 @@ namespace Invert.Core.GraphDesigner
             return node;
         }
 
+        public void Execute(FixTypes command)
+        {
+
+            foreach (var item in Container.Resolve<IRepository>().AllOf<GenericTypedChildItem>())
+            {
+                var type = item.Type;
+                if (type == null)
+                {
+                    InvertApplication.Log(string.Format("Couldn't find type {0}", item.RelatedType));
+                }
+            }
+        }
     }
 }

@@ -11,8 +11,13 @@ namespace Invert.Core.GraphDesigner
         , IToolbarQuery
         , IContextMenuQuery
         , IExecuteCommand<SaveAndCompileCommand>
+        , IDataRecordInserted
+        , IDataRecordRemoved
+        , IDataRecordPropertyChanged
        
     {
+        private List<IDataRecord> _changedRecrods;
+
         public ValidationSystem ValidationSystem
         {
             get { return Container.Resolve<ValidationSystem>(); }
@@ -116,6 +121,7 @@ namespace Invert.Core.GraphDesigner
                 CodeFileGenerator generator = codeFileGenerator;
                 InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
             }
+            ChangedRecrods.Clear();
             InvertApplication.SignalEvent<ICompileEvents>(_ => _.PostCompile(config, items));
 
             yield return
@@ -150,6 +156,29 @@ namespace Invert.Core.GraphDesigner
                     });
                 }
             }
+        }
+
+        public List<IDataRecord> ChangedRecrods
+        {
+            get { return _changedRecrods ?? (_changedRecrods = new List<IDataRecord>()); }
+            set { _changedRecrods = value; }
+        }
+
+        public void RecordInserted(IDataRecord record)
+        {
+            if (ChangedRecrods.Contains(record)) return;
+            ChangedRecrods.Add(record);
+        }
+
+        public void RecordRemoved(IDataRecord record)
+        {
+            ChangedRecrods.Remove(record);
+        }
+
+        public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
+        {
+            if (ChangedRecrods.Contains(record)) return;
+            ChangedRecrods.Add(record);
         }
     }
 }
