@@ -114,7 +114,7 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, ICommandEvents, I
         ShowWindow(FindPage(Pages, _ => _.Name == name));
     }
 
-    [MenuItem("uFrame/Documentation")]
+   // [MenuItem("uFrame/Documentation")]
     public static void ShowWindow()
     {
         var window = GetWindow<uFrameHelp>();

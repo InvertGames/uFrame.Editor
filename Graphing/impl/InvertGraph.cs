@@ -30,6 +30,7 @@ namespace Invert.Core.GraphDesigner
         private string _rootFilterId;
         private bool _expanded;
         private uFrameDatabaseConfig _config;
+        private bool _isDirty;
 
         //#if !UNITY_EDITOR
         //    public FileInfo GraphFileInfo { get; set; }
@@ -108,6 +109,13 @@ namespace Invert.Core.GraphDesigner
                   );
             }
             set { _filterStack = value; }
+        }
+
+        [JsonProperty]
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set { this.Changed("IsDirty", ref _isDirty, value); }
         }
 
         public void PushFilter(IGraphFilter filter)

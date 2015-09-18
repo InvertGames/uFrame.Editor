@@ -59,7 +59,7 @@ namespace Invert.Core.GraphDesigner
                     SpecializedIcon = null,
 
                     //State = DesignerWindow.Designer.CurrentTab.Graph == tab ? NavigationItemState.Current : NavigationItemState.Regular,
-                    Title = tab.Title,
+                    Title = tab.Title + (tab.IsDirty ? "*" : string.Empty),
                     NavigationAction = x =>
                     {
                         InvertApplication.Execute(new LambdaCommand("Change Current Graph", () =>

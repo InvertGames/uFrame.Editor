@@ -87,6 +87,7 @@ public class UnityGraphData: ScriptableObject, IGraphData, ISerializationCallbac
     }
 
     public IGraphFilter[] FilterStack { get; set; }
+    public bool IsDirty { get; set; }
 
     public IEnumerable<IGraphItem> AllGraphItems
     {

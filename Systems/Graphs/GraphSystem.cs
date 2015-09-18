@@ -11,6 +11,10 @@ public class GraphSystem : DiagramPlugin
     , IExecuteCommand<CreateGraphMenuCommand>
     , IExecuteCommand<CreateGraphCommand>
     , IExecuteCommand<AddGraphToWorkspace>
+    , IDataRecordInserted
+    , IDataRecordRemoved,
+    IDataRecordPropertyChanged
+    , ICommandExecuted
 {
     public override void Loaded(UFrameContainer container)
     {
@@ -105,4 +109,47 @@ public class GraphSystem : DiagramPlugin
         workspaceService.CurrentWorkspace.CurrentGraphId = graph.Identifier;
        
     }
+
+    public void RecordInserted(IDataRecord record)
+    {
+        if (record is WorkspaceGraph || record is FilterStackItem || record is FilterItem || record is Workspace || record is UndoItem || record is RedoItem) return;
+        if (WorkspaceService != null && WorkspaceService.CurrentWorkspace != null &&
+            WorkspaceService.CurrentWorkspace.CurrentGraph != null)
+        {
+            
+            WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
+            //InvertApplication.Log(record.GetType().Name);
+        }
+    }
+
+    public void RecordRemoved(IDataRecord record)
+    {
+        if (record is WorkspaceGraph || record is FilterStackItem || record is FilterItem || record is Workspace || record is UndoItem || record is RedoItem) return;
+        if (WorkspaceService != null && WorkspaceService.CurrentWorkspace != null &&
+            WorkspaceService.CurrentWorkspace.CurrentGraph != null)
+        {
+
+            WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
+            //InvertApplication.Log(record.GetType().Name);
+        }
+    }
+
+    public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
+    {
+        if (name == "IsDirty") return;
+        if (record is WorkspaceGraph || record is FilterStackItem || record is FilterItem || record is Workspace || record is UndoItem || record is RedoItem) return;
+        if (WorkspaceService != null && WorkspaceService.CurrentWorkspace != null &&
+            WorkspaceService.CurrentWorkspace.CurrentGraph != null)
+        {
+            if (record == WorkspaceService.CurrentWorkspace.CurrentGraph) return;
+            WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
+            //InvertApplication.Log(name + " " + record.GetType().Name);
+        }
+    }
+
+    public void CommandExecuted(ICommand command)
+    {
+        
+    }
+
 }
