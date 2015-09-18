@@ -110,6 +110,9 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                 {
                     Signal<IChangeDatabase>(_=>_.ChangeDatabase(db.GraphConfiguration));
                 });
+
+                Drawer.SetTooltipForRect(openButton,"Open this database.");
+
                 var db1 = db;
                 Drawer.DoButton(configButton, "Config", ElementDesignerStyles.DarkButtonStyle, () =>
                 {

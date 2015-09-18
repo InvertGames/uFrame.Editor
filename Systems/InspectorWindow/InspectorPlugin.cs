@@ -55,15 +55,32 @@ public class InspectorPlugin : DiagramPlugin
                 GUI.color = cacheColor;
                 return;
         }
+
+
+        var groupRect = rect.WithHeight(30);
+
         foreach (var group in Groups)
         {
-            if (GUIHelpers.DoToolbarEx(group.Key))
+
+            if (GUIHelpers.DoToolbarEx(group.Key, groupRect))
             {
+                var itemRect = rect.WithHeight(17).Below(groupRect);
+
                 foreach (var item in group)
                 {
-                    d.DrawInspector(item, EditorStyles.label);
+                    if (item.InspectorType == InspectorType.GraphItems) itemRect = itemRect.WithHeight(30);
+                    d.DrawInspector(itemRect, item, EditorStyles.label);
+                    itemRect = itemRect.Below(itemRect).WithHeight(17);
                 }
+
+                groupRect = groupRect.Below(itemRect.Above(itemRect));
+
             }
+            else
+            {
+                groupRect = groupRect.Below(groupRect);
+            }
+
         }
 
        

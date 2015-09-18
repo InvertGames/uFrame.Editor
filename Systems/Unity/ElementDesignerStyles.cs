@@ -136,6 +136,13 @@ namespace Invert.Common
         private static GUIStyle _searchBarText;
         private static GUIStyle _listItemTitleStyle;
         private static GUIStyle _darkButtonStyle;
+        private static GUIStyle _darkInspectorLabel;
+
+        public static GUIStyle DarkInspectorLabel
+        {
+            get { return _darkInspectorLabel ?? (_darkInspectorLabel = new GUIStyle(EditorStyles.label)).WithAllStates(Color.white); }
+            set { _darkInspectorLabel = value; }
+        }
 
         public static GUIStyle AddButtonStyle
         {

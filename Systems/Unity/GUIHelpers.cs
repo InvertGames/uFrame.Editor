@@ -109,14 +109,29 @@ namespace Invert.Common.UI
             bool fullWidth = true, Color? textColor = null)
         {
             var rect = GetRect(open ? ElementDesignerStyles.ToolbarStyle : ElementDesignerStyles.ToolbarStyleCollapsed, GUIHelpers.IsInsepctor);
+            return DoToolbar(label, open, rect, add, leftButton, paste, addButtonStyle, pasteButtonStyle, fullWidth, textColor);
+        }
+
+        public static bool DoToolbar(string label,
+           bool open, 
+           Rect forceRect,
+           Action add = null,
+           Action leftButton = null,
+           Action paste = null,
+           GUIStyle addButtonStyle = null,
+           GUIStyle pasteButtonStyle = null,
+           bool fullWidth = true, Color? textColor = null)
+        {
+            var rect = forceRect;
             GUI.Box(rect, "", open ? ElementDesignerStyles.ToolbarStyle : ElementDesignerStyles.ToolbarStyleCollapsed);
             var labelStyle = new GUIStyle(EditorStyles.label)
             {
-                normal = new GUIStyleState() {textColor = textColor ?? ElementDesignerStyles.ToolbarStyle.normal.textColor },
+                normal = new GUIStyleState() { textColor = textColor ?? ElementDesignerStyles.ToolbarStyle.normal.textColor },
                 alignment = TextAnchor.MiddleLeft,
                 fontStyle = FontStyle.Bold,
                 fontSize = 11
             };
+
             var labelRect = new Rect(rect.x + 2, rect.y + (rect.height / 2) - 8, rect.width - (add != null ? 50 : 0), 16);
             var result = open;
             if (leftButton == null)
@@ -175,6 +190,23 @@ namespace Invert.Common.UI
             }
             return EditorPrefs.GetBool(label);
         }
+
+        public static bool DoToolbarEx(string label,Rect rect, Action add = null, Action leftButton = null, Action paste = null, Action clicked = null, bool defOn = true, Color? color = null)
+        {
+            if (!EditorPrefs.HasKey(label))
+            {
+                EditorPrefs.SetBool(label, defOn);
+            }
+            var tBar = DoToolbar(label, EditorPrefs.GetBool(label, true), rect, add, leftButton, paste, null, null, true, color);
+            if (tBar)
+            {
+                if (clicked != null)
+                    clicked();
+                EditorPrefs.SetBool(label, !EditorPrefs.GetBool(label));
+            }
+            return EditorPrefs.GetBool(label);
+        }
+
 
         public static void DoArray<TType>(string label, IEnumerable<TType> items, Action<TType> removeItem, Action add) where TType : IItem
         {

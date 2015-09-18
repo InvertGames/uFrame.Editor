@@ -191,6 +191,10 @@ namespace Invert.Core.GraphDesigner
         public static Rect AddHeight(this Rect source, int height)
         {
             return new Rect(source.x, source.y, source.width, source.height + height);
+        }      
+        public static Rect AddWidth(this Rect source, int width)
+        {
+            return new Rect(source.x, source.y, source.width + width, source.height);
         }
 
 

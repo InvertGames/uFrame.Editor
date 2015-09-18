@@ -26,6 +26,12 @@ namespace Invert.Core.GraphDesigner
             InspectorTip = tip;
         }
 
+        public InspectorProperty(string tip, InspectorType inspectorType)
+        {
+            InspectorType = inspectorType;
+            InspectorTip = tip;
+        }        
+        
         public InspectorProperty(InspectorType inspectorType)
         {
             InspectorType = inspectorType;

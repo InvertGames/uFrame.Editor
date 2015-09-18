@@ -77,8 +77,10 @@ namespace Invert.Core.GraphDesigner
             }
             else
             {
-
-                platform.DrawPropertyField(this.ViewModel, scale);
+                platform.DrawPropertyField(
+                    ViewModel.InspectorType == InspectorType.GraphItems
+                        ? Bounds.WithHeight(30).CenterInsideOf(Bounds)
+                        : Bounds.WithHeight(17).CenterInsideOf(Bounds), this.ViewModel, scale);
             }
         }
 
