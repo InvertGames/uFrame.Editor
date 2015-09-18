@@ -4,7 +4,7 @@ using Invert.Json;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class uFrameDatabaseConfig : IDataRecord, IGraphConfiguration
+    public class uFrameDatabaseConfig : IDataRecord, IGraphConfiguration, IAlwaysGenerate
     {
         private string _codeOutputPath;
         private string _ns;

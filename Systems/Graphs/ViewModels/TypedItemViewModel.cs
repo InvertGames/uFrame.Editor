@@ -13,6 +13,13 @@ namespace Invert.Core.GraphDesigner
         {"Double","double"},
         {"Single","float"},
         {"String","string"},
+        {"System.Int32","int"},
+        {"System.Boolean","bool"},
+        {"System.Char","char"},
+        {"System.Decimal","decimal"},
+        {"System.Double","double"},
+        {"System.Single","float"},
+        {"System.String","string"},
     };
         public static string TypeAlias(string typeName)
         {
@@ -39,16 +46,25 @@ namespace Invert.Core.GraphDesigner
             set { base.IsEditable = value; }
         }
 
+        public IMemberInfo MemberInfo
+        {
+            get { return Data as IMemberInfo; }
+        }
         public virtual string RelatedType
         {
             get
             {
-                var typeName = TypeAlias(Data.RelatedTypeName);
-                if (string.IsNullOrEmpty(typeName))
+                if (MemberInfo != null)
                 {
-                    return "[void]";
+                    var typeName = TypeAlias(MemberInfo.MemberType.TypeName);
+                    if (string.IsNullOrEmpty(typeName))
+                    {
+                        return "[void]";
+                    }
+                    return typeName;
                 }
-                return typeName;//ElementDataBase.TypeAlias(Data.RelatedType);
+               
+                return Data.RelatedTypeName;//ElementDataBase.TypeAlias(Data.RelatedType);
             }
             set
             {

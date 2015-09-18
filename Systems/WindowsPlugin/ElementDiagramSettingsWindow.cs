@@ -93,10 +93,10 @@ public class ElementDiagramSettingsWindow : EditorWindow
             s.SnapSize = Math.Max(1, EditorGUILayout.IntField("Snap Size", s.SnapSize));
             s.Snap = EditorGUILayout.Toggle("Snap",s.Snap);
          
-            var pathStrategies =
-                InvertApplication.Container.Mappings.Where(p => p.From == typeof (ICodePathStrategy)).ToArray();
-            var names = pathStrategies.Select(p => p.Name).ToArray();
-            var selected = Array.IndexOf(names, s.CodePathStrategyName);
+            //var pathStrategies = 
+            //    InvertApplication.Container.Mappings.Where(p => p.Key.Item1 == typeof (ICodePathStrategy)).ToArray();
+            //var names = pathStrategies.Select(p => p.Name).ToArray();
+            //var selected = Array.IndexOf(names, s.CodePathStrategyName);
             //var types = pathStrategies.Select(p => p.to);
             //EditorGUI.BeginChangeCheck();
             //var newIndex = EditorGUILayout.Popup("Generator Path Strategy", Math.Max(0, selected), names);

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 public class SystemFieldMemberInfo : IMemberInfo
@@ -17,5 +20,9 @@ public class SystemFieldMemberInfo : IMemberInfo
         {
             return new SystemTypeInfo(FieldInfo.FieldType);
         }
+    }
+    public IEnumerable<Attribute> GetAttributes()
+    {
+       return FieldInfo.GetCustomAttributes(true).OfType<Attribute>();
     }
 }

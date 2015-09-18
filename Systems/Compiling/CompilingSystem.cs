@@ -7,6 +7,10 @@ using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
 {
+    public interface IAlwaysGenerate : IDataRecord
+    {
+        
+    }
     public class CompilingSystem : DiagramPlugin
         , IToolbarQuery
         , IContextMenuQuery
@@ -36,12 +40,37 @@ namespace Invert.Core.GraphDesigner
 
         public void Execute(SaveAndCompileCommand command)
         {
-            InvertApplication.SignalEvent<ITaskHandler>(_ => { _.BeginTask(Generate()); });
+            InvertApplication.SignalEvent<ITaskHandler>(_ => { _.BeginTask(Generate(command)); });
         }
 
-        public IEnumerable<IDataRecord> GetItems(IRepository repository)
+        public IEnumerable<IDataRecord> GetItems(IRepository repository, bool getAll = false)
         {
-            return repository.AllOf<IDataRecord>();
+            if (!getAll)
+            {
+                foreach (var item in repository.AllOf<IAlwaysGenerate>())
+                {
+                    yield return item;
+                }
+
+                foreach (var item in repository.AllOf<IGraphData>().Where(p => p.IsDirty))
+                {
+                    yield return item;
+                    foreach (var child in item.AllGraphItems)
+                    {
+                        yield return child;
+                    }
+                }
+            }
+            else
+            {
+
+                foreach (var item in repository.AllOf<IDataRecord>())
+                {
+                    yield return item;
+                }
+            }
+          
+
             //yield return repository.AllOf<uFrameDatabaseConfig>().FirstOrDefault();
             //var workspaceSvc = InvertApplication.Container.Resolve<WorkspaceService>();
             //foreach (var workspace in workspaceSvc.Workspaces)
@@ -62,26 +91,26 @@ namespace Invert.Core.GraphDesigner
             //}
         }
 
-        public IEnumerator Generate()
+        public IEnumerator Generate(SaveAndCompileCommand command)
         {
-            var a = ValidationSystem.ValidateDatabase();
+           
+
+            var repository = InvertGraphEditor.Container.Resolve<IRepository>();
+            repository.Commit();
+            var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
+            var items = GetItems(repository, command.ForceCompileAll).Distinct().ToArray();
+            yield return 
+                new TaskProgress(0f, "Validating");
+            var a = ValidationSystem.ValidateNodes(items.OfType<IDiagramNode>().ToArray());
             while (a.MoveNext())
             {
                 yield return a.Current;
             }
             if (ValidationSystem.ErrorNodes.Count > 0)
             {
-                Signal<INotify>(_=>_.Notify("Please fix all issues before compiling.",NotificationIcon.Error));
+                Signal<INotify>(_ => _.Notify("Please fix all issues before compiling.", NotificationIcon.Error));
                 yield break;
             }
-
-            var repository = InvertGraphEditor.Container.Resolve<IRepository>();
-            repository.Commit();
-            var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
-            var items = GetItems(repository).Distinct().ToArray();
-            yield return 
-                new TaskProgress(0f, "Refactoring");
-
             // Grab all the file generators
             var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items).ToArray();
             var length = 100f / (fileGenerators.Length + 1);
@@ -123,7 +152,10 @@ namespace Invert.Core.GraphDesigner
             }
             ChangedRecrods.Clear();
             InvertApplication.SignalEvent<ICompileEvents>(_ => _.PostCompile(config, items));
-
+            foreach (var item in items.OfType<IGraphData>())
+            {
+                item.IsDirty = false;
+            }
             yield return
                 new TaskProgress(100f, "Complete");
 

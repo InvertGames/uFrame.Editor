@@ -180,5 +180,17 @@ namespace Invert.Core.GraphDesigner
                 ErrorNodes.Remove(node);
             }
         }
+
+        public IEnumerator ValidateNodes(IDiagramNode[] items)
+        {
+     
+            var total = 100f / items.Length;
+            for (int index = 0; index < items.Length; index++)
+            {
+                var item = items[index];
+                yield return new TaskProgress("Validating " + item.Name, index * total);
+                ValidateNode(item);
+            }
+        }
     }
 }

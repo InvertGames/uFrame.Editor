@@ -502,7 +502,13 @@ namespace Invert.Core.GraphDesigner
 
         public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
+            
             if (DiagramDrawer ==null || DiagramDrawer.DiagramViewModel == null || DiagramDrawer.DiagramViewModel.IsLoading) return;
+            if (name == "IsDirty")
+            {
+                DiagramViewModel.NavigationViewModel.Refresh();
+                return;
+            }
             DiagramViewModel.PropertyChanged(record, name, previousValue, nextValue);
             if (record is Workspace || record is InvertGraph || record is FilterStackItem)
             {

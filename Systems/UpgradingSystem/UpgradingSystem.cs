@@ -4,6 +4,7 @@ using System.Linq;
 using Invert.Core.GraphDesigner.Unity;
 using Invert.Data;
 using Invert.Json;
+using Invert.uFrame.ECS;
 using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
@@ -176,13 +177,9 @@ namespace Invert.Core.GraphDesigner
         public void Execute(FixTypes command)
         {
 
-            foreach (var item in Container.Resolve<IRepository>().AllOf<GenericTypedChildItem>())
+            foreach (var item in Container.Resolve<IRepository>().AllOf<SequenceItemNode>())
             {
-                var type = item.Type;
-                if (type == null)
-                {
-                    InvertApplication.Log(string.Format("Couldn't find type {0}", item.RelatedType));
-                }
+                item.VariableName = item.VariableNameProvider.GetNewVariableName(item.GetType().Name);
             }
         }
     }

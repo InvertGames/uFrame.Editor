@@ -484,7 +484,7 @@ namespace Invert.Core.GraphDesigner
             {
                 Node = this,
                 Name = name,
-                Identifier = identifier ?? this.Identifier + ":" + name,
+                Identifier = identifier == null?  this.Identifier + ":" + name : this.Identifier + ":" + identifier,
                 Repository = Repository,
             };
         }

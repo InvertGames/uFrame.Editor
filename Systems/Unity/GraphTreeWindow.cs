@@ -58,7 +58,7 @@ namespace Assets.UnderConstruction.Editor
         }
 
 
-        [MenuItem("uFrame/Graph Explorer")]
+    //    [MenuItem("uFrame/Graph Explorer")]
         public static void Init()
         {
             var window = ScriptableObject.CreateInstance<GraphTreeWindow>();

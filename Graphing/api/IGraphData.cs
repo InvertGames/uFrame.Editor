@@ -25,6 +25,7 @@ namespace Invert.Core.GraphDesigner
 
         string Directory { get;  }
         IGraphFilter[] FilterStack { get; set; }
+        bool IsDirty { get; set; }
 
 
         //IEnumerable<ConnectionData> Connections { get; }

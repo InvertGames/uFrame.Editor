@@ -43,6 +43,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public void BeginBackgroundTask(IEnumerator task)
         {
+            if (Task != null && IsModal) return;
             IsModal = false;
             Task = task;
         }

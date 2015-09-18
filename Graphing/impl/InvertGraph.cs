@@ -30,6 +30,7 @@ namespace Invert.Core.GraphDesigner
         private string _rootFilterId;
         private bool _expanded;
         private uFrameDatabaseConfig _config;
+        private bool _isDirty;
 
         //#if !UNITY_EDITOR
         //    public FileInfo GraphFileInfo { get; set; }
@@ -110,6 +111,13 @@ namespace Invert.Core.GraphDesigner
             set { _filterStack = value; }
         }
 
+        [JsonProperty]
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set { this.Changed("IsDirty", ref _isDirty, value); }
+        }
+
         public void PushFilter(IGraphFilter filter)
         {
             var filterStack = new FilterStackItem();
@@ -145,7 +153,6 @@ namespace Invert.Core.GraphDesigner
                 {
                     if (item != filter1)
                     {
-                        InvertApplication.Log(string.Format("Removing filter {0}", item.Name));
                         var item1 = item;
                         Repository.RemoveAll<FilterStackItem>(p => p.GraphId == this.Identifier && p.FilterId == item1.Identifier);
                     }
@@ -386,7 +393,7 @@ namespace Invert.Core.GraphDesigner
             {
                 return Config.Namespace;
             }
-            set { }
+            set { Config.Namespace = value; }
         }
 
         public bool Errors

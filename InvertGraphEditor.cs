@@ -222,27 +222,27 @@ namespace Invert.Core.GraphDesigner
             Settings = Container.Resolve<IGraphEditorSettings>();
             AssetManager = Container.Resolve<IAssetManager>();
             OrganizeFilters();
-            var commandKeyBindings = new List<IKeyBinding>();
-            foreach (var item in Container.Instances)
-            {
-                if (typeof(IEditorCommand).IsAssignableFrom(item.Base))
-                {
-                    if (item.Instance != null)
-                    {
-                        var command = item.Instance as IEditorCommand;
-                        if (command != null)
-                        {
-                            var keyBinding = command.GetKeyBinding();
-                            if (keyBinding != null)
-                                commandKeyBindings.Add(keyBinding);
-                        }
-                    }
-                }
-            }
+            //var commandKeyBindings = new List<IKeyBinding>();
+            //foreach (var item in Container.Instances)
+            //{
+            //    if (typeof(IEditorCommand).IsAssignableFrom(item.Key))
+            //    {
+            //        if (item.Instance != null)
+            //        {
+            //            var command = item.Instance as IEditorCommand;
+            //            if (command != null)
+            //            {
+            //                var keyBinding = command.GetKeyBinding();
+            //                if (keyBinding != null)
+            //                    commandKeyBindings.Add(keyBinding);
+            //            }
+            //        }
+            //    }
+            //}
 
             ConnectionStrategies = Container.ResolveAll<IConnectionStrategy>().ToArray();
 
-            KeyBindings = Container.ResolveAll<IKeyBinding>().Concat(commandKeyBindings).ToArray();
+            KeyBindings = Container.ResolveAll<IKeyBinding>().ToArray();
         }
 
         //public static void ExecuteCommand(IEditorCommand action)
@@ -469,13 +469,13 @@ namespace Invert.Core.GraphDesigner
         public static IEnumerable<Type> GetAllowedFilterItems(Type filterType)
         {
             return Container.RelationshipMappings.Where(
-                p => p.From == filterType && p.To == typeof(IDiagramNodeItem)).Select(p => p.Concrete);
+                p => p.Key.Item1 == filterType && p.Key.Item2 == typeof(IDiagramNodeItem)).Select(p => p.Value);
         }
 
         public static IEnumerable<Type> GetAllowedFilterNodes(Type filterType)
         {
             return Container.RelationshipMappings.Where(
-                p => p.From == filterType && p.To == typeof(IDiagramNode)).Select(p => p.Concrete);
+                p => p.Key.Item1 == filterType && p.Key.Item2 == typeof(IDiagramNode)).Select(p => p.Value);
         }
 
         public static IEnumerable<IEditorCommand> GetContextCommandsFor<T>()
@@ -497,26 +497,26 @@ namespace Invert.Core.GraphDesigner
         public static void OrganizeFilters()
         {
             var filterTypes = Container.RelationshipMappings.Where(
-               p => typeof(IGraphFilter).IsAssignableFrom(p.From) && p.To == typeof(IDiagramNode));
+               p => typeof(IGraphFilter).IsAssignableFrom(p.Key.Item1) && p.Key.Item2 == typeof(IDiagramNode));
             var filterTypeItems = Container.RelationshipMappings.Where(
-                p => typeof(IGraphFilter).IsAssignableFrom(p.From) && p.To == typeof(IDiagramNodeItem));
+                p => typeof(IGraphFilter).IsAssignableFrom(p.Key.Item1) && p.Key.Item2 == typeof(IDiagramNodeItem));
 
             foreach (var filterMapping in filterTypes)
             {
-                if (!FilterExtensions.AllowedFilterNodes.ContainsKey(filterMapping.From))
+                if (!FilterExtensions.AllowedFilterNodes.ContainsKey(filterMapping.Key.Item1))
                 {
-                    FilterExtensions.AllowedFilterNodes.Add(filterMapping.From, new List<Type>());
+                    FilterExtensions.AllowedFilterNodes.Add(filterMapping.Key.Item1, new List<Type>());
                 }
-                FilterExtensions.AllowedFilterNodes[filterMapping.From].Add(filterMapping.Concrete);
+                FilterExtensions.AllowedFilterNodes[filterMapping.Key.Item1].Add(filterMapping.Value);
             }
 
             foreach (var filterMapping in filterTypeItems)
             {
-                if (!FilterExtensions.AllowedFilterItems.ContainsKey(filterMapping.From))
+                if (!FilterExtensions.AllowedFilterItems.ContainsKey(filterMapping.Key.Item1))
                 {
-                    FilterExtensions.AllowedFilterItems.Add(filterMapping.From, new List<Type>());
+                    FilterExtensions.AllowedFilterItems.Add(filterMapping.Key.Item1, new List<Type>());
                 }
-                FilterExtensions.AllowedFilterItems[filterMapping.From].Add(filterMapping.Concrete);
+                FilterExtensions.AllowedFilterItems[filterMapping.Key.Item1].Add(filterMapping.Value);
             }
         }
 

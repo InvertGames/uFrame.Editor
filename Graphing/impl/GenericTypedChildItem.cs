@@ -1,5 +1,6 @@
 using System;
 using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
@@ -11,13 +12,13 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
 {
     protected string _type = string.Empty;
 
-    public Type Type
+    public virtual Type Type
     {
         get
         {
             if (string.IsNullOrEmpty(RelatedType)) return null;
 
-            return InvertApplication.FindType(RelatedType) ?? InvertApplication.FindTypeByName(RelatedType);
+            return InvertApplication.FindType(RelatedType) ?? InvertApplication.FindTypeByName(RelatedType) ;
         }
     }
 
@@ -39,7 +40,7 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
 
     public virtual string DefaultTypeName
     {
-        get { return string.Empty; }
+        get { return typeof(string).FullName; }
     }
 
     public virtual string RelatedTypeName
@@ -57,7 +58,7 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
             if (relatedNode != null)
                 return relatedNode.Name;
 
-            return string.IsNullOrEmpty(RelatedType) ? DefaultTypeName : RelatedType;
+            return string.IsNullOrEmpty(RelatedType) ? DefaultTypeName : Type.Name;
         }
     }
 
@@ -163,5 +164,10 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
             return new SystemTypeInfo(Type ?? InvertApplication.FindTypeByName(RelatedType));
         }
      
+    }
+
+    public virtual IEnumerable<Attribute> GetAttributes()
+    {
+        yield break;
     }
 }

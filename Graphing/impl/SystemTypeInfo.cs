@@ -6,8 +6,14 @@ using System.Reflection;
 
 public class SystemTypeInfo : ITypeInfo
 {
+    private Type _systemType;
 
-    public Type SystemType { get; set; }
+    public Type SystemType
+    {
+        get { return _systemType ?? typeof(void); }
+        set { _systemType = value; }
+    }
+
     public ITypeInfo Other { get; set; }
     public SystemTypeInfo(Type systemType)
     {
@@ -50,7 +56,7 @@ public class SystemTypeInfo : ITypeInfo
         get { return SystemType.Name; }
     }
 
-    public string FullName
+    public virtual string FullName
     {
         get { return SystemType.FullName; }
     }
@@ -104,7 +110,7 @@ public class SystemTypeInfo : ITypeInfo
         return info.FullName == FullName;
     }
 
-    public string Title { get { return TypeName; } }
+    public virtual string Title { get { return TypeName; } }
     public string Group { get { return Namespace; } }
     public string SearchTag { get { return FullName; } }
     public string Description { get; set; }
