@@ -145,7 +145,6 @@ namespace Invert.Core.GraphDesigner
                 {
                     if (item != filter1)
                     {
-                        InvertApplication.Log(string.Format("Removing filter {0}", item.Name));
                         var item1 = item;
                         Repository.RemoveAll<FilterStackItem>(p => p.GraphId == this.Identifier && p.FilterId == item1.Identifier);
                     }

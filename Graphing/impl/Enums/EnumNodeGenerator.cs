@@ -2,11 +2,11 @@ using System.CodeDom;
 using Invert.Core.GraphDesigner;
 
 [TemplateClass(TemplateLocation.DesignerFile)]
-public class EnumNodeGenerator : IClassTemplate<EnumNode>
+public class EnumNodeGenerator : IClassTemplate<EnumNode>, ITemplateCustomFilename
 {
     public string OutputPath
     {
-        get { return Path2.Combine(Ctx.Data.Graph.Name, "Enums"); }
+        get { return Path2.Combine("Enums"); }
     }
 
     public bool CanGenerate
@@ -25,4 +25,5 @@ public class EnumNodeGenerator : IClassTemplate<EnumNode>
     }
 
     public TemplateContext<EnumNode> Ctx { get; set; }
+    public string Filename { get { return Path2.Combine("Enums", Ctx.Data.Name + ".cs"); } }
 }

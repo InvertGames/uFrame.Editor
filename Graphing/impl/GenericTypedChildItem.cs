@@ -12,13 +12,13 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
 {
     protected string _type = string.Empty;
 
-    public Type Type
+    public virtual Type Type
     {
         get
         {
             if (string.IsNullOrEmpty(RelatedType)) return null;
 
-            return InvertApplication.FindType(RelatedType) ?? InvertApplication.FindTypeByName(RelatedType) ?? typeof(void);
+            return InvertApplication.FindType(RelatedType) ?? InvertApplication.FindTypeByName(RelatedType) ;
         }
     }
 

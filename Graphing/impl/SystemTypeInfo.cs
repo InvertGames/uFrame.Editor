@@ -6,8 +6,14 @@ using System.Reflection;
 
 public class SystemTypeInfo : ITypeInfo
 {
+    private Type _systemType;
 
-    public Type SystemType { get; set; }
+    public Type SystemType
+    {
+        get { return _systemType ?? typeof(void); }
+        set { _systemType = value; }
+    }
+
     public ITypeInfo Other { get; set; }
     public SystemTypeInfo(Type systemType)
     {
