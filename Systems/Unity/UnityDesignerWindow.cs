@@ -298,15 +298,15 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public void QueryToolbarCommands(ToolbarUI ui)
         {
-            ui.AddCommand(new ToolbarItem()
-            {
-                Title = "Woop Woop",
-                Command = new LambdaCommand("Woop Woop", () =>
-                {
-                    var window = EditorWindow.GetWindow<uFrameInspectorWindow>(typeof(UnityDesignerWindow));
-                    window.ShowUtility();
-                })
-            });
+            //ui.AddCommand(new ToolbarItem()
+            //{
+            //    Title = "Woop Woop",
+            //    Command = new LambdaCommand("Woop Woop", () =>
+            //    {
+            //        var window = EditorWindow.GetWindow<uFrameInspectorWindow>(typeof(UnityDesignerWindow));
+            //        window.ShowUtility();
+            //    })
+            //});
         }
 
     }
