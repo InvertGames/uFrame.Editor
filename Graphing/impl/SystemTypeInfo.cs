@@ -50,7 +50,7 @@ public class SystemTypeInfo : ITypeInfo
         get { return SystemType.Name; }
     }
 
-    public string FullName
+    public virtual string FullName
     {
         get { return SystemType.FullName; }
     }
@@ -104,7 +104,7 @@ public class SystemTypeInfo : ITypeInfo
         return info.FullName == FullName;
     }
 
-    public string Title { get { return TypeName; } }
+    public virtual string Title { get { return TypeName; } }
     public string Group { get { return Namespace; } }
     public string SearchTag { get { return FullName; } }
     public string Description { get; set; }

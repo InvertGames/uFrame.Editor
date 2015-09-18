@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 public class SystemPropertyMemberInfo : IMemberInfo
@@ -17,5 +20,10 @@ public class SystemPropertyMemberInfo : IMemberInfo
         {
             return new SystemTypeInfo(PropertyInfo.PropertyType);
         }
+    }
+
+    public IEnumerable<Attribute> GetAttributes()
+    {
+        return PropertyInfo.GetCustomAttributes(true).OfType<Attribute>();
     }
 }

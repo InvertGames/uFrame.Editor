@@ -386,7 +386,7 @@ namespace Invert.Core.GraphDesigner
             {
                 return Config.Namespace;
             }
-            set { }
+            set { Config.Namespace = value; }
         }
 
         public bool Errors

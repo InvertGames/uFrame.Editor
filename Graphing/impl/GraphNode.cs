@@ -368,7 +368,7 @@ namespace Invert.Core.GraphDesigner
         //}
         [Browsable(false)]
         public string FullLabel { get { return Name; } }
-        [InspectorProperty]
+        //[InspectorProperty]
         public virtual string FullName
         {
             get
@@ -530,12 +530,16 @@ namespace Invert.Core.GraphDesigner
             get { return true; }
         }
 
-        [InspectorProperty]
+        //[InspectorProperty]
         public virtual string Namespace
         {
             get
             {
                 return Graph.Namespace;
+            }
+            set
+            {
+                
             }
         }
 

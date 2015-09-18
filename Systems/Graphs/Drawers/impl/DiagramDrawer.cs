@@ -376,7 +376,7 @@ namespace Invert.Core.GraphDesigner
             {
                 if (mouseEvent.ModifierKeyStates.Alt)
                 {
-                    DiagramViewModel.ShowContainerDebug();
+                   // DiagramViewModel.ShowContainerDebug();
                 }
                 else
                 {
