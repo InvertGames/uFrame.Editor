@@ -10,7 +10,9 @@ namespace Invert.Core.GraphDesigner.Unity
         , IInputPanningHandler
         , IRepaintWindow
         , ICommandExecuted
-        
+        , IExecuteCommand<ScrollGraphCommand>
+        , IGraphLoaded
+        , IToolbarQuery
     {
         private DesignerWindow _designerWindow;
         private Vector2 _scrollPosition;
@@ -100,6 +102,7 @@ namespace Invert.Core.GraphDesigner.Unity
         private MouseEvent _event;
 
         private ModifierKeyState _modifierKeyStates;
+        private Vector2? _forceScrollPosition;
 
         public ModifierKeyState ModifierKeyStates
         {
@@ -273,5 +276,38 @@ namespace Invert.Core.GraphDesigner.Unity
         {
             MouseEvent = null;
         }
+
+        public void Execute(ScrollGraphCommand command)
+        {
+            //TODO MINOR: enchance logic of calculating the right scrollposition for better user experience
+            _forceScrollPosition = command.Position;
+            if (DesignerWindow != null)
+            {
+                _forceScrollPosition -= new Vector2(DesignerWindow.DiagramRect.width / 2, DesignerWindow.DiagramRect.height/ 2);
+            }
+        }
+
+        public void GraphLoaded()
+        {
+            if (_forceScrollPosition.HasValue)
+            {
+                _scrollPosition = _forceScrollPosition.Value;
+                _forceScrollPosition = null;
+            }
+        }
+
+        public void QueryToolbarCommands(ToolbarUI ui)
+        {
+            ui.AddCommand(new ToolbarItem()
+            {
+                Title = "Woop Woop",
+                Command = new LambdaCommand("Woop Woop", () =>
+                {
+                    var window = EditorWindow.GetWindow<uFrameInspectorWindow>(typeof(UnityDesignerWindow));
+                    window.ShowUtility();
+                })
+            });
+        }
+
     }
 }

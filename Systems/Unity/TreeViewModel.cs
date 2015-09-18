@@ -10,6 +10,7 @@ public class TreeViewModel
     private Func<IItem, bool> _predicate;
     private int _selectedIndex;
     private List<TreeViewItem> _treeData;
+    private string _singleItemIcon;
 
     public TreeViewModel()
     {
@@ -27,6 +28,12 @@ public class TreeViewModel
             ConstructData();
             Refresh();
         }
+    }
+
+    public string SingleItemIcon
+    {
+        get { return _singleItemIcon ?? (_singleItemIcon = "DotIcon"); }
+        set { _singleItemIcon = value; }
     }
 
     public IItem SelectedData
@@ -145,7 +152,7 @@ public class TreeViewModel
                 var data = item.Data;
                 var treeData = data as ITreeItem;
                 item.Visible = item.Parent == null || item.Parent.Visible && item.ParentData.Expanded;
-                item.Icon = treeData == null || !treeData.Children.Any() ? "DotIcon" : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                item.Icon = treeData == null || !treeData.Children.Any() ? SingleItemIcon : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
                 item.Highlighted = false;
                 item.Selected = SelectedIndex == item.Index;
                 if (data.Title == null) continue;
@@ -186,7 +193,8 @@ public class TreeViewModel
                     item.Visible = false;
                 }
 
-                item.Icon = treeData == null ? "DotIcon" : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                item.Icon = treeData == null ? SingleItemIcon : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                
                 if (data.Title == null) continue;
                 if (data.Title.Length > LargestString.Length) LargestString = data.Title;
                 if (item.Visible && item.Indent > MaxIdentLevel) MaxIdentLevel = item.Indent;

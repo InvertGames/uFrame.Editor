@@ -5,13 +5,12 @@ using UnityEngine;
 
 public class uFrameInspectorWindow : EditorWindow {
     private Vector2 _scrollPosition;
-    private Vector2 _scrollPosition2;
 
     [MenuItem("uFrame/Inspector #&i")]
     internal static void ShowWindow()
     {
         var window = GetWindow<uFrameInspectorWindow>();
-        window.title = "uFrame Inspector";
+        window.title = "Inspector";
         Instance = window;
         window.Show();
     }
@@ -21,21 +20,54 @@ public class uFrameInspectorWindow : EditorWindow {
     public void OnGUI()
     {
         Instance = this;
-        var rect = new Rect(0f, 0f, Screen.width, Screen.height);
-        var left = rect.LeftHalf();
-        var right = rect.RightHalf();
+        var rect = new Rect(0f, 0f, Screen.width, Screen.height).Pad(0,0,4,20);
 
-        GUILayout.BeginArea(left);
+        GUILayout.BeginArea(rect);
         _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
-        InvertApplication.SignalEvent<IDrawInspector>(_ => _.DrawInspector(left));
-        GUILayout.EndScrollView();
-        GUILayout.EndArea();
-
-        GUILayout.BeginArea(right);
-        _scrollPosition2 = GUILayout.BeginScrollView(_scrollPosition2);
-        InvertApplication.SignalEvent<IDrawErrorsList>(_ => _.DrawErrors(right));
+        InvertApplication.SignalEvent<IDrawInspector>(_ => _.DrawInspector(rect));
         GUILayout.EndScrollView();
         GUILayout.EndArea();
     
     }
+
+    public void Update()
+    {
+        Repaint();
+    }
+
 }
+
+public class uFrameIssuesWindow : EditorWindow
+{
+    private Vector2 _scrollPosition;
+
+    [MenuItem("uFrame/Issues #&u")]
+    internal static void ShowWindow()
+    {
+        var window = GetWindow<uFrameIssuesWindow>();
+        window.title = "Issues";
+        Instance = window;
+        window.Show();
+    }
+
+    public static uFrameIssuesWindow Instance { get; set; }
+
+    public void OnGUI()
+    {
+        Instance = this;
+        var rect = new Rect(0f, 0f, Screen.width, Screen.height);
+
+        GUILayout.BeginArea(rect);
+        _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
+        InvertApplication.SignalEvent<IDrawErrorsList>(_ => _.DrawErrors(rect));
+        GUILayout.EndScrollView();
+        GUILayout.EndArea();
+
+    }
+
+    public void Update()
+    {
+        Repaint();
+    }
+}
+

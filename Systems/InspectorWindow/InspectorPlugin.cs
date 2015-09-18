@@ -44,8 +44,17 @@ public class InspectorPlugin : DiagramPlugin
 
     public void DrawInspector(Rect rect)
     {
-     
-        if (Groups == null) return;
+
+        if (Groups == null || !Groups.Any())
+        {
+                var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
+                var textRect = rect;
+                var cacheColor = GUI.color;
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.4f);
+                d.DrawLabel(textRect, "No Items Selected", CachedStyles.WizardSubBoxTitleStyle, DrawingAlignment.MiddleCenter);
+                GUI.color = cacheColor;
+                return;
+        }
         foreach (var group in Groups)
         {
             if (GUIHelpers.DoToolbarEx(group.Key))
@@ -253,16 +262,34 @@ public class InspectorPlugin : DiagramPlugin
     }
     public void QueryToolbarCommands(ToolbarUI ui)
     {
-        var isOpen = IsWindowOpen<uFrameInspectorWindow>();
+        var isInspectorWindowOpened = IsWindowOpen<uFrameInspectorWindow>();
+        var isIssuesWindowOpened = IsWindowOpen<uFrameIssuesWindow>();
         ui.AddCommand(new ToolbarItem()
         {
-            Title = "Inspector/Issues",
-            Checked = isOpen,
+            Title = "Inspector",
+            Checked = isInspectorWindowOpened,
             Position = ToolbarPosition.BottomRight,
             Command = new LambdaCommand("Show", () =>
             {
                 var window = EditorWindow.GetWindow<uFrameInspectorWindow>();
-                if (isOpen)
+                window.title = "Inspector";
+                if (isInspectorWindowOpened)
+                {
+                    window.Close();
+                }
+            })
+        }); 
+        
+        ui.AddCommand(new ToolbarItem()
+        {
+            Title = "Issues",
+            Checked = isIssuesWindowOpened,
+            Position = ToolbarPosition.BottomRight,
+            Command = new LambdaCommand("Show", () =>
+            {
+                var window = EditorWindow.GetWindow<uFrameIssuesWindow>();
+                window.title = "Issues";
+                if (isIssuesWindowOpened)
                 {
                     window.Close();
                 }
