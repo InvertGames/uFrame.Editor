@@ -30,7 +30,7 @@ namespace Invert.Core.GraphDesigner.Unity.Wizards
 
             bounds = bounds.PadSides(15);
 
-            var descriptionHeight = string.IsNullOrEmpty(item.Description) ? 0 : platform.CalculateTextHeight(item.Description, CachedStyles.BreadcrumbTitleStyle, bounds.width) + 60;
+            var descriptionHeight = string.IsNullOrEmpty(item.Description) ? 50 : platform.CalculateTextHeight(item.Description, CachedStyles.BreadcrumbTitleStyle, bounds.width) + 60;
 
             var headerRect = bounds.WithHeight(40);
             var iconRect = bounds.WithSize(41, 41);

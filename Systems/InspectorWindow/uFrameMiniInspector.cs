@@ -31,6 +31,7 @@ namespace Invert.Core.GraphDesigner.Unity.InspectorWindow
                 fieldViewModel.InspectorType = attribute.InspectorType;
                 fieldViewModel.Type = property.PropertyType;
                 fieldViewModel.DiagramViewModel = DiagramViewModel;
+                fieldViewModel.DataObject = target;
                 fieldViewModel.CustomDrawerType = attribute.CustomDrawerType;
                 fieldViewModel.CachedValue = fieldViewModel.Getter();
                 if (!string.IsNullOrEmpty(attribute.InspectorTip)) fieldViewModel.InspectorTip = attribute.InspectorTip;
