@@ -429,7 +429,7 @@ namespace Invert.Core
 
         public static IEnumerable<KeyValuePair<PropertyInfo, TAttribute>> GetPropertiesWithAttributeByType<TAttribute>(this Type type, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance) where TAttribute : Attribute
         {
-            foreach (var source in type.GetProperties(flags))
+            foreach (var source in type.GetProperties(flags).ToArray())
             {
                 var attribute = source.GetCustomAttributes(typeof (TAttribute), true).OfType<TAttribute>().FirstOrDefault();
                 if (attribute == null) continue;

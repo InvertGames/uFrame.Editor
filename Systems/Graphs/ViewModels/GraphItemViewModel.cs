@@ -283,8 +283,9 @@ namespace Invert.Core.GraphDesigner
                     
                 };
                 fieldViewModel.Getter = () => property.GetValue(dataObject, null);
-                fieldViewModel.Setter = _ => property.SetValue(dataObject, _, null);
+                fieldViewModel.Setter = (d,v) => property.SetValue(d, v, null);
                 fieldViewModel.InspectorType = attribute.InspectorType;
+                fieldViewModel.DataObject = dataObject;
                 fieldViewModel.Type = property.PropertyType;
                 fieldViewModel.CustomDrawerType = attribute.CustomDrawerType;
                 fieldViewModel.CachedValue = fieldViewModel.Getter();

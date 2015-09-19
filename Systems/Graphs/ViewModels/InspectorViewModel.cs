@@ -63,10 +63,11 @@ namespace Invert.Core.GraphDesigner
                     InspectorType = property.Value.InspectorType,
                     CustomDrawerType = property.Value.CustomDrawerType,
                     Getter = () => property1.GetValue(data, null),
-                    Setter = (v) =>
+                    DataObject = data,
+                    Setter = (d,v) =>
                     {
 
-                        property1.SetValue(data, v, null);
+                        property1.SetValue(d, v, null);
 
                     }
                 };

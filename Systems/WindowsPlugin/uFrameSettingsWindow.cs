@@ -162,9 +162,10 @@ public class uFrameSettingsWindow : EditorWindow
                     {
                         CachedValue = property.Key.GetValue(null, null),
                         Getter = () => property1.Key.GetValue(null, null),
-                        Setter = _ =>
+                        DataObject = null,
+                        Setter = (d,v) =>
                         {
-                            property1.Key.SetValue(null, _, null);
+                            property1.Key.SetValue(null, v, null);
                             InvertApplication.Container = null;
                         },
                         Name = property.Key.Name,

@@ -17,14 +17,16 @@ namespace Invert.Core
         {
             foreach (var item in Listeners)
             {
-                obj(item);
+                var item1 = item;
+                obj(item1);
             }
         }
         public void Signal(Action<T> action)
         {
             foreach (var item in Listeners)
             {
-                action(item);
+                var item1 = item;
+                action(item1);
             }
         }
 

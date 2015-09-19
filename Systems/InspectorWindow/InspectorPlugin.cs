@@ -109,26 +109,39 @@ public class InspectorPlugin : DiagramPlugin
         if (uFrameInspectorWindow.Instance != null)
             uFrameInspectorWindow.Instance.Repaint();
     }
-    public virtual IEnumerable<PropertyFieldViewModel> GetInspectorOptions(object obj)
+    public virtual List<PropertyFieldViewModel> GetInspectorOptions(object obj)
     {
-        if (obj == null) yield break;
-        foreach (var item in obj.GetPropertiesWithAttribute<InspectorProperty>())
+        List<PropertyFieldViewModel> list = new List<PropertyFieldViewModel>();
+        if (obj == null) return list;
+        var items = obj.GetType().GetPropertiesWithAttributeByType<InspectorProperty>().ToArray();
+        for (int index = 0; index < items.Length; index++)
         {
+            var item = items[index];
+
             var property = item.Key;
             var attribute = item.Value;
+            var item1 = item;
             var fieldViewModel = new PropertyFieldViewModel()
             {
                 Name = property.Name,
             };
+
             fieldViewModel.Getter = () => property.GetValue(obj, null);
-            fieldViewModel.Setter = _ => property.SetValue(obj, _, null);
+
+            fieldViewModel.Setter = delegate(object d, object v)
+            {
+                fieldViewModel.PropertyInfo.SetValue(d, v, null);
+            };
+
+            fieldViewModel.PropertyInfo = item.Key;
             fieldViewModel.InspectorType = attribute.InspectorType;
             fieldViewModel.Type = property.PropertyType;
             fieldViewModel.DataObject = obj;
             fieldViewModel.CustomDrawerType = attribute.CustomDrawerType;
             fieldViewModel.CachedValue = fieldViewModel.Getter();
-            yield return fieldViewModel;
+            list.Add(fieldViewModel);
         }
+        return list;
     }
     private void UpdateSelection()
     {

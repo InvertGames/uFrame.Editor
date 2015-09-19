@@ -441,7 +441,7 @@ namespace Invert.Core.GraphDesigner.Unity
                         {
                             InvertApplication.Execute(() =>
                             {
-                                d.Setter(graphItem);
+                                d.Setter(d.DataObject,graphItem);
                             });
                         }));
                     }
@@ -474,7 +474,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     d.CachedValue = EditorGUILayout.TextArea((string)d.CachedValue, GUILayout.Height(50));
                     if (EditorGUI.EndChangeCheck())
                     { 
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                         
                     }
                     if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
@@ -512,7 +512,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
 
@@ -530,7 +530,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (d.Type == typeof(float))
@@ -544,7 +544,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (d.Type == typeof(Vector2))
@@ -558,7 +558,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
 
@@ -573,7 +573,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
 
                 }
@@ -588,7 +588,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
 
                 }
@@ -603,7 +603,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (d.Type == typeof(bool))
@@ -617,7 +617,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (typeof(Enum).IsAssignableFrom(d.Type))
@@ -633,7 +633,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     {
                         InvertApplication.Execute(() =>
                         {
-                            d.Setter(d.CachedValue);
+                            d.Setter(d.DataObject, d.CachedValue);
                         });
                     
                     }
@@ -681,7 +681,7 @@ var                 labelWidtho = GUILayout.Width(140);
                         {
                             InvertApplication.Execute(() =>
                             {
-                                d.Setter(graphItem);
+                                d.Setter(d.DataObject, graphItem);
                             });
                         }));
                     }
@@ -713,8 +713,8 @@ var                 labelWidtho = GUILayout.Width(140);
                     EditorGUI.BeginChangeCheck();
                     d.CachedValue = EditorGUI.TextArea(fieldArea,(string)d.CachedValue);
                     if (EditorGUI.EndChangeCheck())
-                    { 
-                        d.Setter(d.CachedValue);
+                    {
+                        d.Setter(d.DataObject, d.CachedValue);
                         
                     }
                     if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
@@ -747,7 +747,7 @@ var                 labelWidtho = GUILayout.Width(140);
                     
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
 
@@ -763,7 +763,7 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (d.Type == typeof(float))
@@ -775,7 +775,7 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (d.Type == typeof(Vector2))
@@ -787,7 +787,7 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
 
@@ -800,7 +800,7 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
 
                 }
@@ -813,7 +813,7 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
 
                 }
@@ -826,7 +826,7 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (d.Type == typeof(bool))
@@ -838,7 +838,8 @@ var                 labelWidtho = GUILayout.Width(140);
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        d.Setter(d.CachedValue);
+
+                        d.Setter(d.DataObject, d.CachedValue);
                     }
                 }
                 else if (typeof(Enum).IsAssignableFrom(d.Type))
@@ -852,7 +853,7 @@ var                 labelWidtho = GUILayout.Width(140);
                     {
                         InvertApplication.Execute(() =>
                         {
-                            d.Setter(d.CachedValue);
+                            d.Setter(d.DataObject, d.CachedValue);
                         });
                     
                     }

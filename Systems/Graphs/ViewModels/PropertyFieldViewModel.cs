@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace Invert.Core.GraphDesigner
 {
@@ -9,10 +10,11 @@ namespace Invert.Core.GraphDesigner
         public Type Type { get; set; }
         public override string Name { get; set; }
         public Func<object> Getter { get; set; }
-        public Action<object> Setter { get; set; }
+        public Action<object,object> Setter { get; set; }
         public override bool IsEditing { get; set; }
         public object CachedValue { get; set; }
         public string InspectorTip { get; set; }
+        public PropertyInfo PropertyInfo { get; set; }
 
 
         public PropertyFieldViewModel()

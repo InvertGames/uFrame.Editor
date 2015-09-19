@@ -27,7 +27,7 @@ namespace Invert.Core.GraphDesigner.Unity.InspectorWindow
                     Name = property.Name,
                 };
                 fieldViewModel.Getter = () => property.GetValue(target, null);
-                fieldViewModel.Setter = _ => property.SetValue(target, _, null);
+                fieldViewModel.Setter = (d,v) => property.SetValue(d, v, null);
                 fieldViewModel.InspectorType = attribute.InspectorType;
                 fieldViewModel.Type = property.PropertyType;
                 fieldViewModel.DiagramViewModel = DiagramViewModel;
