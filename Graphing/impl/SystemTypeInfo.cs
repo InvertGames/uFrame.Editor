@@ -26,7 +26,17 @@ public class SystemTypeInfo : ITypeInfo
         Other = other;
     }
 
-    public bool IsArray { get { return SystemType.IsArray; } }
+    public bool IsArray
+    {
+        get
+        {
+            if (Other != null)
+            {
+                return Other.IsArray;
+            }
+            return SystemType.IsArray;
+        }
+    }
 
     public bool IsList
     {
@@ -35,7 +45,14 @@ public class SystemTypeInfo : ITypeInfo
 
     public bool IsEnum
     {
-        get { return SystemType.IsEnum; }
+        get
+        {
+            if (Other != null)
+            {
+                return Other.IsEnum;
+            }
+            return SystemType.IsEnum;
+        }
     }
 
     public ITypeInfo InnerType
@@ -53,15 +70,39 @@ public class SystemTypeInfo : ITypeInfo
 
     public string TypeName
     {
-        get { return SystemType.Name; }
+        get
+        {
+            if (Other != null)
+            {
+                return Other.TypeName;
+            }
+            return SystemType.Name;
+        }
     }
 
     public virtual string FullName
     {
-        get { return SystemType.FullName; }
+        get
+        {
+            if (Other != null)
+            {
+                return Other.FullName;
+            }
+            return SystemType.FullName;
+        }
     }
 
-    public string Namespace { get { return SystemType.Namespace; } }
+    public string Namespace
+    {
+        get
+        {
+            if (Other != null)
+            {
+                return Other.Namespace;
+            }
+            return SystemType.Namespace;
+        }
+    }
 
     public virtual IEnumerable<IMemberInfo> GetMembers()
     {
