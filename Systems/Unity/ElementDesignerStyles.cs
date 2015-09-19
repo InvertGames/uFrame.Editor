@@ -135,6 +135,14 @@ namespace Invert.Common
         private static GUIStyle _wizardListItemBoxStyle;
         private static GUIStyle _searchBarText;
         private static GUIStyle _listItemTitleStyle;
+        private static GUIStyle _darkButtonStyle;
+        private static GUIStyle _darkInspectorLabel;
+
+        public static GUIStyle DarkInspectorLabel
+        {
+            get { return _darkInspectorLabel ?? (_darkInspectorLabel = new GUIStyle(EditorStyles.label)).WithAllStates(Color.white); }
+            set { _darkInspectorLabel = value; }
+        }
 
         public static GUIStyle AddButtonStyle
         {
@@ -454,6 +462,43 @@ namespace Invert.Common
                     };
                 }
                 return _buttonStyle;
+            }
+        }     
+        
+        public static GUIStyle DarkButtonStyle
+        {
+            get
+            {
+                if (_darkButtonStyle == null)
+                {
+                    var textColor =  new Color(0.8f, 0.8f, 0.8f);
+                    _darkButtonStyle = new GUIStyle
+                    {
+                        normal =
+                        {
+                            background = GetSkinTexture("CommandBar"),
+                            textColor = textColor
+                        },
+                        focused =
+                        {
+                            background = GetSkinTexture("CommandBar"),
+                            textColor = textColor
+                        },
+                        active = { background = GetSkinTexture("EventButton"), textColor = textColor },
+                        hover = { background = GetSkinTexture("CommandBar_Hover"), textColor = textColor },
+                        onHover =
+                        {
+                            background = GetSkinTexture("CommandBar_Hover"),
+                            textColor = textColor
+                        },
+                        onFocused = { background = GetSkinTexture("EventButton"), textColor = textColor },
+                        onNormal = { background = GetSkinTexture("EventButton"), textColor = textColor },
+                        onActive = { background = GetSkinTexture("EventButton"), textColor = textColor },
+                        fixedHeight = 25,
+                        alignment = TextAnchor.MiddleCenter,
+                    };
+                }
+                return _darkButtonStyle;
             }
         }
 

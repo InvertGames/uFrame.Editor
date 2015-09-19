@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Invert.Common;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -33,6 +35,9 @@ namespace Invert.Core.GraphDesigner.Unity.InspectorWindow
                 fieldViewModel.CachedValue = fieldViewModel.Getter();
                 if (!string.IsNullOrEmpty(attribute.InspectorTip)) fieldViewModel.InspectorTip = attribute.InspectorTip;
                 Properties.Add(fieldViewModel);
+
+                Height += fieldViewModel.InspectorType == InspectorType.GraphItems ? 30 : 17;
+
             }
         }
 
@@ -50,12 +55,17 @@ namespace Invert.Core.GraphDesigner.Unity.InspectorWindow
             set { _properties = value; }
         }
 
-        public void Draw()
+        public float Height { get; set; }
+
+        public void Draw(Rect rect)
         {
+            var itemRect = rect.WithHeight(17);
+
             foreach (var prop in Properties)
             {
-
-                Drawer.DrawInspector(prop,CachedStyles.DefaultLabel as GUIStyle);
+                if (prop.InspectorType == InspectorType.GraphItems) itemRect = itemRect.WithHeight(30);
+                Drawer.DrawInspector(itemRect,prop,ElementDesignerStyles.DarkInspectorLabel);
+                itemRect = itemRect.Below(itemRect).WithHeight(17);
             }            
         }
 

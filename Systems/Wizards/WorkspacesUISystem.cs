@@ -111,14 +111,14 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                 var configButton = openButton.LeftOf(openButton).Translate(-2, 0);
                 var deleteButton = configButton.LeftOf(configButton).Translate(-2, 0);
 
-                platform.DoButton(openButton, "Open", ElementDesignerStyles.ButtonStyle, () =>
+                platform.DoButton(openButton, "Open", ElementDesignerStyles.DarkButtonStyle, () =>
                 {
                     Execute(new OpenWorkspaceCommand() { Workspace = workspace.Workspace });
                     EnableWizard = false;
                 });
                 var db1 = db;
-                platform.DoButton(configButton, "Config", ElementDesignerStyles.ButtonStyle,()=>InvokeConfigFor(db1));
-                platform.DoButton(deleteButton, "Remove", ElementDesignerStyles.ButtonStyle, () => { Execute(new RemoveWorkspaceCommand() { Workspace = workspace.Workspace }); });
+                platform.DoButton(configButton, "Config", ElementDesignerStyles.DarkButtonStyle, () => InvokeConfigFor(db1));
+                platform.DoButton(deleteButton, "Remove", ElementDesignerStyles.DarkButtonStyle, () => { Execute(new RemoveWorkspaceCommand() { Workspace = workspace.Workspace }); });
                 //platform.DoButton(showButton, "Show In Explorer", ElementDesignerStyles.ButtonStyle, () => { });
 
 
@@ -161,7 +161,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             Signal<IDrawActionDialog>(_ => _.DrawActionDialog(Drawer, databasesActionInspectorBounds, SelectedAction, () => SelectedAction = null));
             Signal<IDrawWorkspacesList>(_ => _.DrawWorkspacesList(Drawer, databasesListBounds, items));
 
-            Drawer.DoButton(closeButtonBounds, "Close", ElementDesignerStyles.ButtonStyle, () =>
+            Drawer.DoButton(closeButtonBounds, "Close", ElementDesignerStyles.DarkButtonStyle, () =>
             {
                 if (WorkspaceService.CurrentWorkspace == null)
                 {

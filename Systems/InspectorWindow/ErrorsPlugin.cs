@@ -65,9 +65,12 @@ public class ErrorsPlugin : DiagramPlugin
         GUIHelpers.IsInsepctor = false;
         if (InvertGraphEditor.PlatformDrawer == null) return;
 
+        var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
+        d.DrawStretchBox(rect,CachedStyles.WizardListItemBoxStyle,10);        
+
+
         if (!ErrorInfo.Any())
         {
-            var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
             var textRect = rect;
             var cacheColor = GUI.color;
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.4f);

@@ -43,6 +43,7 @@ namespace Invert.Core.GraphDesigner
         void ClearTooltip();
 
         void DrawPropertyField(PropertyFieldViewModel propertyFieldDrawer, float scale);
+        void DrawPropertyField(Rect r, PropertyFieldViewModel propertyFieldDrawer, float scale);
 
         void DrawStretchBox(Rect scale, object nodeBackground, float offset);
 

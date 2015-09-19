@@ -10,11 +10,17 @@ using UnityEngine;
 
 namespace Invert.Core.GraphDesigner.Unity.Wizards
 {
+
+
+
     public class ActionsUISystem : DiagramPlugin, IDrawActionDialog, IDrawActionsPanel
     {
 
+
+
         //TODO WIZARDS Find better way to cache inspectors
         private readonly Dictionary<ActionItem,uFrameMiniInspector> _inspectors = new Dictionary<ActionItem, uFrameMiniInspector>();
+        private Vector2 _scrollPosition;
 
         public void DrawActionDialog(IPlatformDrawer platform, Rect bounds, ActionItem item, Action cancel = null)
         {
@@ -35,27 +41,34 @@ namespace Invert.Core.GraphDesigner.Unity.Wizards
                 .WithSize(100, 30)
                 .InnerAlignWithBottomRight(bounds);
 
-            platform.DrawLabel(headerRect, item.Title, CachedStyles.WizardSubBoxTitleStyle, DrawingAlignment.MiddleCenter);
-            platform.DrawImage(iconRect, string.IsNullOrEmpty(item.Icon) ? "CreateEmptyDatabaseIcon" : item.Icon, true);
-            platform.DrawLabel(descriptionRect, item.Description, CachedStyles.BreadcrumbTitleStyle, DrawingAlignment.MiddleLeft);
-
             if (!_inspectors.ContainsKey(item))
             {
                 var uFrameMiniInspector = new uFrameMiniInspector(item.Command);
                 _inspectors.Add(item, uFrameMiniInspector);
             }
+            var inspector = _inspectors[item];
+            var inspectorHeight = inspector.Height;
+
+
+            _scrollPosition = GUI.BeginScrollView(bounds.AddHeight(-30).AddWidth(15), _scrollPosition,
+                bounds.WithHeight(headerRect.height + iconRect.height + descriptionRect.height + inspectorHeight));
+
+            platform.DrawLabel(headerRect, item.Title, CachedStyles.WizardSubBoxTitleStyle, DrawingAlignment.MiddleCenter);
+            platform.DrawImage(iconRect, string.IsNullOrEmpty(item.Icon) ? "CreateEmptyDatabaseIcon" : item.Icon, true);
+            platform.DrawLabel(descriptionRect, item.Description, CachedStyles.BreadcrumbTitleStyle, DrawingAlignment.MiddleLeft);
+
+            inspector.Draw(descriptionRect.WithHeight(inspectorHeight).Pad(0,0,10,0).Below(descriptionRect));
 
             //Draw generic inspector
-            GUILayout.BeginArea(inspectorRect);
-                _inspectors[item].Draw();
-            GUILayout.EndArea();
 
+
+                GUI.EndScrollView();
             if ( cancel != null)
             {
-                platform.DoButton(executeButtonRect.InnerAlignWithBottomLeft(bounds), "Cancel", ElementDesignerStyles.ButtonStyle, cancel);
+                platform.DoButton(executeButtonRect.InnerAlignWithBottomLeft(bounds), "Cancel", ElementDesignerStyles.DarkButtonStyle, cancel);
             }
 
-            platform.DoButton(executeButtonRect, string.IsNullOrEmpty(item.Verb) ? "Create" : item.Verb, ElementDesignerStyles.ButtonStyle, () =>
+            platform.DoButton(executeButtonRect, string.IsNullOrEmpty(item.Verb) ? "Create" : item.Verb, ElementDesignerStyles.DarkButtonStyle, () =>
             {
                 InvertApplication.Execute(item.Command);
             });

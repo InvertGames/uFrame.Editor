@@ -166,7 +166,7 @@ namespace Assets.UnderConstruction.Editor
 
 
                 GUI.color = cColor;
-                PlatformDrawer.DoButton(openButton,isGraphInWorkspace ? "Open" : "Import" , ElementDesignerStyles.ButtonStyle, () =>
+                PlatformDrawer.DoButton(openButton, isGraphInWorkspace ? "Open" : "Import", ElementDesignerStyles.DarkButtonStyle, () =>
                 {
                     
                     /* OPEN DATABASE */

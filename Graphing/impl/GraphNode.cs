@@ -249,7 +249,7 @@ namespace Invert.Core.GraphDesigner
     
 
 
-        [JsonProperty, InspectorProperty(InspectorType.TextArea)]
+        [JsonProperty, InspectorProperty("Comments associated with this node.",InspectorType.TextArea)]
         public string Comments { get; set; }
 
         [Browsable(false)]

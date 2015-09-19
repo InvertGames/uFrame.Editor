@@ -44,10 +44,10 @@ public class InspectorPlugin : DiagramPlugin
 
     public void DrawInspector(Rect rect)
     {
-
+        var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
+      //  d.DrawStretchBox(rect, CachedStyles.WizardListItemBoxStyle, 10);     
         if (Groups == null || !Groups.Any())
         {
-                var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
                 var textRect = rect;
                 var cacheColor = GUI.color;
                 GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.4f);
@@ -55,16 +55,32 @@ public class InspectorPlugin : DiagramPlugin
                 GUI.color = cacheColor;
                 return;
         }
+
+
+        var groupRect = rect.WithHeight(30);
+
         foreach (var group in Groups)
         {
-            if (GUIHelpers.DoToolbarEx(group.Key))
+
+            if (GUIHelpers.DoToolbarEx(group.Key, groupRect))
             {
+                var itemRect = rect.WithHeight(17).Below(groupRect);
+
                 foreach (var item in group)
                 {
-                    var d = InvertGraphEditor.PlatformDrawer as UnityDrawer;
-                    d.DrawInspector(item, EditorStyles.label);
+                    if (item.InspectorType == InspectorType.GraphItems) itemRect = itemRect.WithHeight(30);
+                    d.DrawInspector(itemRect, item, EditorStyles.label);
+                    itemRect = itemRect.Below(itemRect).WithHeight(17);
                 }
+
+                groupRect = groupRect.Below(itemRect.Above(itemRect));
+
             }
+            else
+            {
+                groupRect = groupRect.Below(groupRect);
+            }
+
         }
 
        
@@ -82,7 +98,6 @@ public class InspectorPlugin : DiagramPlugin
                 .GroupBy(p => p.Graph.Name)
                 .OrderBy(p => p.Key).ToArray();
 
-        
     }
 
     public IGrouping<string, GenericNode>[] Items { get; set; }
