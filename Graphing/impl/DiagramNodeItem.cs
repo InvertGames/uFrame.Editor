@@ -127,7 +127,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
     public virtual string Highlighter { get { return null; } }
     public IRepository Repository { get; set; }
 
-    [InspectorProperty]
+  
     public virtual string Identifier
     {
         get
@@ -147,7 +147,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
 
     public virtual bool IsSelectable { get { return true; } }
 
-    [NodeProperty, JsonProperty]
+    [ JsonProperty]
     public string NodeId
     {
         get { return _nodeId; }

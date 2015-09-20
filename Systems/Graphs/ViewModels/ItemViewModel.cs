@@ -200,6 +200,7 @@ namespace Invert.Core.GraphDesigner
 #endif
             NodeViewModel.Select();
             IsSelected = true;
+            InvertApplication.SignalEvent<IGraphSelectionEvents>(_ => _.SelectionChanged(this));
             //BeginEditing();
         }
     }
