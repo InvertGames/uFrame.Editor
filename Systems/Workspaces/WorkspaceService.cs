@@ -110,6 +110,9 @@ namespace Invert.Core.GraphDesigner
             {
                 Workspace = workspace
             });
+
+            InvertApplication.SignalEvent<INotify>(_ => _.Notify(command.Name + " workspace has been created!", NotificationIcon.Info));
+
         }
 
         public void Execute(RemoveWorkspaceCommand command)

@@ -92,11 +92,11 @@ public class InspectorPlugin : DiagramPlugin
         if (WorkspaceService == null) return;
         if (WorkspaceService.CurrentWorkspace == null) return;
 
-        Items =
-            WorkspaceService.CurrentWorkspace.Graphs.SelectMany(p => p.NodeItems.OrderBy(x=>x.Name))
-                .OfType<GenericNode>()
-                .GroupBy(p => p.Graph.Name)
-                .OrderBy(p => p.Key).ToArray();
+//        Items =
+//            WorkspaceService.CurrentWorkspace.Graphs.SelectMany(p => p.NodeItems.OrderBy(x=>x.Name))
+//                .OfType<GenericNode>()
+//                .GroupBy(p => p.Graph.Name)
+//                .OrderBy(p => p.Key).ToArray();
 
     }
 
@@ -202,7 +202,7 @@ public class InspectorPlugin : DiagramPlugin
         if (Repository == null) return;
         if (WorkspaceService == null) return;
         if (WorkspaceService.CurrentWorkspace == null) return;
-        if (Items == null) UpdateItems();
+       // if (Items == null) UpdateItems();
         
 //        if (GUIHelpers.DoToolbarEx("Explorer"))
 //        {

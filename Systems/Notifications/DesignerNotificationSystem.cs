@@ -55,7 +55,11 @@ namespace Invert.Core.GraphDesigner.Unity.Notifications
                 RequireClose = requireClose,
                 Actions = actions
             };
-            Items.Add(notificationItem);
+
+            EditorApplication.delayCall +=
+                () => {
+                          Items.Add(notificationItem);
+                };
 
             Signal<IDebugWindowEvents>(_ => _.RegisterInspectedItem(notificationItem, notificationItem.Message, true));
             //Add notification item to the queue

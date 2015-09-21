@@ -269,7 +269,7 @@ namespace Invert.Core.GraphDesigner
             // var time = DateTime.Now;
             foreach (var item in items)
             {
-                yield return new TaskProgress(string.Format("Loading..."), 95f);
+                
                 // Get the ViewModel for the data
                 //InvertApplication.Log("B-A" + DateTime.Now.Subtract(time).TotalSeconds.ToString());
                 var mapping = InvertApplication.Container.RelationshipMappings[item.GetType(), typeof(ViewModel)];
@@ -293,6 +293,7 @@ namespace Invert.Core.GraphDesigner
                 //vm.Connectors.Clear();
                 //vm.GetConnectors(vm.Connectors);
                 //connectors.AddRange(vm.Connectors);
+                yield return new TaskProgress(string.Format("Loading..."), 95f);
             } 
             IsLoading = false;
             RefreshConnectors();
@@ -399,8 +400,22 @@ namespace Invert.Core.GraphDesigner
 
             foreach (var connection in CurrentRepository.All<ConnectionData>())
             {
-                var startConnector = connectors.FirstOrDefault(p => p.Identifier == connection.OutputIdentifier && p.Direction == ConnectorDirection.Output);
-                var endConnector = connectors.FirstOrDefault(p => p.Identifier == connection.InputIdentifier && p.Direction == ConnectorDirection.Input);
+
+                ConnectorViewModel startConnector = null;
+                ConnectorViewModel endConnector = null;
+
+                for (int i = 0; i < connectors.Length; i++)
+                {
+                    if (startConnector != null && endConnector != null) break;
+                    var p = connectors[i];
+                    if (p.Direction == ConnectorDirection.Output && p.Identifier == connection.OutputIdentifier)
+                        startConnector = p;
+                    else if (p.Direction == ConnectorDirection.Input && p.Identifier == connection.InputIdentifier)
+                        endConnector = p;
+                }
+
+//                var startConnector = connectors.FirstOrDefault(p =>  p.Direction == ConnectorDirection.Output && p.Identifier == connection.OutputIdentifier);
+//                var endConnector = connectors.FirstOrDefault(p => p.Direction == ConnectorDirection.Input && p.Identifier == connection.InputIdentifier);
 
 
                 if (startConnector == null || endConnector == null) continue;

@@ -137,6 +137,11 @@ namespace Invert.Core.GraphDesigner
         public static Rect InnerAlignWithBottomRight(this Rect source, Rect target)
         {
             return new Rect(target.xMax - source.width,target.yMax - source.height, source.width, source.height);
+        }            
+        
+        public static Rect InnerAlignWithCenterRight(this Rect source, Rect target)
+        {
+            return source.InnerAlignWithBottomRight(source).AlignHorisonallyByCenter(target);
         }    
         
         public static Rect InnerAlignWithBottomLeft(this Rect source, Rect target)

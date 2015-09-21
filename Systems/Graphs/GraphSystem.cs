@@ -107,7 +107,7 @@ public class GraphSystem : DiagramPlugin
         graph.Name = command.Name;
         workspaceService.CurrentWorkspace.AddGraph(graph);
         workspaceService.CurrentWorkspace.CurrentGraphId = graph.Identifier;
-       
+        InvertApplication.SignalEvent<INotify>(_ => _.Notify(command.Name + " graph has been created!", NotificationIcon.Info));
     }
 
     public void RecordInserted(IDataRecord record)

@@ -69,7 +69,7 @@ namespace Invert.Core.GraphDesigner
 
             if (StyleSchema.ShowIcon && NodeViewModel.IconName != null)
             {
-                var iconBounds = IconBounds ?? (IconBounds = platform.CalculateImageSize(NodeViewModel.IconName));
+                var iconBounds = IconBounds ?? (IconBounds = new Vector2(16,16));
                 width += iconBounds.Value.x;
 //                if (height - Padding.y*2 < iconBounds.y)
 //                {
@@ -182,9 +182,12 @@ namespace Invert.Core.GraphDesigner
 
                 if (StyleSchema.ShowIcon && !string.IsNullOrEmpty(NodeViewModel.IconName))
                 {
-                    var iconsize = IconBounds ?? (IconBounds = platform.CalculateImageSize(NodeViewModel.IconName));
+                    var iconsize = IconBounds ?? (IconBounds = new Vector2(16,16));
                     var size = iconsize.Value.y > Bounds.y ? Bounds.y : iconsize.Value.y;
-                    var imageBounds = new Rect(Bounds.xMax - padding.right - size, Bounds.y + ((Bounds.height / 2f) - (size / 2f)), size, size);
+                    //var imageBounds = new Rect(Bounds.xMax - padding.right - size, Bounds.y + ((Bounds.height / 2f) - (size / 2f)), size, size);
+
+
+                    var imageBounds = new Rect().WithSize(16, 16).InnerAlignWithUpperRight(Bounds).AlignHorisonallyByCenter(headerBounds).Translate(-headerPadding.right,0);
                     platform.DrawImage(imageBounds.Scale(scale), IconImage, true);
                 }
 

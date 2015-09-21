@@ -482,6 +482,7 @@ namespace Invert.Core.GraphDesigner
         public virtual string IconName
         {
             get { return "CommandIcon"; }
+            set { }
         }
 
         public virtual Color IconTint

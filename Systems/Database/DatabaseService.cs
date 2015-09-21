@@ -154,6 +154,8 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordRemoved(IDataRecord record)
         {
+            //TODO Check already invoked in JsonFileRecordManager and FastJsonFileRecordManager
+
             InvertApplication.SignalEvent<IDataRecordRemoved>(_ =>
             {
                 if (_ != this) _.RecordRemoved(record);
@@ -233,6 +235,9 @@ namespace Invert.Core.GraphDesigner
             db.Commit();
             CurrentDatabaseIdentifier = config.Identifier;
             InvertApplication.Container = null;
+            if(InvertApplication.Container!=null)
+                InvertApplication.SignalEvent<INotify>(_ => _.Notify(command.Name + " Database " + " has been created!", NotificationIcon.Info));
+
         }
 
         public void Execute(EditDatabaseCommand command)

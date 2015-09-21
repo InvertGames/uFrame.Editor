@@ -50,7 +50,7 @@ namespace Invert.Data
 
         public IDataRecordManager CreateRepository(IRepository repository, Type type)
         {
-            return new JsonFileRecordManager(repository, RootPath, type);
+            return new FastJsonFileRecordManager(repository, RootPath, type);
         }
     }
 }

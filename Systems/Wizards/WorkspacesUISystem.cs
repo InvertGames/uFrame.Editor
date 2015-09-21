@@ -196,7 +196,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                 content.Add(new DesignerWindowModalContent()
                 {
                     Drawer = DrawWorkspacesWizard,
-                    ZIndex = 1
+                    ZIndex = 2
                 });
         }
 
@@ -215,7 +215,8 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                     Command = new LambdaCommand("Workspaces", () => EnableWizard = true),
                     Title = "Workspace:",
                     Description = "Click to manage your workspaces."
-                });
+                });   
+          
                 foreach (var item in WorkspaceService.Workspaces)
                 {
                     ui.AddCommand(new ToolbarItem()
