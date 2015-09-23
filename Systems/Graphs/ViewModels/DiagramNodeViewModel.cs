@@ -599,7 +599,7 @@ namespace Invert.Core.GraphDesigner
 
         public bool Dirty { get; set; }
 
-        public bool IsFilter
+        public virtual bool IsFilter
         {
             get { return InvertGraphEditor.IsFilter(GraphItemObject.GetType()); }
         }

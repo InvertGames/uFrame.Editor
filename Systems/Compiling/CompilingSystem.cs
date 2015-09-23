@@ -183,7 +183,7 @@ namespace Invert.Core.GraphDesigner
                         Group = "Open",
                         Command = new LambdaCommand("Open File", () =>
                         {
-                            InvertApplication.Log(file1.AssetPath);
+                            
                             InvertGraphEditor.Platform.OpenScriptFile(file1.AssetPath);
                         })
                     });
