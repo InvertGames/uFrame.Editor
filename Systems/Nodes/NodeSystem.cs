@@ -26,16 +26,19 @@ namespace Invert.Core.GraphDesigner
                 ui.AddCommand(new ContextMenuItem()
                 {
                     Title = "Rename",
+                    Group = "Node",
                     Command = new RenameCommand() { ViewModel = diagramNode }
                 });
                 ui.AddCommand(new ContextMenuItem()
                 {
                     Title = "Hide",
+                    Group = "Node",
                     Command = new HideCommand() { Node = diagramNode.GraphItemObject, Filter = diagramNode.DiagramViewModel.GraphData.CurrentFilter }
                 });
                 ui.AddCommand(new ContextMenuItem()
                 {
                     Title = "Delete",
+                    Group = "Careful",
                     Command = new DeleteCommand() { Item = diagramNode.GraphItemObject as Invert.Data.IDataRecord }
                 });
                 if (diagramNode.IsExternal)
@@ -43,6 +46,7 @@ namespace Invert.Core.GraphDesigner
                     ui.AddCommand(new ContextMenuItem()
                     {
                         Title = "Pull",
+                        Group = "Node",
                         Command = new PullNodeCommand() { Node = diagramNode.GraphItemObject as GraphNode }
                     });
                 }
@@ -63,6 +67,7 @@ namespace Invert.Core.GraphDesigner
                         ui.AddCommand(new ContextMenuItem()
                         {
                             Title = "Create " + Container.GetNodeConfig(nodeType).Name,
+                            Group = "Create",
                             Command = new CreateNodeCommand()
                             {
                                 NodeType = nodeType,
@@ -77,12 +82,13 @@ namespace Invert.Core.GraphDesigner
             
                 if (filter.AllowExternalNodes)
                 {
-                    ui.AddSeparator();
+                   
                     foreach (var item in filter.GetAllowedDiagramItems().OfType<GenericNode>().OrderBy(p => p.Name))
                     {
                         ui.AddCommand(new ContextMenuItem()
                         {
                             Title = "Show/" + item.Config.Name + "/" + item.Name,
+                            Group = "Show",
                             Command = new ShowCommand() { Node = item, Filter = filter, Position = evt.MousePosition }
                         });
                     }

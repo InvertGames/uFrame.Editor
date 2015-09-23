@@ -46,11 +46,11 @@ public class GraphSystem : DiagramPlugin
         var diagram = obj as DiagramViewModel;
         if (diagram != null)
         {
-            ui.AddSeparator();
+     
             ui.AddCommand(new ContextMenuItem()
             {
                 Title = "Delete This Graph",
-                Group = "Remove",
+                Group = "Z",
                 Command =  new LambdaFileSyncCommand("Delete Graph", () =>
                 {
                     Container.Resolve<IRepository>().Remove(diagram.DataObject as IDataRecord);

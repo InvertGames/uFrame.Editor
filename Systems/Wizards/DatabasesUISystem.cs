@@ -216,6 +216,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                     ui.AddCommand(new ContextMenuItem()
                     {
                         Title = item.Title,
+                        Group = "Databases",
                         Checked = databaseService.CurrentConfiguration == item,
                         Command = new LambdaCommand("Change Database", () =>
                         {
@@ -223,10 +224,11 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                         })
                     });
                 }
-                ui.AddSeparator();
+             
                 ui.AddCommand(new ContextMenuItem()
                 {
                     Title = "Manage",
+                    Group="Manage",
                     Command = new LambdaCommand("Manage Databases", () => EnableWizard = true),
                     
                 });

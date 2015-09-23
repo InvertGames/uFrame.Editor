@@ -43,6 +43,7 @@ namespace Invert.Core.GraphDesigner
         public ICommand AddCommand { get; set; }
         public NodeConfigBase NodeConfig { get; set; }
         public NodeConfigSectionBase SectionConfig { get; set; }
+        public bool IsBig { get; set; }
 
         public void Add()
         {

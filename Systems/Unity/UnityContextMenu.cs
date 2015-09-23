@@ -14,7 +14,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public void CreateMenuItems(GenericMenu genericMenu)
         {
-            var groups = Commands.GroupBy(p => p==null? "" : p.Group).OrderBy(p => p.Key == "Default").ToArray();
+            var groups = Commands.GroupBy(p => p==null? "" : p.Group).OrderBy(p => p.Key).ToArray();
 
             foreach (var group in groups)
             {
@@ -28,10 +28,10 @@ namespace Invert.Core.GraphDesigner.Unity
                     {
                         InvertApplication.Execute(command);
                     } );
-                  
+                    groupCount ++;
                 }
                 if (group != groups.Last() && groupCount > 0)
-                    genericMenu.AddSeparator("");
+                    genericMenu.AddSeparator(null);
             }
         }
 

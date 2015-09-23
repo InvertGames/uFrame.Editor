@@ -180,6 +180,7 @@ namespace Invert.Core.GraphDesigner
                     ui.AddCommand(new ContextMenuItem()
                     {
                         Title = "Open " + Path.GetFileName(file.AssetPath),
+                        Group = "Open",
                         Command = new LambdaCommand("Open File", () =>
                         {
                             InvertApplication.Log(file1.AssetPath);
