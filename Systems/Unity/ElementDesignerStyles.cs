@@ -2070,7 +2070,7 @@ namespace Invert.Common
                     .WithIcon(true)
                     .WithSubTitle(true)
                     .WithHeaderPadding(new RectOffset(10, 5, 8, 8))
-                    .WithTitleFont(null, 20, null, FontStyle.Bold)
+                    .WithTitleFont(null, 16, null, FontStyle.Bold)
                     .WithSubTitleFont(null, 15, null, FontStyle.Normal)
                     .RecomputeStyles();
                 }

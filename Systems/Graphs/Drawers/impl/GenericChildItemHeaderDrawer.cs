@@ -65,7 +65,7 @@ namespace Invert.Core.GraphDesigner
             var b = new Rect(Bounds);
             b.x += 8;
             b.width -= 27;
-            platform.DrawLabel(b.Scale(scale), ViewModel.Name, CachedStyles.HeaderStyle);
+            platform.DrawLabel(b.Scale(scale), ViewModel.Name, ViewModel.IsBig ? CachedStyles.NodeStyleSchemaBold.SubTitleStyleObject : CachedStyles.HeaderStyle);
             
             if (ViewModel.AddCommand != null && ViewModel.Enabled)
             {

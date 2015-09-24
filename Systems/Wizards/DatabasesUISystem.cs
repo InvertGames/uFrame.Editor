@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Assets.UnderConstruction.Editor;
 using Invert.Common;
 using Invert.Core.GraphDesigner.Systems.GraphUI.api;
 using Invert.Core.GraphDesigner.Unity;
@@ -191,7 +190,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             content.Add(new DesignerWindowModalContent()
             {
                 Drawer = DrawDatabasesWizard,
-                ZIndex = 3
+                ZIndex = 1
             });
         }
 
@@ -217,6 +216,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                     ui.AddCommand(new ContextMenuItem()
                     {
                         Title = item.Title,
+                        Group = "Databases",
                         Checked = databaseService.CurrentConfiguration == item,
                         Command = new LambdaCommand("Change Database", () =>
                         {
@@ -224,14 +224,12 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                         })
                     });
                 }
-                ui.AddSeparator();
+             
                 ui.AddCommand(new ContextMenuItem()
                 {
                     Title = "Manage",
-                    Command = new LambdaCommand("Manage Databases", () =>
-                    {
-                        EnableWizard = true;
-                    }),
+                    Group="Manage",
+                    Command = new LambdaCommand("Manage Databases", () => EnableWizard = true),
                     
                 });
             }

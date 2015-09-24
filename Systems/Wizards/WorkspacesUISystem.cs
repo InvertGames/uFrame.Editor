@@ -255,6 +255,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                         ui.AddCommand(new ContextMenuItem()
                         {
                             Title = item.Name,
+                            Group = "Workspaces",
                             Checked = item == WorkspaceService.CurrentWorkspace,
                             Command = new OpenWorkspaceCommand()
                             {
@@ -280,10 +281,11 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                     //        });
                     //    }
                     //}
-                    ui.AddSeparator();
+         
                     ui.AddCommand(new ContextMenuItem()
                     {
                         Command = new LambdaCommand("Manage Workspaces", () => EnableWizard = true),
+                        Group = "Manage",
                         Title = "Manage"
                     });
 
