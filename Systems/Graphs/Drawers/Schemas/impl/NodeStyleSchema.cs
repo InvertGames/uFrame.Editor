@@ -59,8 +59,8 @@ namespace Invert.Core.GraphDesigner.Schemas.impl
         {
             HeaderImage = image;
             return this;
-        }
-
+        }        
+        
         public virtual INodeStyleSchema WithTitleFont(string font, int? fontsize, Color? color, FontStyle? style)
         {
             TitleFontStyle = style.GetValueOrDefault(TitleFontStyle);

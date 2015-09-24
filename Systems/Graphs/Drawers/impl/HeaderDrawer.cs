@@ -183,12 +183,15 @@ namespace Invert.Core.GraphDesigner
                 if (StyleSchema.ShowIcon && !string.IsNullOrEmpty(NodeViewModel.IconName))
                 {
                     var iconsize = IconBounds ?? (IconBounds = new Vector2(16,16));
-                    var size = iconsize.Value.y > Bounds.y ? Bounds.y : iconsize.Value.y;
-                    //var imageBounds = new Rect(Bounds.xMax - padding.right - size, Bounds.y + ((Bounds.height / 2f) - (size / 2f)), size, size);
+                    var size = 16;
+                    var imageBounds = new Rect(Bounds.xMax - padding.right - size, Bounds.y + ((Bounds.height / 2f) - (size / 2f)), 16, 16);
 
 
-                    var imageBounds = new Rect().WithSize(16, 16).InnerAlignWithUpperRight(Bounds).AlignHorisonallyByCenter(headerBounds).Translate(-headerPadding.right,0);
+                    //var imageBounds = new Rect().WithSize(16, 16).InnerAlignWithUpperRight(Bounds).AlignHorisonallyByCenter(headerBounds).Translate(-headerPadding.right,0);
+                    var cCache = GUI.color;
+                    GUI.color = new Color(cCache.r, cCache.g, cCache.b, cCache.a*0.7f);
                     platform.DrawImage(imageBounds.Scale(scale), IconImage, true);
+                    GUI.color = cCache;
                 }
 
                 //GUI.Label(textBounds.Scale(scale), NodeViewModel.Label ?? string.Empty, titleStyle);

@@ -68,8 +68,8 @@ namespace Invert.Core.GraphDesigner.Unity.Schemas
         protected override object ConstructIcon(string iconName, Color color = new Color())
         {
             var texture = ElementDesignerStyles.GetSkinTexture(iconName);
-            if (texture == null) throw new Exception(string.Format("Icon {0} not found!", iconName));
-            if (color != default(Color)) texture = texture.Tint(color);
+            if (texture == null) texture = ElementDesignerStyles.GetSkinTexture("CommandIcon");
+            //if (color != default(Color)) texture = texture.Tint(color);
             return texture;
         }
 
