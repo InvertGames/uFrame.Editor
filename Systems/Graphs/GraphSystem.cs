@@ -116,8 +116,16 @@ public class GraphSystem : DiagramPlugin
         if (WorkspaceService != null && WorkspaceService.CurrentWorkspace != null &&
             WorkspaceService.CurrentWorkspace.CurrentGraph != null)
         {
+            var diagramItem = record as IDiagramNodeItem;
+            if (diagramItem != null)
+            {
+                diagramItem.Graph.IsDirty = true;
+            }
+            else
+            {
+                WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;    
+            }
             
-            WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
             //InvertApplication.Log(record.GetType().Name);
         }
     }
@@ -128,9 +136,15 @@ public class GraphSystem : DiagramPlugin
         if (WorkspaceService != null && WorkspaceService.CurrentWorkspace != null &&
             WorkspaceService.CurrentWorkspace.CurrentGraph != null)
         {
-
-            WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
-            //InvertApplication.Log(record.GetType().Name);
+            var diagramItem = record as IDiagramNodeItem;
+            if (diagramItem != null)
+            {
+                diagramItem.Graph.IsDirty = true;
+            }
+            else
+            {
+                WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
+            }
         }
     }
 
@@ -141,7 +155,18 @@ public class GraphSystem : DiagramPlugin
         if (WorkspaceService != null && WorkspaceService.CurrentWorkspace != null &&
             WorkspaceService.CurrentWorkspace.CurrentGraph != null)
         {
-            if (record == WorkspaceService.CurrentWorkspace.CurrentGraph) return;
+            if (record is IGraphData) return;
+
+            var diagramItem = record as IDiagramNodeItem;
+            if (diagramItem != null)
+            {
+                diagramItem.Graph.IsDirty = true;
+            }
+            else
+            {
+                WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
+            }
+
             WorkspaceService.CurrentWorkspace.CurrentGraph.IsDirty = true;
             //InvertApplication.Log(name + " " + record.GetType().Name);
         }
