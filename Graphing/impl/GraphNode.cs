@@ -275,6 +275,14 @@ namespace Invert.Core.GraphDesigner
         /// <param name="errors"></param>
         public virtual void Validate(List<ErrorInfo> errors)
         {
+            
+            foreach (var item in PersistedItems)
+            {
+                if (string.IsNullOrEmpty(item.Name))
+                {
+                    errors.AddError("All items must have a name.", this);
+                }
+            }
             //foreach (var child in this.PersistedItems)
             //{
             //    child.Validate(errors);
@@ -811,7 +819,7 @@ namespace Invert.Core.GraphDesigner
 
         public IEnumerable<IItem> Children
         {
-            get { return PersistedItems.OfType<IItem>().Except(new []{this}); }
+            get { return FilterItems.Select(p=>p.Node).OfType<IItem>().Except(new []{this}); }
         }
 
         [JsonProperty]

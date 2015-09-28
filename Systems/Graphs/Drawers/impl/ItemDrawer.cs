@@ -155,7 +155,7 @@ namespace Invert.Core.GraphDesigner
 
         public virtual void DrawBackground(IPlatformDrawer platform, float scale)
         {
-            if (IsSelected)
+            if (IsSelected || this.ItemViewModel.IsEditing)
             {
                 platform.DrawStretchBox(Bounds.Scale(scale), CachedStyles.Item5, 0f);
             }

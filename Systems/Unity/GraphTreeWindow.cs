@@ -58,10 +58,10 @@ namespace Assets.UnderConstruction.Editor
         }
 
 
-    //    [MenuItem("uFrame/Graph Explorer")]
+     [MenuItem("uFrame Dev/Graph Explorer %T")]
         public static void Init()
         {
-            var window = ScriptableObject.CreateInstance<GraphTreeWindow>();
+            var window = GetWindow<GraphTreeWindow>();
             window.minSize = new Vector2(200,200);
             window.title = "Graph Explorer";
             window.Show();
@@ -81,7 +81,9 @@ namespace Assets.UnderConstruction.Editor
             PlatformDrawer.DrawImage(searchIconRect,"SearchIcon",true);
 
             EditorGUI.BeginChangeCheck();
+            GUI.SetNextControlName("Search");
             SearchCriteria = GUI.TextField(searcbarRect, SearchCriteria ?? "");
+            
             if (EditorGUI.EndChangeCheck())
             {
                 if (string.IsNullOrEmpty(SearchCriteria))
@@ -109,8 +111,8 @@ namespace Assets.UnderConstruction.Editor
                     TryNavigateToItem(i);
                 });
             });
-        
-        
+
+            GUI.FocusControl("Search");
         
         
         }

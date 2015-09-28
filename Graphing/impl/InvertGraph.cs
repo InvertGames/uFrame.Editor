@@ -740,9 +740,13 @@ namespace Invert.Core.GraphDesigner
             get { return null; }
         }
 
-        public IEnumerable<IItem> Children
+        public virtual IEnumerable<IItem> Children
         {
-            get { return NodeItems.OfType<IItem>(); }
+            get
+            {
+
+                return NodeItems.OfType<IItem>();
+            }
         }
 
         [JsonProperty]

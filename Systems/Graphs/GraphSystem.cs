@@ -119,6 +119,7 @@ public class GraphSystem : DiagramPlugin
             var diagramItem = record as IDiagramNodeItem;
             if (diagramItem != null)
             {
+                if (diagramItem.Graph != null)
                 diagramItem.Graph.IsDirty = true;
             }
             else
