@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Invert.Core;
 
 public class SystemTypeInfo : ITypeInfo
 {
@@ -146,7 +147,7 @@ public class SystemTypeInfo : ITypeInfo
         var systemInfo = info as SystemTypeInfo;
         if (systemInfo != null)
         {
-            return systemInfo.SystemType.IsAssignableFrom(SystemType);
+            return systemInfo.SystemType.IsAssignableFrom(SystemType) || systemInfo.SystemType.IsCastableTo(SystemType);
         }
         return info.FullName == FullName;
     }

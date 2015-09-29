@@ -56,6 +56,58 @@ namespace Invert.Core.GraphDesigner
             }
 
         }
+
+
+        public SelectionMenuCategory CreateCategoryIfNotExist(params string[] path)
+        {
+            if (path.Length < 1)
+            {
+                throw new Exception("Path must have at least one value");
+            }
+            List<IItem> items = Items;
+            SelectionMenuCategory pathMenuItem = null;
+            foreach (var pathItem in path)
+            {
+                pathMenuItem = items.OfType<SelectionMenuCategory>().FirstOrDefault(p => p.Title == pathItem);
+                if (pathMenuItem == null)
+                {
+                    pathMenuItem = new SelectionMenuCategory()
+                    {
+                        Title = pathItem,
+                    };
+                    items.Add(pathMenuItem);
+                }
+                items = pathMenuItem.ChildItems;
+            }
+            return pathMenuItem;
+        }
+
+
+        protected IItem FindItem(string name)
+        {
+            return FindItem(this.Items, name);
+        }
+
+        protected IItem FindItem(IEnumerable<IItem> items, string name, bool recursive = true)
+        {
+            foreach (var item in items)
+            {
+                if (item.Title == name)
+                    return item;
+                if (recursive)
+                {
+                    var treeItem = item as ITreeItem;
+                    if (treeItem != null)
+                    {
+                        var result = FindItem(treeItem.Children, name);
+                        if (result != null)
+                            return result;
+                    }
+                }
+                
+            }
+            return null;
+        }
         
     }
 }

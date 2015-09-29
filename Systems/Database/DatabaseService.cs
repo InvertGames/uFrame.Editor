@@ -118,7 +118,7 @@ namespace Invert.Core.GraphDesigner
             {
                 config = new uFrameDatabaseConfig
                 {
-                    CodeOutputPath = "Code",
+                    CodeOutputPath = "Assets/Code",
                     Namespace = title
                 };
 

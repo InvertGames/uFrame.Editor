@@ -38,7 +38,7 @@ namespace Assets.UnderConstruction.Editor
         {
             get { return _treeModel ?? (_treeModel = GraphData == null ? null : new TreeViewModel()
             {
-                Data = new[] { GraphData as IItem }.ToList(),
+                Data = WorkspaceService == null ? null : WorkspaceService.Workspaces.Cast<IItem>().ToList(),
                 Submit = TryNavigateToItem
             }); }
             set { _treeModel = value; }
@@ -58,7 +58,7 @@ namespace Assets.UnderConstruction.Editor
         }
 
 
-     [MenuItem("uFrame Dev/Graph Explorer %T")]
+     [MenuItem("uFrame/Graph Explorer %T")]
         public static void Init()
         {
             var window = GetWindow<GraphTreeWindow>();

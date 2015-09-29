@@ -149,7 +149,13 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
         {
             items.Add(new ActionItem()
             {
-                Command = new CreateDatabaseCommand(),
+                Command = new CreateDatabaseCommand()
+                {
+                    Name = "NewDB",
+                    Namespace = "NewDB",
+                    CodePath = "Assets/Code",
+                    
+                },
                 Title = "New Empty Database",
                 Description = "Create a completely empty database. Suitable, if you are going to start from scratch. Do not forget to specify code path and the namespace. Changing namespace later will require refactoring of the existing code!",
                 Icon = "CreateEmptyDatabaseIcon"
