@@ -92,9 +92,9 @@ namespace Invert.Data
             }
 
             //Using code stolen from CodeProject which iterates over files 8x faster. (lag reduction was around 1/6 according to the compiler
-            foreach (var file in FastDirectoryEnumerator.EnumerateFiles(RecordsPath))
+            foreach (var file in DirectoryInfo.GetFiles("*"))
             {
-                LoadRecord(file);
+                LoadRecord(file.FullName);
             }
             _loadedCached = true;
         }
@@ -109,10 +109,10 @@ namespace Invert.Data
             }
         }
 
-        private void LoadRecord(FileData file)
+        private void LoadRecord(string file)
         {
-            if (Cached.ContainsKey(Path.GetFileNameWithoutExtension(file.Name))) return;
-            var record = InvertJsonExtensions.DeserializeObject(For, JSON.Parse(ReadFile(file.Path))) as IDataRecord;
+            if (Cached.ContainsKey(Path.GetFileNameWithoutExtension(file))) return;
+            var record = InvertJsonExtensions.DeserializeObject(For, JSON.Parse(ReadFile(file))) as IDataRecord;
             if (record != null)
             {
                 record.Repository = this.Repository;
