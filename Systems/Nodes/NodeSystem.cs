@@ -6,6 +6,14 @@ using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
 {
+    public interface IDemoVersionLimit
+    {
+        
+    }
+    public interface IDemoVersionLimitZero
+    {
+
+    }
     public class NodeSystem : DiagramPlugin,
         IContextMenuQuery,
         IExecuteCommand<CreateNodeCommand>,
@@ -100,6 +108,37 @@ namespace Invert.Core.GraphDesigner
 
         public void Execute(CreateNodeCommand command)
         {
+#if DEMO
+            if (typeof (IDemoVersionLimitZero).IsAssignableFrom(command.NodeType))
+            {
+                Signal<INotify>(_ => _.NotifyWithActions("You've reached the max number of nodes of this type, upgrade to full version.", NotificationIcon.Warning, new NotifyActionItem()
+                {
+                    Title = "Buy Now",
+                    Action = () =>
+                    {
+                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                    }
+                }));
+                return;
+            }
+            if (typeof(IDemoVersionLimit).IsAssignableFrom(command.NodeType))
+            {
+                var nodeCount = command.GraphData.Repository.AllOf<IDiagramNode>().Count(p => p.GetType() == command.NodeType);
+                if (nodeCount >= 10)
+                {
+                    Signal<INotify>(_ => _.NotifyWithActions("You've reached the max number of nodes of this type, upgrade to full version.", NotificationIcon.Warning, new NotifyActionItem()
+                    {
+                        Title = "Buy Now",
+                        Action = () =>
+                        {
+                            InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                        }
+                    }));
+                    return;
+                }
+            }
+           
+#endif
 
             var node = Activator.CreateInstance(command.NodeType) as IDiagramNode;
             var repository = Container.Resolve<IRepository>();
