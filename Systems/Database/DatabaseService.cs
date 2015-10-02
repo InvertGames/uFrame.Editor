@@ -200,7 +200,7 @@ namespace Invert.Core.GraphDesigner
             });
         }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
           
         }

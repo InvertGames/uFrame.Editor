@@ -15,7 +15,7 @@ namespace Invert.Data
         {
             var result = InvertJsonExtensions.DeserializeObject<TType>((string)InvertJsonExtensions.SerializeObject(record).ToString()) as TType;
             result.Identifier = Guid.NewGuid().ToString();
-            return result;
+            return result; 
         }
 
         public static void Changed<TType>(this IDataRecord record, string propertyName,ref TType beforeValue, TType value)

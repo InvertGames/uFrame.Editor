@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Invert.Data;
+using Invert.IOC;
 
 namespace Invert.Core.GraphDesigner
 {
@@ -20,6 +21,7 @@ namespace Invert.Core.GraphDesigner
         , IDataRecordPropertyChanged
        
     {
+
         private List<IDataRecord> _changedRecrods;
 
         public ValidationSystem ValidationSystem
@@ -38,9 +40,53 @@ namespace Invert.Core.GraphDesigner
           
         }
 
+        public override void Loaded(UFrameContainer container)
+        {
+            base.Loaded(container);
+//#if DEMO
+         
+         
+//                Signal<INotify>(_=>_.NotifyWithActions("You're using the demo version of uFrame ECS.",NotificationIcon.Warning,new NotifyActionItem()
+//                {
+//                    Title = "Buy Now",
+//                    Action = ()=>
+//                    {
+//                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+//                    }
+//                }));
+//                return;
+            
+//#endif
+        }
+
         public void Execute(SaveAndCompileCommand command)
         {
+#if DEMO
+
+
+            Signal<INotify>(x=> x.NotifyWithActions("You're using the demo version of uFrame ECS.", NotificationIcon.Warning, 
+                new NotifyActionItem()
+                {
+                    Title = "Buy Now",
+                    Action = () =>
+                    {
+                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                    }
+                },
+                new NotifyActionItem()
+                {
+                    Title = "Nope, Compile It",
+                    Action = () =>
+                    {
+                        InvertApplication.SignalEvent<ITaskHandler>(_ => { _.BeginTask(Generate(command)); });
+                    }
+                }
+                ));
+#else
             InvertApplication.SignalEvent<ITaskHandler>(_ => { _.BeginTask(Generate(command)); });
+
+#endif
+
         }
 
         public IEnumerable<IDataRecord> GetItems(IRepository repository, bool getAll = false)
@@ -167,9 +213,9 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
-            var node = obj as DiagramNodeViewModel;
+            var node = obj.FirstOrDefault() as DiagramNodeViewModel;
             if (node != null)
             {
                 var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();

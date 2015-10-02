@@ -127,9 +127,9 @@ namespace Invert.Core.GraphDesigner
             {
                 this.IsCollapsed = !IsCollapsed;
             });
-            IsExternal = GraphItemObject.Graph.Identifier != DiagramViewModel.GraphData.Identifier;
+           
         }
-
+        
         public override void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
             base.PropertyChanged(record, name, previousValue, nextValue);
@@ -377,6 +377,7 @@ namespace Invert.Core.GraphDesigner
                 BeginEditing();
             }
             IsDirty = true;
+            IsExternal = GraphItemObject.Graph.Identifier != DiagramViewModel.GraphData.Identifier;
 
         }
 

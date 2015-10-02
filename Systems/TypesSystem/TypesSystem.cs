@@ -22,9 +22,9 @@ namespace Invert.Core.GraphDesigner
 
         public GraphTypeInfo[] TypesInfo { get; set; }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
-            var typedItem = obj as TypedItemViewModel;
+            var typedItem = obj.FirstOrDefault() as TypedItemViewModel;
             
             if (typedItem != null)
             {
@@ -42,7 +42,7 @@ namespace Invert.Core.GraphDesigner
                     });
                 }
             }
-            var nodeItem = obj as ItemViewModel;
+            var nodeItem = obj.FirstOrDefault() as ItemViewModel;
             if (nodeItem != null)
             {
                 ui.AddCommand(new ContextMenuItem()
@@ -51,7 +51,7 @@ namespace Invert.Core.GraphDesigner
                     Command = new DeleteCommand()
                     {
                         Title = "Delete Item",
-                        Item = nodeItem.DataObject as IDataRecord
+                        Item = new[] {nodeItem.DataObject as IDataRecord }
                     }
                 });
             }

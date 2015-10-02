@@ -627,7 +627,7 @@ namespace Invert.Core.GraphDesigner
 
         public void ShowContextMenu(MouseEvent mouseEvent)
         {
-            InvertApplication.SignalEvent<IShowContextMenu>(_ => _.Show(mouseEvent, DiagramViewModel.SelectedNode));
+            InvertApplication.SignalEvent<IShowContextMenu>(_ => _.Show(mouseEvent, DiagramViewModel.SelectedNodes.Cast<object>().ToArray()));
         }
 
         public void ShowItemContextMenu(MouseEvent mouseEvent)

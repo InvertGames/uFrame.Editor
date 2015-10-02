@@ -27,7 +27,7 @@ namespace Invert.Core.GraphDesigner.Unity.WindowsSystem
 //            }
         }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
           //  throw new NotImplementedException();
         }

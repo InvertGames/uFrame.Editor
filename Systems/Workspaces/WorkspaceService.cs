@@ -69,7 +69,7 @@ namespace Invert.Core.GraphDesigner
         public Dictionary<Type, WorkspaceConfiguration> Configurations { get; set; }
 
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
            
         }

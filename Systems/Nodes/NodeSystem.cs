@@ -6,6 +6,14 @@ using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
 {
+    public interface IDemoVersionLimit
+    {
+
+    }
+    public interface IDemoVersionLimitZero
+    {
+
+    }
     public class NodeSystem : DiagramPlugin,
         IContextMenuQuery,
         IExecuteCommand<CreateNodeCommand>,
@@ -18,9 +26,10 @@ namespace Invert.Core.GraphDesigner
         IOnMouseUpEvent
     {
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
         {
-            var diagramNode = obj as DiagramNodeViewModel;
+
+            var diagramNode = objs.FirstOrDefault() as DiagramNodeViewModel;
             if (diagramNode != null)
             {
                 ui.AddCommand(new ContextMenuItem()
@@ -33,13 +42,20 @@ namespace Invert.Core.GraphDesigner
                 {
                     Title = "Hide",
                     Group = "Node",
-                    Command = new HideCommand() { Node = diagramNode.GraphItemObject, Filter = diagramNode.DiagramViewModel.GraphData.CurrentFilter }
+                    Command = new HideCommand()
+                    {
+                        Node = objs.OfType<DiagramNodeViewModel>().Select(p=>p.GraphItemObject).ToArray(),
+                        Filter = diagramNode.DiagramViewModel.GraphData.CurrentFilter
+                    }
                 });
                 ui.AddCommand(new ContextMenuItem()
                 {
                     Title = "Delete",
                     Group = "Careful",
-                    Command = new DeleteCommand() { Item = diagramNode.GraphItemObject as Invert.Data.IDataRecord }
+                    Command = new DeleteCommand()
+                    {
+                        Item = objs.OfType<DiagramNodeViewModel>().Select(p => p.GraphItemObject).ToArray()
+                    }
                 });
                 if (diagramNode.IsExternal)
                 {
@@ -47,16 +63,19 @@ namespace Invert.Core.GraphDesigner
                     {
                         Title = "Pull",
                         Group = "Node",
-                        Command = new PullNodeCommand() { Node = diagramNode.GraphItemObject as GraphNode }
+                        Command = new PullNodeCommand()
+                        {
+                            Node = objs.OfType<DiagramNodeViewModel>().Select(p => p.GraphItemObject).ToArray(),
+                        }
                     });
                 }
-                
+
             }
 
-            var diagram = obj as DiagramViewModel;
+            var diagram = objs.FirstOrDefault() as DiagramViewModel;
             if (diagram != null)
             {
-                
+
                 var filter = diagram.GraphData.CurrentFilter;
                 foreach (var nodeType in FilterExtensions.AllowedFilterNodes[filter.GetType()])
                 {
@@ -75,14 +94,14 @@ namespace Invert.Core.GraphDesigner
                                 Position = diagram.LastMouseEvent.MouseDownPosition
                             }
                         });
-                        
+
                     }
-                   
+
                 }
-            
+
                 if (filter.AllowExternalNodes)
                 {
-                   
+
                     foreach (var item in filter.GetAllowedDiagramItems().OfType<GenericNode>().OrderBy(p => p.Name))
                     {
                         ui.AddCommand(new ContextMenuItem()
@@ -93,13 +112,46 @@ namespace Invert.Core.GraphDesigner
                         });
                     }
                 }
-                
+
             }
+
+
 
         }
 
         public void Execute(CreateNodeCommand command)
         {
+#if DEMO
+            if (typeof (IDemoVersionLimitZero).IsAssignableFrom(command.NodeType))
+            {
+                Signal<INotify>(_ => _.NotifyWithActions("You've reached the max number of nodes of this type, upgrade to full version.", NotificationIcon.Warning, new NotifyActionItem()
+                {
+                    Title = "Buy Now",
+                    Action = () =>
+                    {
+                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                    }
+                }));
+                return;
+            }
+            if (typeof(IDemoVersionLimit).IsAssignableFrom(command.NodeType))
+            {
+                var nodeCount = command.GraphData.Repository.AllOf<IDiagramNode>().Count(p => p.GetType() == command.NodeType);
+                if (nodeCount >= 10)
+                {
+                    Signal<INotify>(_ => _.NotifyWithActions("You've reached the max number of nodes of this type, upgrade to full version.", NotificationIcon.Warning, new NotifyActionItem()
+                    {
+                        Title = "Buy Now",
+                        Action = () =>
+                        {
+                            InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                        }
+                    }));
+                    return;
+                }
+            }
+           
+#endif
 
             var node = Activator.CreateInstance(command.NodeType) as IDiagramNode;
             var repository = Container.Resolve<IRepository>();
@@ -108,7 +160,7 @@ namespace Invert.Core.GraphDesigner
             if (string.IsNullOrEmpty(node.Name))
                 node.Name =
                     repository.GetUniqueName("New" + node.GetType().Name.Replace("Data", ""));
-       
+
             var filterItem = node as IFilterItem;
             if (filterItem != null)
             {
@@ -119,8 +171,6 @@ namespace Invert.Core.GraphDesigner
             {
                 command.GraphData.CurrentFilter.ShowInFilter(node, command.Position);
             }
-            
-            
 
         }
 
@@ -131,7 +181,8 @@ namespace Invert.Core.GraphDesigner
 
         public void Execute(DeleteCommand command)
         {
-            command.Item.Repository.Remove(command.Item);
+            foreach (var item in command.Item)
+                item.Repository.Remove(item);
         }
 
         public void Execute(ShowCommand command)
@@ -141,23 +192,29 @@ namespace Invert.Core.GraphDesigner
 
         public void Execute(HideCommand command)
         {
-            command.Filter.HideInFilter(command.Node);
+            foreach(var item in command.Node)
+            command.Filter.HideInFilter(item);
         }
 
         public void Execute(PullNodeCommand command)
         {
             var workspaceService = Container.Resolve<WorkspaceService>();
+
             if (workspaceService != null && workspaceService.CurrentWorkspace != null)
             {
-                command.Node.GraphId = workspaceService.CurrentWorkspace.CurrentGraphId;
-                foreach (var item in command.Node.FilterNodes)
+                foreach (var gn in command.Node.OfType<GraphNode>())
                 {
-                    if (item == command.Node) continue;
-                    item.GraphId = workspaceService.CurrentWorkspace.CurrentGraphId;
+                    gn.GraphId = workspaceService.CurrentWorkspace.CurrentGraphId;
+                    foreach (var item in gn.FilterNodes)
+                    {
+                        if (gn == item) continue;
+                        item.GraphId = workspaceService.CurrentWorkspace.CurrentGraphId;
+                    }
                 }
-                
+             
+
             }
-            
+
         }
 
         public void OnMouseUp(Drawer drawer, MouseEvent mouseEvent)
@@ -171,7 +228,7 @@ namespace Invert.Core.GraphDesigner
             {
                 command.Item.Name = "RenameMe";
             }
-            
+
             command.Item.Rename(command.Name);
             command.Item.EndEditing();
         }

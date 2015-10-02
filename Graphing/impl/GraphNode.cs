@@ -390,7 +390,7 @@ namespace Invert.Core.GraphDesigner
 
         public IRepository Repository { get; set; }
 
- 
+        [InspectorProperty]
         public virtual string Identifier
         {
             get { return string.IsNullOrEmpty(_identifier) ? (_identifier = Guid.NewGuid().ToString()) : _identifier; }
