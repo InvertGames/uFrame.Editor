@@ -16,9 +16,9 @@ namespace Invert.Core.GraphDesigner
             base.Initialize(container);
         }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
-            var connector = obj as ConnectorViewModel;
+            var connector = obj.FirstOrDefault() as ConnectorViewModel;
             if (connector != null)
             {
                 var connections =

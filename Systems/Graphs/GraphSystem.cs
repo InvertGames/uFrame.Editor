@@ -24,7 +24,7 @@ public class GraphSystem : DiagramPlugin
 
     public WorkspaceService WorkspaceService { get; set; }
 
-    public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+    public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
     {
         if (obj is CreateGraphMenuCommand)
         {
@@ -43,7 +43,7 @@ public class GraphSystem : DiagramPlugin
             }
             
         }
-        var diagram = obj as DiagramViewModel;
+        var diagram = obj.FirstOrDefault() as DiagramViewModel;
         if (diagram != null)
         {
      

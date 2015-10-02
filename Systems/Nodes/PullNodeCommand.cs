@@ -2,6 +2,6 @@ namespace Invert.Core.GraphDesigner
 {
     public class PullNodeCommand : Command, IFileSyncCommand
     {
-        public GraphNode Node { get; set; }
+        public IDiagramNode[] Node { get; set; }
     }
 }

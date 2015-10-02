@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -137,7 +137,10 @@ namespace Invert.Core.GraphDesigner
         {
             get { return SelectedGraphItems.OfType<DiagramNodeViewModel>().FirstOrDefault(); }
         }
-
+        public IEnumerable<DiagramNodeViewModel> SelectedNodes
+        {
+            get { return SelectedGraphItems.OfType<DiagramNodeViewModel>(); }
+        }
         public IEnumerable<GraphItemViewModel> SelectedNodeItems
         {
             get
@@ -894,8 +897,8 @@ namespace Invert.Core.GraphDesigner
             }
             foreach (var remove in removeList)
                 GraphItems.Remove(remove);
-          
-
+          if (removeList.Count > 0)
+            RefreshConnectors();
          
         }
 

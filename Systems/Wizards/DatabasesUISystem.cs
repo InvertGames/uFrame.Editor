@@ -211,7 +211,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             //});
         }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
             if (obj is ChangeDatabaseCommand)
             {

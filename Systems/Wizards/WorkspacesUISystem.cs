@@ -243,11 +243,11 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             }
         }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
             if (WorkspaceService.Workspaces.Count() >= 8)
             {
-                var selectProject = obj as SelectWorkspaceCommand;
+                var selectProject = obj.FirstOrDefault() as SelectWorkspaceCommand;
                 if (selectProject != null)
                 {
                     foreach (var item in WorkspaceService.Workspaces)

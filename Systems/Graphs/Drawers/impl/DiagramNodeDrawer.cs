@@ -506,9 +506,9 @@ namespace Invert.Core.GraphDesigner
             if (_cachedIssues == null)
             {
                 _cachedIssues = new ErrorInfo[] {};// ViewModel.Issues.ToArray();
-                _cachedTag = string.Join(" | ", ViewModel.Tags.ToArray());
+                
             }
-
+            _cachedTag = string.Join(" | ", ViewModel.Tags.ToArray());
             //if (Children == null || Children.Count < 1)
             //{
             // //Children.Clear();

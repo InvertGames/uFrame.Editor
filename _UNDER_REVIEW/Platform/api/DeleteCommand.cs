@@ -1,7 +1,9 @@
+using Invert.Data;
+
 namespace Invert.Core.GraphDesigner
 {
     public class DeleteCommand : Command, IFileSyncCommand
     {
-        public Invert.Data.IDataRecord Item { get; set; }
+        public IDataRecord[] Item { get; set; }
     }
 }

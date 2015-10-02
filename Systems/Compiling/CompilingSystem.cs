@@ -213,9 +213,9 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, object obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
-            var node = obj as DiagramNodeViewModel;
+            var node = obj.FirstOrDefault() as DiagramNodeViewModel;
             if (node != null)
             {
                 var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
