@@ -386,7 +386,7 @@ namespace Invert.Core.GraphDesigner
         {
             get { return _config ?? (_config = Repository.GetSingle<uFrameDatabaseConfig>()); }
         }
-        [InspectorProperty]
+        [InspectorProperty("All the code generated for this graph will be placed inside this namespace.")]
         public string Namespace
         {
             get
