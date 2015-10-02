@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using Invert.Common;
@@ -61,8 +62,20 @@ namespace Invert.Core.GraphDesigner.Unity
                 else
                 {
                      var sc = SearchCriteria.ToLower();
-                    TreeModel.Predicate =
-                        i => i.Title != null && (i.Title.ToLower().Contains(sc) || i.Title.ToLower() == sc);
+                    TreeModel.Predicate = i =>
+                    {
+                        if (string.IsNullOrEmpty(i.Title)) return false;
+
+                        if (
+                            CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.Title, SearchCriteria,
+                                CompareOptions.IgnoreCase) != -1) return true;
+
+                        if (!string.IsNullOrEmpty(i.SearchTag) &&
+                            CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.SearchTag, SearchCriteria,
+                                CompareOptions.IgnoreCase) != -1) return true;
+
+                        return false;
+                    };
                 }
                 TreeModel.IsDirty = true;
             }

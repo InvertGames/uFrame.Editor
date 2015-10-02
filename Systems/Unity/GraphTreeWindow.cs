@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
@@ -92,7 +93,20 @@ namespace Assets.UnderConstruction.Editor
                 }
                 else
                 {
-                    TreeModel.Predicate = i => i.Title.Contains(SearchCriteria);
+                    TreeModel.Predicate = TreeModel.Predicate = i =>
+                    {
+                        if (string.IsNullOrEmpty(i.Title)) return false;
+
+                        if (
+                            CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.Title, SearchCriteria,
+                                CompareOptions.IgnoreCase) != -1) return true;
+
+                        if (!string.IsNullOrEmpty(i.SearchTag) &&
+                            CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.SearchTag, SearchCriteria,
+                                CompareOptions.IgnoreCase) != -1) return true;
+
+                        return false;
+                    };
                 }
             }
 
