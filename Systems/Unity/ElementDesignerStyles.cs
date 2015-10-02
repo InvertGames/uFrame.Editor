@@ -1657,7 +1657,7 @@ namespace Invert.Common
                         fixedHeight = 19f * Scale,
                         stretchWidth = true,
                         alignment = TextAnchor.MiddleCenter,
-                        fontSize = Mathf.RoundToInt(9 * Scale),
+                        fontSize = Mathf.RoundToInt(10 * Scale),
                         fontStyle = FontStyle.Normal
                     };
                 return _tag1;

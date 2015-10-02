@@ -63,6 +63,15 @@ namespace Invert.Core.GraphDesigner
                 bounds.x += 3;
                 Bounds = bounds;
 
+                if (ViewModel.InspectorType == InspectorType.GraphItems)
+                {
+                    Bounds= Bounds.WithHeight(30);
+                }
+                else if (ViewModel.InspectorType == InspectorType.TextArea)
+                {
+                    Bounds = Bounds.WithHeight(60);
+                }
+
             }
             
             
@@ -77,10 +86,20 @@ namespace Invert.Core.GraphDesigner
             }
             else
             {
-                platform.DrawPropertyField(
-                    ViewModel.InspectorType == InspectorType.GraphItems
-                        ? Bounds.WithHeight(30).CenterInsideOf(Bounds)
-                        : Bounds.WithHeight(17).CenterInsideOf(Bounds), this.ViewModel, scale);
+                Rect inspBounds;
+                if (ViewModel.InspectorType == InspectorType.GraphItems)
+                {
+                    inspBounds = Bounds.WithHeight(30).CenterInsideOf(Bounds);
+                }
+                else if (ViewModel.InspectorType == InspectorType.TextArea)
+                {
+                    inspBounds = Bounds.WithHeight(60).CenterInsideOf(Bounds);
+                }
+                else
+                {
+                    inspBounds = Bounds.WithHeight(17).CenterInsideOf(Bounds);
+                }
+                platform.DrawPropertyField(inspBounds, this.ViewModel, scale);
             }
         }
 

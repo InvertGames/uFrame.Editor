@@ -30,7 +30,8 @@ namespace Invert.Core.GraphDesigner.Unity
         }
 
         private string currentTooltip;
-        
+        private GUIStyle _textWrappingTextArea;
+
         public void SetTooltipForRect(Rect rect, string tooltip)
         {
             bool isMouseOver = rect.Contains(Event.current.mousePosition);
@@ -646,9 +647,21 @@ namespace Invert.Core.GraphDesigner.Unity
 
             GUI.color = colorCache;
 
-        } 
-        
-        
+        }
+
+        public GUIStyle TextWrappingTextArea
+        {
+            get {
+                if (_textWrappingTextArea == null)
+                {
+                    _textWrappingTextArea = new GUIStyle(EditorStyles.textArea);
+                    _textWrappingTextArea.wordWrap = true;
+                }
+                return _textWrappingTextArea;
+            }
+            set { _textWrappingTextArea = value; }
+        }
+
         public virtual void DrawInspector(Rect rect, PropertyFieldViewModel d, GUIStyle labelStyle)
         {
             var colorCache = GUI.color;
@@ -708,14 +721,15 @@ var                 labelWidtho = GUILayout.Width(140);
             {
                 if (d.InspectorType == InspectorType.TextArea)
                 {
+                    labelArea = rect.WithHeight(17).InnerAlignWithUpperRight(rect);
+                    fieldArea = rect.Below(labelArea).Clip(rect).PadSides(2);
                     EditorGUI.LabelField(labelArea, d.Name, labelStyle);
                     SetTooltipForRect(rect,d.InspectorTip);
                     EditorGUI.BeginChangeCheck();
-                    d.CachedValue = EditorGUI.TextArea(fieldArea,(string)d.CachedValue);
+                    d.CachedValue = EditorGUI.TextArea(fieldArea,(string)d.CachedValue,TextWrappingTextArea);
                     if (EditorGUI.EndChangeCheck())
                     {
                         d.Setter(d.DataObject, d.CachedValue);
-                        
                     }
                     if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                     {

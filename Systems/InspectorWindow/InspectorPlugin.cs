@@ -68,9 +68,22 @@ public class InspectorPlugin : DiagramPlugin
 
                 foreach (var item in group)
                 {
-                    if (item.InspectorType == InspectorType.GraphItems) itemRect = itemRect.WithHeight(30);
+
+                    Rect inspBounds;
+                    if (item.InspectorType == InspectorType.GraphItems)
+                    {
+                        itemRect = itemRect.WithHeight(30);
+                    }
+                    else if (item.InspectorType == InspectorType.TextArea)
+                    {
+                        itemRect = itemRect.WithHeight(60);
+                    }
+                    else
+                    {
+                        itemRect = itemRect.WithHeight(17);
+                    }
                     d.DrawInspector(itemRect, item, EditorStyles.label);
-                    itemRect = itemRect.Below(itemRect).WithHeight(17);
+                    itemRect = itemRect.Below(itemRect).Translate(0,3).WithHeight(17);
                 }
 
                 groupRect = groupRect.Below(itemRect.Above(itemRect));
