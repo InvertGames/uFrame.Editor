@@ -140,7 +140,7 @@ public class TreeViewUISystem : DiagramPlugin, IDrawTreeView, IQueryDesignerWind
         var itemTemplateRect = bounds.WithHeight(ItemHeight);
         bool hasItems = false;
 
-        foreach (var treeViewItem in viewModel.TreeData.ToArray())
+        foreach (var treeViewItem in viewModel.TreeData)
         {
             if (!treeViewItem.Visible) continue;
             hasItems = true;

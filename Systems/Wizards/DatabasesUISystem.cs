@@ -211,9 +211,10 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
             //});
         }
 
-        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
         {
-            if (obj is ChangeDatabaseCommand)
+            var obj = objs.FirstOrDefault() as ChangeDatabaseCommand;
+            if (obj != null)
             {
                 var databaseService = InvertApplication.Container.Resolve<DatabaseService>();
                 foreach (var item in databaseService.Configurations.Values)
