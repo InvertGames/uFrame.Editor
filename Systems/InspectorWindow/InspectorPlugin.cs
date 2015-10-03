@@ -135,6 +135,7 @@ public class InspectorPlugin : DiagramPlugin
 
             fieldViewModel.PropertyInfo = item.Key;
             fieldViewModel.InspectorType = attribute.InspectorType;
+            fieldViewModel.InspectorTip = attribute.InspectorTip;
             fieldViewModel.Type = property.PropertyType;
             fieldViewModel.DataObject = obj;
             fieldViewModel.CustomDrawerType = attribute.CustomDrawerType;
