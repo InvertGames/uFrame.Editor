@@ -28,7 +28,7 @@ public class QuickAccessWindowPlugin : DiagramPlugin, IQuickAccessEvents
 
     }
 
-  //  [MenuItem("uFrame/Quick Access #z")]
+    //  [MenuItem("Window/uFrame/Quick Access #z")]
     public static void ShowQuickAccess()
     {
         InvertApplication.SignalEvent<IWindowsEvents>(_ => _.ShowWindow("QuickAccessWindowFactory", "Quick Access", null, new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y), new Vector2(150f, 250f)));
@@ -36,7 +36,7 @@ public class QuickAccessWindowPlugin : DiagramPlugin, IQuickAccessEvents
          
     }
 
-  //  [MenuItem("uFrame/Quick Access #z",true)]
+    //  [MenuItem("Window/uFrame/Quick Access #z",true)]
     public static bool ShowQuickAccessValidation()
     {
         return InvertGraphEditor.DesignerWindow != null && InvertGraphEditor.DesignerWindow.DiagramViewModel != null;

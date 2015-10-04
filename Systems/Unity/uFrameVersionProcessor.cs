@@ -21,7 +21,7 @@ public class uFrameVersionProcessor : AssetPostprocessor
     private static void ShowChangeLog()
     {
         EditorApplication.delayCall -= ShowChangeLog;
-        EditorApplication.ExecuteMenuItem("uFrame/Welcome Screen");
+        EditorApplication.ExecuteMenuItem("Window/uFrame/Welcome Screen");
         
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class uFrameInspectorWindow : EditorWindow {
     private Vector2 _scrollPosition;
 
-    [MenuItem("uFrame/Inspector #&i")]
+    [MenuItem("Window/uFrame/Inspector #&i")]
     internal static void ShowWindow()
     {
         var window = GetWindow<uFrameInspectorWindow>();
@@ -41,7 +41,7 @@ public class uFrameIssuesWindow : EditorWindow
 {
     private Vector2 _scrollPosition;
 
-    [MenuItem("uFrame/Issues #&u")]
+    [MenuItem("Window/uFrame/Issues #&u")]
     internal static void ShowWindow()
     {
         var window = GetWindow<uFrameIssuesWindow>();

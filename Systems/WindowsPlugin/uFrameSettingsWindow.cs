@@ -11,7 +11,7 @@ using UnityEngine;
 public class uFrameSettingsWindow : EditorWindow
 {
 
-    [MenuItem("uFrame/Settings")]
+    [MenuItem("Window/uFrame/Settings")]
     internal static void ShowWindow()
     {
         var window = GetWindow<uFrameSettingsWindow>();

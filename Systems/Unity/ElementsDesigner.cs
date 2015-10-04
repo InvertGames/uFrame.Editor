@@ -11,7 +11,7 @@ namespace Invert.Core.GraphDesigner.Unity
     {
         public static ElementsDesigner Instance { get; set; }
 
-        [MenuItem("Window/uFrame Designer", false, 1)]
+        [MenuItem("Window/uFrame/Graph Window", false, 1)]
         public static void Init()
         {
             // Get existing open window or if none, make a new one:

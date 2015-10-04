@@ -17,7 +17,7 @@ public class SelectedCodePreview : EditorWindow
     private CodeFileGenerator[] fileGenerators;
     private Vector2 _scrollPosition;
 
-    [MenuItem("uFrame/Code Preview Window #&p")]
+    [MenuItem("Window/uFrame/Code Preview Window #&p")]
     internal static void ShowWindow()
     {
         var window = GetWindow<SelectedCodePreview>();
