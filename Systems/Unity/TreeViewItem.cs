@@ -1,4 +1,5 @@
 using Invert.Core;
+using UnityEngine;
 
 public class TreeViewItem
 {
@@ -16,4 +17,5 @@ public class TreeViewItem
     public string Icon { get; set; }
     public bool Highlighted { get; set; }
     public bool Selected { get; set; }
+    public Color? ColorMark { get; set; }
 }

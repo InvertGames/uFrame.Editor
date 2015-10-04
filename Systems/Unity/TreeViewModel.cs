@@ -36,6 +36,8 @@ public class TreeViewModel
         set { _singleItemIcon = value; }
     }
 
+    public Func<IItem, string> SingleIconSelector { get; set; }
+
     public IItem SelectedData
     {
         get { return SelectedItem != null ? SelectedItem.Data : null; }
@@ -45,6 +47,8 @@ public class TreeViewModel
     {
         get { return SelectedIndex > -1 && SelectedIndex < TreeData.Count ? TreeData[SelectedIndex] : null; }
     }
+
+    public Func<IItem, Color?> ColorMarkSelector { get; set; } 
 
     public int SelectedIndex
     {
@@ -152,7 +156,8 @@ public class TreeViewModel
                 var data = item.Data;
                 var treeData = data as ITreeItem;
                 item.Visible = item.Parent == null || item.Parent.Visible && item.ParentData.Expanded;
-                item.Icon = treeData == null || !treeData.Children.Any() ? SingleItemIcon : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                item.Icon = treeData == null || !treeData.Children.Any() ? (SingleIconSelector == null ? SingleItemIcon : SingleIconSelector(data)) : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                item.ColorMark = ColorMarkSelector != null ? ColorMarkSelector(data) : null;
                 item.Highlighted = false;
                 item.Selected = SelectedIndex == item.Index;
                 if (data.Title == null) continue;
@@ -193,7 +198,8 @@ public class TreeViewModel
                     item.Visible = false;
                 }
 
-                item.Icon = treeData == null ? SingleItemIcon : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                item.ColorMark = ColorMarkSelector != null ? ColorMarkSelector(data) : null;
+                item.Icon = treeData == null ? (SingleIconSelector == null ? SingleItemIcon : SingleIconSelector(data)) : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
                 
                 if (data.Title == null) continue;
                 if (data.Title.Length > LargestString.Length) LargestString = data.Title;

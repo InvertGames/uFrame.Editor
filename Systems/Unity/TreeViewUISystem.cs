@@ -151,7 +151,7 @@ public class TreeViewUISystem : DiagramPlugin, IDrawTreeView, IQueryDesignerWind
             var itemRect = itemTemplateRect.Pad(5*treeViewItem.Indent, 0, 5*treeViewItem.Indent, 0);
             
             var localItemY = itemRect.Translate(0, -position.yMin).y;
-
+            if (localItemY > (viewModel.Scroll.y + position.height)) break;
             var imageRect = new Rect().WithSize(12, 12)
                 .Align(itemRect)
                 .AlignHorisonallyByCenter(itemRect)
@@ -175,7 +175,11 @@ public class TreeViewUISystem : DiagramPlugin, IDrawTreeView, IQueryDesignerWind
 
             PlatformDrawer.DrawLabel(labelRect, treeViewItem.Data.Title, CachedStyles.ListItemTitleStyle);
             PlatformDrawer.DrawImage(imageRect, treeViewItem.Icon, true);
-
+            if (treeViewItem.ColorMark.HasValue)
+            {
+                var colorMarkRect = new Rect().WithSize(8, 8).InnerAlignWithCenterRight(itemRect).Translate(-24,0);
+                PlatformDrawer.DrawRect(colorMarkRect,treeViewItem.ColorMark.Value);
+            }
 
             var item1 = treeViewItem;
             PlatformDrawer.DoButton(itemRect.Translate(25, 0), "", CachedStyles.ClearItemStyle,

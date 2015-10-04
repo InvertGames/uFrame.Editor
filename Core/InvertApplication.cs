@@ -203,6 +203,34 @@ namespace Invert.Core
             }
             return null;
         }
+
+        public static Type FindRuntimeType(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+
+            foreach (var assembly in TypeAssemblies)
+            {
+                try
+                {
+                    foreach (var item in assembly.GetTypes())
+                    {
+                        if (item.Name == name)
+                            return item;
+                        if (item.FullName == name)
+                            return item;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
+
+            }
+            return null;
+        }
+
+        
+
         public static ICorePlugin[] Plugins
         {
             get

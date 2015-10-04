@@ -10,6 +10,11 @@ namespace Invert.Core.GraphDesigner
         private string _name1;
         private Type _type;
 
+        public override string InputDescription
+        {
+            get { return "Plug in any output which requires a Type.\n(For example Property)"; }
+        }
+
         public override string FullName
         {
             get { return Name; }

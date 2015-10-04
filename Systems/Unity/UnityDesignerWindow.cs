@@ -12,6 +12,7 @@ namespace Invert.Core.GraphDesigner.Unity
         , ICommandExecuted
         , IExecuteCommand<ScrollGraphCommand>
         , IGraphLoaded
+        , IQueryDiagramScroll
         , IToolbarQuery
     {
         private DesignerWindow _designerWindow;
@@ -98,6 +99,7 @@ namespace Invert.Core.GraphDesigner.Unity
         public void Repaint()
         {
             ElementsDesigner.Instance.Repaint();
+
         }
         private MouseEvent _event;
 
@@ -309,5 +311,14 @@ namespace Invert.Core.GraphDesigner.Unity
             //});
         }
 
+        public void QueryDiagramScroll(ref Vector2 scroll)
+        {
+            scroll = _forceScrollPosition ?? _scrollPosition;
+        }
+    }
+
+    public interface IQueryDiagramScroll
+    {
+        void QueryDiagramScroll(ref Vector2 scroll);
     }
 }

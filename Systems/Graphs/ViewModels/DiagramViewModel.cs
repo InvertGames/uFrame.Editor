@@ -277,7 +277,7 @@ namespace Invert.Core.GraphDesigner
                 //InvertApplication.Log("B-A" + DateTime.Now.Subtract(time).TotalSeconds.ToString());
                 var mapping = InvertApplication.Container.RelationshipMappings[item.GetType(), typeof(ViewModel)];
                 if (mapping == null) continue;
-                var vm = Activator.CreateInstance(mapping, item, this) as GraphItemViewModel;
+                var vm = Activator.CreateInstance(mapping, item, this) as GraphItemViewModel; 
                 //var vm = 
                 //    InvertApplication.Container.ResolveRelation<ViewModel>(item.GetType(), item, this) as
                 //        GraphItemViewModel;
@@ -566,22 +566,33 @@ namespace Invert.Core.GraphDesigner
 
         public void Navigate()
         {
-            if (SelectedNode == null) return;
-            if (SelectedNode.IsFilter)
-            {
 
-                if (SelectedNode.GraphItemObject == GraphData.CurrentFilter)
-                {
-                    GraphData.PopFilter();
-                    GraphData.UpdateLinks();
-                }
-                else
-                {
 
-                    GraphData.PushFilter(SelectedNode.GraphItemObject as IGraphFilter);
-                    GraphData.UpdateLinks();
-                }
-            }
+            InvertApplication.Execute(new FilterBySelectionCommand()); 
+//
+//            if (SelectedNode == null) return;
+//            if (SelectedNode.IsFilter)
+//            {
+//
+//                if (SelectedNode.GraphItemObject == GraphData.CurrentFilter)
+//                {
+//                    GraphData.PopFilter();
+//                    GraphData.UpdateLinks();
+//
+//                }
+//                else
+//                {
+//                    var graphFilter = SelectedNode.GraphItemObject as IGraphFilter;
+//                    GraphData.PushFilter(graphFilter);
+//                    GraphData.UpdateLinks();
+//                }
+//                //   if (command.SaveInHistory) SaveNewStep(null);
+//
+//            }
+//            InvertApplication.Execute(new FilterBySelectionCommand()
+//            {
+//                
+//            });
         }
 
         public void Save()
@@ -774,17 +785,18 @@ namespace Invert.Core.GraphDesigner
 
         public void NavigateTo(string identifier)
         {
-            var graphItem = CurrentRepository.AllOf<IDiagramNodeItem>().FirstOrDefault(p => p.Identifier == identifier);
-            if (graphItem == null) return;
-            var node = graphItem.Node;
-            NavigateTo(node);
+            InvertApplication.Execute(new NavigateByIdCommand()
+            {
+                Identifier = identifier
+            });
         }
         public void NavigateByName(string name)
         {
-            var graphItem = CurrentRepository.AllOf<IDiagramNodeItem>().FirstOrDefault(p => p.Name == name);
-            if (graphItem == null) return;
-            var node = graphItem.Node;
-            NavigateTo(node);
+
+          InvertApplication.Execute(new NavigateByNameCommand()
+          {
+              ItemName = name
+          });
         }
 
         public void ShowQuickAdd()

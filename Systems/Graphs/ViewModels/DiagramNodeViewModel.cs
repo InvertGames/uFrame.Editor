@@ -495,54 +495,7 @@ namespace Invert.Core.GraphDesigner
 
         public virtual Color HeaderColor
         {
-            get
-            {
-                switch (Color)
-                {
-                    case NodeColor.Gray:
-                        return new Color32(104, 105, 109, 255);
-                        break;
-                    case NodeColor.DarkGray:
-                        return new Color32(56, 56, 57, 255);
-                        break;
-                    case NodeColor.Blue:
-                        return new Color32(115, 110, 180, 255);
-                        break;
-                    case NodeColor.LightGray:
-                        return new Color32(87, 101, 108, 255);
-                        break;
-                    case NodeColor.Black:
-                        return new Color32(50, 50, 50, 255);
-                        break;
-                    case NodeColor.DarkDarkGray:
-                        return new Color32(51, 56, 58, 255);
-                        break;
-                    case NodeColor.Orange:
-                        return new Color32(235, 126, 21, 255);
-                        break;
-                    case NodeColor.Red:
-                        return new Color32(234, 20, 20, 255);
-                        break;
-                    case NodeColor.Yellow:
-                        return new Color32(134, 134, 18, 255);
-                        break;
-                    case NodeColor.Green:
-                        return new Color32(25, 99, 9, 255);
-                        break;
-                    case NodeColor.Purple:
-                        return new Color32(58, 70, 94, 255);
-                        break;
-                    case NodeColor.Pink:
-                        return new Color32(79, 44, 115, 255);
-                        break;
-                    case NodeColor.YellowGreen:
-                        return new Color32(197, 191, 25, 255);
-                        break;
-                    default:
-                        return default(Color);
-                        break;
-                }
-            }
+            get { return CachedStyles.GetColor(Color); }
         }
 
         public string Label

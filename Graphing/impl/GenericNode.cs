@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Invert.Json;
+using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {

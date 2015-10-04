@@ -20,7 +20,8 @@ namespace Invert.Core.GraphDesigner
         IDataRecordInserted,
         IDataRecordRemoved,
         IDataRecordPropertyChanged,
-        IDataRecordManagerRefresh
+        IDataRecordManagerRefresh,
+        IToolbarQuery
     {
         private DesignerViewModel _designerViewModel;
 
@@ -110,6 +111,9 @@ namespace Invert.Core.GraphDesigner
 
         private bool _shouldProcessInputFromDiagram = true;
 
+        private DateTime _lastFpsUpdate;
+        private int _framesLastSec;
+        private int _fpsShown;
         public void Draw(float width, float height, Vector2 scrollPosition, float scale)
         {
             DiagramDrawer.IsEditingField = false;
@@ -162,6 +166,25 @@ namespace Invert.Core.GraphDesigner
                     DiagramDrawer.DrawTabs(Drawer, tabsRect);
                     DiagramDrawer.DrawBreadcrumbs(Drawer, breadCrumbsRect.y);
                 }
+
+                var fpsCounterRect = tabsRect.WithWidth(80).RightOf(tabsRect).Translate(-100,0);
+
+                if (ShowFPS)
+                {
+                    if ((DateTime.Now - _lastFpsUpdate).TotalMilliseconds > 1000)
+                    {
+                        _fpsShown = _framesLastSec;
+                        _lastFpsUpdate = DateTime.Now;
+                        _framesLastSec = 0;
+                    }
+                    else
+                    {
+                        _framesLastSec++;
+                    }
+                    Drawer.DrawLabel(fpsCounterRect, string.Format("FPS: {0}", _fpsShown), CachedStyles.WizardSubBoxTitleStyle);
+
+                }
+
                 Drawer.DrawRect(diagramRect, InvertGraphEditor.Settings.BackgroundColor);
 
                 DiagramRect = diagramRect;
@@ -217,7 +240,7 @@ namespace Invert.Core.GraphDesigner
                 }
 
 
-                DrawToolip(toolbarTopRect);
+                DrawToolip(breadCrumbsRect);
 
                 Drawer.DoToolbar(toolbarBottomRect, this, ToolbarPosition.BottomLeft);
                 //drawer.DoToolbar(toolbarBottomRect, this, ToolbarPosition.BottomRight);
@@ -241,7 +264,7 @@ namespace Invert.Core.GraphDesigner
                 var tooltipHeight = Drawer.CalculateTextHeight(tooltip, CachedStyles.BreadcrumbTitleStyle, 350);
 
                 var infoRect =
-                    new Rect().WithSize(350, Math.Max(80, tooltipHeight + 60)).AlignTopRight(alignmentRect).Below(alignmentRect).Pad(0, 15, 15, 0);
+                    new Rect().WithSize(350, Math.Max(80, tooltipHeight + 60)).AlignTopRight(alignmentRect).Below(alignmentRect).Pad(0, 15, 15, 0).Translate(-20,0);
 
                 var imageRect =
                     new Rect().WithSize(37, 37).AlignTopRight(infoRect).AlignHorisonallyByCenter(infoRect).Translate(-10, 0);
@@ -588,6 +611,26 @@ namespace Invert.Core.GraphDesigner
         public void ManagerRefreshed(IDataRecordManager manager)
         {
             RefreshContent();
+        }
+
+        public bool ShowFPS
+        {
+            get { return InvertGraphEditor.Prefs.GetBool("ShowFPSInDiagramDesigner", false); }
+            set { InvertGraphEditor.Prefs.SetBool("ShowFPSInDiagramDesigner",value); }
+        }
+
+        public void QueryToolbarCommands(ToolbarUI ui)
+        {
+            ui.AddCommand(new ToolbarItem()
+            {
+                Title = "Toggle FPS",
+                Checked = ShowFPS,
+                Command = new LambdaCommand("Toggle Fps", () =>
+                {
+                    ShowFPS = !ShowFPS;
+                }),
+                Position = ToolbarPosition.BottomRight
+            });
         }
     }
 }

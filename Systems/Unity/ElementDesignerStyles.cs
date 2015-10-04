@@ -137,6 +137,7 @@ namespace Invert.Common
         private static GUIStyle _listItemTitleStyle;
         private static GUIStyle _darkButtonStyle;
         private static GUIStyle _darkInspectorLabel;
+        private static GUIStyle _wizardActionButtonStyleSmall;
 
         public static GUIStyle DarkInspectorLabel
         {
@@ -1657,7 +1658,7 @@ namespace Invert.Common
                         fixedHeight = 19f * Scale,
                         stretchWidth = true,
                         alignment = TextAnchor.MiddleCenter,
-                        fontSize = Mathf.RoundToInt(9 * Scale),
+                        fontSize = Mathf.RoundToInt(10 * Scale),
                         fontStyle = FontStyle.Normal
                     };
                 return _tag1;
@@ -1878,11 +1879,24 @@ namespace Invert.Common
             {
                 return _wizardActionButtonStyle ?? (_wizardActionButtonStyle = new GUIStyle()
             {
-                border = new RectOffset(10,10,10,10),
+                border = new RectOffset(14,14,14,14),
                 alignment = TextAnchor.MiddleCenter
             }).WithAllStates("Box33",Color.white)
             .WithHoveredState("Box33_Hovered",Color.white);}
             set { _wizardActionButtonStyle = value; }
+        }    
+        
+        public static GUIStyle WizardActionButtonStyleSmall
+        {
+            get
+            {
+                return _wizardActionButtonStyleSmall ?? (_wizardActionButtonStyleSmall = new GUIStyle()
+            {
+                border = new RectOffset(14,14,14,14),
+                alignment = TextAnchor.MiddleCenter
+            }).WithAllStates("Box33_Small",Color.white)
+            .WithHoveredState("Box33_Small_Hovered",Color.white);}
+            set { _wizardActionButtonStyleSmall = value; }
         }
 
         public static GUIStyle WizardSubBoxTitleStyle

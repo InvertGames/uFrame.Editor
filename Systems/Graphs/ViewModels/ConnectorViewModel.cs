@@ -25,6 +25,31 @@ namespace Invert.Core.GraphDesigner
         {
             get { return DataObject as IConnectable; }
         }
+
+        private string _inputDescription;
+        private string _outputDescription;
+
+        public string InputDesctiption
+        {
+            get {
+                if (_inputDescription == null && Data.InputDescription != null)
+                {
+                        _inputDescription = Data.InputDescription;
+                } return _inputDescription;
+            }
+        }
+
+        public string OutputDesctiption
+        {
+            get
+            {
+                if (_outputDescription == null && Data.OutputDescription != null)
+                {
+                        _outputDescription = Data.OutputDescription;
+                } return _outputDescription;
+            }
+        }
+
         //public IConnectionStrategy Strategy { get; set; }
 
         public override Vector2 Position { get; set; }

@@ -139,6 +139,7 @@ namespace Invert.Core.GraphDesigner
 
             _filterStack = null;
         }
+
         public void PopToFilter(IGraphFilter filter1)
         {
             if (filter1 == null)
