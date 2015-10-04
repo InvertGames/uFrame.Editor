@@ -13,6 +13,9 @@ namespace Invert.Core.GraphDesigner
         bool AllowInputs { get; }
         bool AllowOutputs { get; }
 
+        string InputDescription { get; }
+        string OutputDescription { get; }
+
         bool AllowMultipleInputs { get; }
         bool AllowMultipleOutputs { get; }
         Color Color { get; }

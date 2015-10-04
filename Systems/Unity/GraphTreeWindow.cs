@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Linq;
+using Invert.Common;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
 using UnityEditor;
@@ -40,7 +41,14 @@ namespace Assets.UnderConstruction.Editor
             get { return _treeModel ?? (_treeModel = GraphData == null ? null : new TreeViewModel()
             {
                 Data = WorkspaceService == null ? null : WorkspaceService.Workspaces.Cast<IItem>().ToList(),
-                Submit = TryNavigateToItem
+                Submit = TryNavigateToItem,
+                ColorMarkSelector = i =>
+                {
+                    var node = i as GraphNode;
+                    if (node != null) return node.Color;
+                    return null;
+                }
+                
             }); }
             set { _treeModel = value; }
         }
@@ -75,25 +83,27 @@ namespace Assets.UnderConstruction.Editor
             if (TreeModel == null) return;
             var window = new Rect(0, 0, this.position.width, this.position.height);
 
-            var searcbarRect = window.WithHeight(50).Pad(5,5,55,10);
+            var searcbarRect = window.WithHeight(32).PadSides(5);
             var listRect = window.Below(searcbarRect).Clip(window).PadSides(5);
-            var searchIconRect = new Rect().WithSize(31, 31).AlignHorisonallyByCenter(searcbarRect).RightOf(searcbarRect).Translate(10, 0);
+            var searchIconRect = new Rect().WithSize(32, 32).InnerAlignWithBottomRight(searcbarRect).AlignHorisonallyByCenter(searcbarRect).PadSides(10);
 
             PlatformDrawer.DrawImage(searchIconRect,"SearchIcon",true);
 
+            GUI.SetNextControlName("GraphTreeSearch");
             EditorGUI.BeginChangeCheck();
-            GUI.SetNextControlName("Search");
-            SearchCriteria = GUI.TextField(searcbarRect, SearchCriteria ?? "");
-            
+            SearchCriteria = GUI.TextField(searcbarRect, SearchCriteria ?? "", ElementDesignerStyles.SearchBarTextStyle);
+            PlatformDrawer.DrawImage(searchIconRect, "SearchIcon", true);
             if (EditorGUI.EndChangeCheck())
             {
+
                 if (string.IsNullOrEmpty(SearchCriteria))
                 {
                     TreeModel.Predicate = null;
                 }
                 else
                 {
-                    TreeModel.Predicate = TreeModel.Predicate = i =>
+                    var sc = SearchCriteria.ToLower();
+                    TreeModel.Predicate = i =>
                     {
                         if (string.IsNullOrEmpty(i.Title)) return false;
 
@@ -108,6 +118,7 @@ namespace Assets.UnderConstruction.Editor
                         return false;
                     };
                 }
+                TreeModel.IsDirty = true;
             }
 
 
@@ -126,7 +137,7 @@ namespace Assets.UnderConstruction.Editor
                 });
             });
 
-            GUI.FocusControl("Search");
+            GUI.FocusControl("GraphTreeSearch");
         
         
         }

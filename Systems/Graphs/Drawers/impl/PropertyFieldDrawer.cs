@@ -71,7 +71,7 @@ namespace Invert.Core.GraphDesigner
                 {
                     Bounds = Bounds.WithHeight(60);
                 }
-
+                //
             }
             
             
@@ -99,7 +99,7 @@ namespace Invert.Core.GraphDesigner
                 {
                     inspBounds = Bounds.WithHeight(17).CenterInsideOf(Bounds);
                 }
-                platform.DrawPropertyField(inspBounds, this.ViewModel, scale);
+                platform.DrawPropertyField(inspBounds.Pad(7, 0, 14, 0), this.ViewModel, scale);
             }
         }
 

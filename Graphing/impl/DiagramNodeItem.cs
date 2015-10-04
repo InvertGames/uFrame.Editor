@@ -371,6 +371,16 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
         get { return true; }
     }
 
+    public virtual string InputDescription
+    {
+        get { return null; }
+    }
+
+    public virtual string OutputDescription
+    {
+        get { return null; }
+    }
+
     public virtual bool AllowMultipleInputs
     {
         get { return true; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.AccessControl;
+using Invert.Common;
 using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
@@ -169,7 +170,8 @@ namespace Invert.Core.GraphDesigner
 
                 platform.SetTooltipForRect(newTabButtonRect,"Create or import new graphs");
 
-                platform.DoButton(newTabButtonRect,"",CachedStyles.WizardSubBoxStyle,()=>{ InvertApplication.SignalEvent<INewTabRequested>(_=>_.NewTabRequested());});
+                platform.DoButton(newTabButtonRect,"",ElementDesignerStyles.WizardActionButtonStyleSmall,()=>{ InvertApplication.SignalEvent<INewTabRequested>(_=>_.NewTabRequested());});
+                //platform.DrawImage(newTabButtonRect,"",true);
                 platform.DrawImage(newTabButtonRect.PadSides(6),"PlusIcon_Micro",true);
 
 
@@ -181,8 +183,26 @@ namespace Invert.Core.GraphDesigner
 
         public void DrawBreadcrumbs(IPlatformDrawer platform,  float y)
         {
-            var breadcrumbsRect = new Rect(0, y, Bounds.width, 30f);
-            platform.DrawRect(breadcrumbsRect, InvertGraphEditor.Settings.BackgroundColor);
+
+            var navPanelRect = new Rect(4, y, 60, 30f);
+            var breadcrumbsRect = new Rect(64, y, Bounds.width-44, 30f);
+            platform.DrawRect(Bounds.WithOrigin(0,y).WithHeight(30), InvertGraphEditor.Settings.BackgroundColor);
+
+            var back = new Rect().WithSize(30, 30).PadSides(2).CenterInsideOf(navPanelRect.LeftHalf());
+            platform.DoButton(back, "", ElementDesignerStyles.WizardActionButtonStyleSmall,
+                () =>
+                {
+                    InvertApplication.Execute(new NavigateBackCommand());
+                });
+            platform.DrawImage(back.PadSides(4), "BackIcon", true);
+
+            var forward = new Rect().WithSize(30, 30).PadSides(2).CenterInsideOf(navPanelRect.RightHalf());
+            platform.DoButton(forward, "", ElementDesignerStyles.WizardActionButtonStyleSmall,
+                () =>
+                {
+                    InvertApplication.Execute(new NavigateForwardCommand());
+                });
+            platform.DrawImage(forward.PadSides(4),"ForwardIcon",true);
 
             //var color = new Color(InvertGraphEditor.Settings.BackgroundColor.r * 0.8f, InvertGraphEditor.Settings.BackgroundColor.g * 0.8f, InvertGraphEditor.Settings.BackgroundColor.b * 0.8f, 1f);
             //platform.DrawRect(rect, color);

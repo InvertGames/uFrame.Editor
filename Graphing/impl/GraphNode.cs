@@ -130,6 +130,9 @@ namespace Invert.Core.GraphDesigner
             get { return true; }
         }
 
+        public virtual string InputDescription { get { return null; } }
+        public virtual string OutputDescription { get { return null; } }
+
         public virtual bool AllowMultipleInputs
         {
             get { return true; }
@@ -142,7 +145,16 @@ namespace Invert.Core.GraphDesigner
 
         public virtual Color Color
         {
-            get { return Color.white; }
+            get { return CachedStyles.GetColor(NodeConfig.GetColor(this)); }
+        }
+
+        public virtual NodeConfigBase NodeConfig
+        {
+            get
+            {
+                return _nodeConfig ?? (
+                  _nodeConfig = InvertGraphEditor.Container.GetNodeConfig(GetType()) as NodeConfigBase);
+            }
         }
 
         public virtual void OnConnectionApplied(IConnectable output, IConnectable input)
@@ -214,6 +226,7 @@ namespace Invert.Core.GraphDesigner
         private bool _isSelected;
         private bool _expanded;
         private IGraphData _graph;
+        private NodeConfigBase _nodeConfig;
 
         public IEnumerable<FlagItem> Flags
         {

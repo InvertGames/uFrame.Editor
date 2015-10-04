@@ -213,8 +213,8 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
-            if (obj is ChangeDatabaseCommand)
-            {
+        //    if (obj is ChangeDatabaseCommand)
+         //   {
                 var databaseService = InvertApplication.Container.Resolve<DatabaseService>();
                 foreach (var item in databaseService.Configurations.Values)
                 {
@@ -238,7 +238,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
                     Command = new LambdaCommand("Manage Databases", () => EnableWizard = true),
                     
                 });
-            }
+         //   }
         }
     }
 

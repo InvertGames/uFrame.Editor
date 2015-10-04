@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Invert.Core.GraphDesigner
 {
     public static class CachedStyles
@@ -375,5 +377,132 @@ namespace Invert.Core.GraphDesigner
             get { return _wizardListItemBoxStyle ?? (_wizardListItemBoxStyle = InvertGraphEditor.StyleProvider.GetStyle(InvertStyles.WizardListItemBox)); }
             set { _wizardListItemBoxStyle = value; }
         }
+
+        public static Color GetColor(NodeColor color)
+        {
+            switch (color)
+            {
+                case NodeColor.Gray:
+                    return new Color32(104, 105, 109, 255);
+                    break;
+                case NodeColor.DarkGray:
+                    return new Color32(56, 56, 57, 255);
+                    break;
+                case NodeColor.Blue:
+                    return new Color32(115, 110, 180, 255);
+                    break;
+                case NodeColor.LightGray:
+                    return new Color32(87, 101, 108, 255);
+                    break;
+                case NodeColor.Black:
+                    return new Color32(50, 50, 50, 255);
+                    break;
+                case NodeColor.DarkDarkGray:
+                    return new Color32(51, 56, 58, 255);
+                    break;
+                case NodeColor.Orange:
+                    return new Color32(235, 126, 21, 255);
+                    break;
+                case NodeColor.Red:
+                    return new Color32(234, 20, 20, 255);
+                    break;
+                case NodeColor.Yellow:
+                    return new Color32(134, 134, 18, 255);
+                    break;
+                case NodeColor.Green:
+                    return new Color32(25, 99, 9, 255);
+                    break;
+                case NodeColor.Purple:
+                    return new Color32(58, 70, 94, 255);
+                    break;
+                case NodeColor.Pink:
+                    return new Color32(79, 44, 115, 255);
+                    break;
+                case NodeColor.YellowGreen:
+                    return new Color32(197, 191, 25, 255);
+                    break;
+                case NodeColor.Palevioletred:
+                    return new Color32(219,112,147,255);
+                case NodeColor.Palevioletred4:
+                    return new Color32(139,71,93,255);
+                case NodeColor.Violetred2:
+                    return new Color32(238,58,140,255);
+                case NodeColor.Violetred4:
+                    return new Color32(139,71,93,255);
+                case NodeColor.Mediumorchid2:
+                    return new Color32(209,95,238,255);
+                case NodeColor.Mediumorchid4:
+                    return new Color32(122,55,139,255);
+                case NodeColor.Mediumpurple2:
+                    return new Color32(159,121,238,255);
+                case NodeColor.Stateblue2:
+                    return new Color32(106,90,205,255);
+                case NodeColor.Royalblue2:
+                    return new Color32(67,110,238,255);         
+                case NodeColor.Royalblue4:
+                    return new Color32(39,64,139,255);
+                case NodeColor.Lightsteelblue3:
+                    return new Color32(162,181,205,255);
+                case NodeColor.Lightskyblue2:
+                    return new Color32(164,211,238,255);
+                case NodeColor.Azure3:
+                    return new Color32(193,205,205,255);       
+                case NodeColor.Azure4:
+                    return new Color32(131, 139, 139, 255);
+                case NodeColor.Manganeseblue:
+                    return new Color32(3, 168, 158, 255);
+                case NodeColor.Aquamarine3:
+                    return new Color32(102, 205, 170, 255);
+                case NodeColor.Seagreen2:
+                    return new Color32(78, 238, 148, 255);
+                case NodeColor.Seagreen4:
+                    return new Color32(46,139,87,255);
+                case NodeColor.Darkolivegreen3:
+                    return new Color32(162,205,90,255);
+                case NodeColor.Darkolivegreen4:
+                    return new Color32(110,139,61,255);
+                case NodeColor.Olivedrab:
+                    return new Color32(107,142,35,255);
+                case NodeColor.Lightgoldenrod3:
+                    return new Color32(205,190,112,255);
+                case NodeColor.Lightgoldenrod4:
+                    return new Color32(139,129,76,255);
+                case NodeColor.Gold3:
+                    return new Color32(205,173,0,255);
+                case NodeColor.Tan:
+                    return new Color32(210,180,140,255);
+                case NodeColor.Carrot:
+                    return new Color32(237,145,33,255);
+                case NodeColor.Sienna2:
+                    return new Color32(238,121,66,255);
+                case NodeColor.Salmon2:
+                    return new Color32(238,130,98,255);
+                case NodeColor.Indianred2:
+                    return new Color32(238,99,99,255);
+                case NodeColor.Indianred4:
+                    return new Color32(139,58,58,255);
+                case NodeColor.SgiTeal:
+                    return new Color32(56,142,142,255);
+                case NodeColor.SgiDarkgrey:
+                    return new Color32(85,85,85,255);
+                case NodeColor.SgiLightBlue:
+                    return new Color32(125,158,192,255);
+                case NodeColor.SgiChartReuse:
+                    return new Color32(113,198,113,255);
+                case NodeColor.SgiBeet:
+                    return new Color32(142,56,142,255);
+                case NodeColor.SgiSlateBlue:
+                    return new Color32(113,113,198,255);
+                case NodeColor.SgiBrightGrey:
+                    return new Color32(197,193,170,255);
+
+
+                default:
+                    return default(Color);
+                    break;
+
+            }
+        }
+
     }
 }

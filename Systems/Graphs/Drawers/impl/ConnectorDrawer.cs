@@ -401,14 +401,22 @@ namespace Invert.Core.GraphDesigner
                 
 
             var bounds = Bounds.Scale(scale);
-            if (ViewModel.IsMouseOver)
-            {
+          // if (ViewModel.IsMouseOver)
+         //   {
                 platform.DrawImage(bounds, Texture, true);
-                platform.DrawImage(bounds, Texture, true);
-            }
+              //  platform.DrawImage(bounds, Texture, true);
+          //  }
             
-            platform.DrawImage(bounds, Texture, true);
-          
+            //platform.DrawImage(bounds, Texture, true);
+
+
+            if (ViewModel.Direction == ConnectorDirection.Output && !string.IsNullOrEmpty(ViewModel.OutputDesctiption))
+                platform.SetTooltipForRect(bounds, ViewModel.OutputDesctiption);
+            else if ( !string.IsNullOrEmpty(ViewModel.InputDesctiption))
+            {
+                platform.SetTooltipForRect(bounds, ViewModel.InputDesctiption);
+                
+            }
             //if (InvertGraphEditor.Settings.ShowGraphDebug && ViewModel.IsMouseOver)
             //{
             //    GUI.Label(new Rect(Bounds.x + 20, Bounds.y - 10, 500, 50),
