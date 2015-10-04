@@ -25,7 +25,7 @@ namespace Invert.Core.GraphDesigner.Unity.Wizards
             }
             set { _items = value; }
         }
-        //[MenuItem("uFrame/Databases")]
+        //[MenuItem("Window/uFrame/Databases")]
         public static void Init()
         {
             var window = GetWindow<DatabaseListWindow>();

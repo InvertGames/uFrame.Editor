@@ -437,11 +437,12 @@ namespace Invert.Core.GraphDesigner.Unity
 
                     foreach (var graphItem in items)
                     {
+                        var graphItem1 = graphItem;
                         menu.AddItem(new SelectionMenuItem(graphItem, () =>
                         {
                             InvertApplication.Execute(() =>
                             {
-                                d.Setter(d.DataObject,graphItem);
+                                d.Setter(d.DataObject, graphItem1);
                             });
                         }));
                     }

@@ -76,6 +76,8 @@ namespace Invert.Core.GraphDesigner
                     CustomDrawerType = property.Value.CustomDrawerType,
                     Getter = () => property1.GetValue(GraphItem, null),
                     DataObject = GraphItem,
+                    DisableInputs = true,
+                    DisableOutputs = true,
                     Setter = (d,v) =>
                     {
                         property1.SetValue(d, v, null);

@@ -6,6 +6,11 @@ using Invert.Core.GraphDesigner;
 
 public class EnumNode : GenericNode , IClassTypeNode
 {
+    public override bool AllowOutputs
+    {
+        get { return false; }
+    }
+    
     public string ClassName
     {
         get { return Name; }

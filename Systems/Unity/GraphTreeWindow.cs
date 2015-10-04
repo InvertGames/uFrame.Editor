@@ -1,12 +1,62 @@
 using System.Linq;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
+using Invert.Data;
 using UnityEditor;
 using UnityEngine;
 
 namespace Assets.UnderConstruction.Editor
 {
-    public class GraphTreeWindow : EditorWindow, IGraphSelectionEvents
+    public class GraphTreeWindow : EditorWindow
+    {
+        [MenuItem("Window/uFrame/Graph Explorer %T")]
+        public static void Init()
+        {
+            var window = GetWindow<GraphTreeWindow>();
+            window.minSize = new Vector2(200, 200);
+            window.title = "Graph Explorer";
+            window.Show();
+            window.Repaint();
+            window.Focus();
+            Instance = window;
+            window.Focused = true;
+        }
+
+        public static GraphTreeWindow Instance { get; set; }
+
+        void OnGUI()
+        {
+            InvertApplication.SignalEvent<IDrawGraphTreeWindow>(_=>_.DrawGraphTreeWindow(this.position.width,this.position.height));
+        }
+
+        void Update()
+        {
+           
+            if (Dirty || Focused)
+            {
+                Repaint();
+                Dirty = false;
+            }
+        }
+
+        public void OnLostFocus()
+        {
+            Focused = true;
+        }
+
+        public void OnFocus()
+        {
+            Focused = true;
+        }
+        public bool Focused { get; set; }
+        public bool Dirty { get; set; }
+    }
+    
+    public interface IDrawGraphTreeWindow
+    {
+        void DrawGraphTreeWindow(float width, float height);
+    }
+    public class GraphTreeWindowPlugin : DiagramPlugin, IGraphSelectionEvents, IDrawGraphTreeWindow, IDataRecordPropertyChanged, IDataRecordRemoved, IDataRecordInserted
     {
         private WorkspaceService _workspaceService;
         private TreeViewModel _treeModel;
@@ -49,72 +99,12 @@ namespace Assets.UnderConstruction.Editor
 
         void OnEnable()
         {
-            InvertApplication.ListenFor<IGraphSelectionEvents>(this);
+            
         }
 
         private void SetHardDirty() //If you know what I mean
         {
             TreeModel = null;
-        }
-
-
-     [MenuItem("uFrame/Graph Explorer %T")]
-        public static void Init()
-        {
-            var window = GetWindow<GraphTreeWindow>();
-            window.minSize = new Vector2(200,200);
-            window.title = "Graph Explorer";
-            window.Show();
-            window.Repaint();
-            window.Focus();
-        }
-
-        void OnGUI()
-        {
-            if (TreeModel == null) return;
-            var window = new Rect(0, 0, this.position.width, this.position.height);
-
-            var searcbarRect = window.WithHeight(50).Pad(5,5,55,10);
-            var listRect = window.Below(searcbarRect).Clip(window).PadSides(5);
-            var searchIconRect = new Rect().WithSize(31, 31).AlignHorisonallyByCenter(searcbarRect).RightOf(searcbarRect).Translate(10, 0);
-
-            PlatformDrawer.DrawImage(searchIconRect,"SearchIcon",true);
-
-            EditorGUI.BeginChangeCheck();
-            GUI.SetNextControlName("Search");
-            SearchCriteria = GUI.TextField(searcbarRect, SearchCriteria ?? "");
-            
-            if (EditorGUI.EndChangeCheck())
-            {
-                if (string.IsNullOrEmpty(SearchCriteria))
-                {
-                    TreeModel.Predicate = null;
-                }
-                else
-                {
-                    TreeModel.Predicate = i => i.Title.Contains(SearchCriteria);
-                }
-            }
-
-
-//            PlatformDrawer.DrawTextbox("GraphTreeWindow_Search",searcbarRect,_searchCriterial,GUI.skin.textField.WithFont("Verdana",15),
-//                (val,submit) =>
-//                {
-//                    _searchCriterial = val;
-//                });
-
-
-            InvertApplication.SignalEvent<IDrawTreeView>(_ =>
-            {
-                _.DrawTreeView(listRect, TreeModel, (m, i) =>
-                {
-                    TryNavigateToItem(i);
-                });
-            });
-
-            GUI.FocusControl("Search");
-        
-        
         }
 
         private void TryNavigateToItem(IItem item)
@@ -133,11 +123,6 @@ namespace Assets.UnderConstruction.Editor
 
         }
 
-        void Update()
-        {
-            if (TreeModel != null && TreeModel.IsDirty) TreeModel.Refresh();
-            Repaint();
-        }
 
         public void SelectionChanged(GraphItemViewModel selected)
         {
@@ -158,9 +143,66 @@ namespace Assets.UnderConstruction.Editor
                     TreeModel.SelectedIndex = -1;
                 }
             }
+            Repaint();
         }
 
+        private static void Repaint()
+        {
+            if (GraphTreeWindow.Instance != null)
+            GraphTreeWindow.Instance.Repaint();
+        }
 
+        public void DrawGraphTreeWindow(float width, float height)
+        {
+            if (TreeModel == null) return;
+            var window = new Rect(0, 0, width, height);
 
+            var searcbarRect = window.WithHeight(50).Pad(5, 5, 55, 10);
+            var listRect = window.Below(searcbarRect).Clip(window).PadSides(5);
+            var searchIconRect = new Rect().WithSize(31, 31).AlignHorisonallyByCenter(searcbarRect).RightOf(searcbarRect).Translate(10, 0);
+
+            PlatformDrawer.DrawImage(searchIconRect, "SearchIcon", true);
+
+            EditorGUI.BeginChangeCheck();
+            GUI.SetNextControlName("Search");
+            SearchCriteria = GUI.TextField(searcbarRect, SearchCriteria ?? "");
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                if (string.IsNullOrEmpty(SearchCriteria))
+                {
+                    TreeModel.Predicate = null;
+                }
+                else
+                {
+                    TreeModel.Predicate = i => i.Title.Contains(SearchCriteria);
+                }
+            }
+
+            InvertApplication.SignalEvent<IDrawTreeView>(_ =>
+            {
+                _.DrawTreeView(listRect, TreeModel, (m, i) =>
+                {
+                    TryNavigateToItem(i);
+                });
+            });
+
+            GUI.FocusControl("Search");
+        }
+
+        public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
+        {
+            Repaint();
+        }
+
+        public void RecordRemoved(IDataRecord record)
+        {
+            Repaint();
+        }
+
+        public void RecordInserted(IDataRecord record)
+        {
+            Repaint();
+        }
     }
 }

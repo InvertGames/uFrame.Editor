@@ -158,8 +158,11 @@ namespace Invert.Core.GraphDesigner
             set { throw new NotImplementedException(); }
         }
 
+        public bool DisableInputs { get; set; }
+        public bool DisableOutputs { get; set; }
         protected virtual ConnectorViewModel CreateInputConnector()
         {
+            if (DisableInputs) return null;
             return new ConnectorViewModel()
             {
                 DataObject = DataObject,
@@ -197,6 +200,7 @@ namespace Invert.Core.GraphDesigner
 
         protected virtual ConnectorViewModel CreateOutputConnector()
         {
+            if (DisableOutputs) return null;
             return new ConnectorViewModel()
             {
                 DataObject = DataObject,

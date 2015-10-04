@@ -13,5 +13,9 @@ namespace Invert.Core.GraphDesigner
             : base(inspectorType)
         {
         }
+
+        public NodeProperty(string tip) : base(tip)
+        {
+        }
     }
 }
