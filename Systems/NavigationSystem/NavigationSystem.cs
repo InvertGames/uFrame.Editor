@@ -227,7 +227,12 @@ namespace Invert.Core.GraphDesigner {
 
         private void SaveNavSnapshot()
         {
+
             Profiler.BeginSample("Save Navigation Step");
+
+            if (WorkspaceService == null || WorkspaceService.CurrentWorkspace == null ||
+                WorkspaceService.CurrentWorkspace.CurrentGraph == null) return;
+            
             var navHistoryItems = Repository.All<NavHistoryItem>().OrderBy(i => i.Time).ToList();
             var activeHistoryItem = navHistoryItems.FirstOrDefault(i => i.IsActive);
             if (activeHistoryItem != null)

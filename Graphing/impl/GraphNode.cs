@@ -236,6 +236,7 @@ namespace Invert.Core.GraphDesigner
         private IGraphData _graph;
         private NodeConfigBase _nodeConfig;
         private int _order;
+        private string _comments;
 
         public IEnumerable<FlagItem> Flags
         {
@@ -268,11 +269,13 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-    
 
-
-        [JsonProperty, InspectorProperty("Comments associated with this node.",InspectorType.TextArea)]
-        public string Comments { get; set; }
+        [JsonProperty, InspectorProperty("Comments associated with this node.", InspectorType.TextArea)]
+        public virtual string Comments
+        {
+            get { return _comments; }
+            set { this.Changed("Comments", ref  _comments, value); }
+        }
 
         [Browsable(false)]
         public virtual bool IsValid
@@ -610,7 +613,7 @@ namespace Invert.Core.GraphDesigner
         [Browsable(false)]
         public string SearchTag { get { return Name; } }
 
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         [Browsable(false)]
         public virtual bool ShouldRenameRefactor { get { return true; } }
@@ -839,7 +842,7 @@ namespace Invert.Core.GraphDesigner
         }
 
         [JsonProperty]
-        public bool Expanded
+        public virtual bool Expanded
         {
             get { return _expanded; }
             set

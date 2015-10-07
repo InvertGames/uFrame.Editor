@@ -8,6 +8,11 @@ namespace Invert.Core.GraphDesigner
         {
         }
 
+        public override INodeStyleSchema StyleSchema
+        {
+            get { return CachedStyles.NodeStyleSchemaMinimalistic; }
+        }
+
         public override IEnumerable<string> Tags
         {
             get { yield return "Type Reference"; }

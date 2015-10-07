@@ -83,6 +83,7 @@ namespace Invert.Core.GraphDesigner
             container.RegisterInstance<UFrameContainer>(container);
 
             container.AddNode<TypeReferenceNode, TypeReferenceNodeViewModel, TypeReferenceNodeDrawer>("Type Reference");
+            container.AddNode<NoteNode, NoteNodeViewModel, NoteNodeDrawer>("Note");
 
             // TODO 2.0 Key-bindings
 //            container.RegisterKeyBinding(new RenameCommand(), "Rename", KeyCode.F2);

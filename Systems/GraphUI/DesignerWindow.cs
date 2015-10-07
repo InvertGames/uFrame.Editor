@@ -261,7 +261,7 @@ namespace Invert.Core.GraphDesigner
             var tooltip = Drawer.GetTooltip();
             if (!string.IsNullOrEmpty(tooltip))
             {
-                var tooltipHeight = Drawer.CalculateTextHeight(tooltip, CachedStyles.BreadcrumbTitleStyle, 350);
+                var tooltipHeight = Drawer.CalculateTextHeight(tooltip, CachedStyles.ListItemTitleStyle, 350);
 
                 var infoRect =
                     new Rect().WithSize(350, Math.Max(80, tooltipHeight + 60)).AlignTopRight(alignmentRect).Below(alignmentRect).Pad(0, 15, 15, 0).Translate(-20,0);
@@ -270,7 +270,7 @@ namespace Invert.Core.GraphDesigner
                     new Rect().WithSize(37, 37).AlignTopRight(infoRect).AlignHorisonallyByCenter(infoRect).Translate(-10, 0);
 
                 Drawer.DrawStretchBox(infoRect, CachedStyles.TooltipBoxStyle, 13);
-                Drawer.DrawLabel(infoRect.Pad(15, 15, 15 + 41 + 15, 30), tooltip, CachedStyles.BreadcrumbTitleStyle,
+                Drawer.DrawLabel(infoRect.Pad(15, 15, 15 + 41 + 15, 30), tooltip, CachedStyles.ListItemTitleStyle,
                     DrawingAlignment.MiddleLeft);
                 Drawer.DrawImage(imageRect, "InfoIcon", true);
 

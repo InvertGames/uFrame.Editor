@@ -12,12 +12,13 @@ namespace Invert.Core.GraphDesigner
         {
             get { return (TData)DataObject; }
         }
+
     }
 
     public abstract class GraphItemViewModel : ViewModel,IDataRecordInserted, IDataRecordRemoved, IDataRecordPropertyChanged
     {
         public virtual bool IsNewLine { get; set; }
-        public string Comments
+        public virtual string Comments
         {
             get { return "TODO"; }
             set
@@ -25,6 +26,8 @@ namespace Invert.Core.GraphDesigner
                 
             }
         }
+
+        public virtual string Description { get; set; }
 
         public override object DataObject
         {

@@ -45,7 +45,7 @@ namespace Invert.Core.GraphDesigner
 
         public Type Type
         {
-            get { return _type ?? (_type = InvertApplication.FindTypeByName(Name)); }
+            get { return _type ?? (_type = InvertApplication.FindTypeByName(Name) ?? InvertApplication.FindRuntimeType(Name)); }
             set { _type = value; }
         }
 

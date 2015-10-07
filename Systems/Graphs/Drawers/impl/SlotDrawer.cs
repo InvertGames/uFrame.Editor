@@ -96,8 +96,11 @@ namespace Invert.Core.GraphDesigner
         {
             base.Draw(platform, scale);
          
-            var adjusted = new Rect(Bounds);
-           
+            var adjusted = new Rect(Bounds).Pad(2,0,4,0);
+
+
+            if(!string.IsNullOrEmpty(ViewModel.Description))
+            platform.SetTooltipForRect(adjusted,ViewModel.Description);
            
             if (IOViewmModel.AllowSelection)
             {

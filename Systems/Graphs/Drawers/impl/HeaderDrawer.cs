@@ -12,6 +12,7 @@ namespace Invert.Core.GraphDesigner
         private object _iconImage;
         private object _headerImage;
 
+        public string IconTooltip { get; set; }
 
         public virtual INodeStyleSchema StyleSchema
         {
@@ -189,9 +190,16 @@ namespace Invert.Core.GraphDesigner
 
                     //var imageBounds = new Rect().WithSize(16, 16).InnerAlignWithUpperRight(Bounds).AlignHorisonallyByCenter(headerBounds).Translate(-headerPadding.right,0);
                     var cCache = GUI.color;
-                    GUI.color = new Color(cCache.r, cCache.g, cCache.b, cCache.a*0.7f);
+                    GUI.color = new Color(cCache.r, cCache.g, cCache.b, 0.7f);
                     platform.DrawImage(imageBounds.Scale(scale), IconImage, true);
                     GUI.color = cCache;
+
+                    if (!string.IsNullOrEmpty(IconTooltip))
+                    {
+                        platform.SetTooltipForRect(imageBounds.Scale(scale), IconTooltip);
+                    }
+
+
                 }
 
                 //GUI.Label(textBounds.Scale(scale), NodeViewModel.Label ?? string.Empty, titleStyle);

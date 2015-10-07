@@ -92,11 +92,25 @@ namespace Invert.Core.GraphDesigner.Unity
             var selectedItem = TreeModel.SelectedData as IItem;
             if (selectedItem != null)
             {
-                var titleRect = descriptionRect.WithHeight(40).PadSides(10);
-                var desctTextRect = descriptionRect.Below(titleRect).Clip(descriptionRect).PadSides(10);
-                PlatformDrawer.DrawStretchBox(descriptionRect,CachedStyles.WizardSubBoxStyle,10);
-                PlatformDrawer.DrawLabel(titleRect, selectedItem.Title, CachedStyles.WizardActionTitleStyle, DrawingAlignment.TopLeft);
-                PlatformDrawer.DrawLabel(desctTextRect, selectedItem.Description ?? "Please add description to the item", CachedStyles.WizardActionTitleStyle,DrawingAlignment.TopLeft);
+                PlatformDrawer.DrawStretchBox(descriptionRect, CachedStyles.WizardSubBoxStyle, 10);
+
+                if (string.IsNullOrEmpty(selectedItem.Description))
+                {
+                    var textRect = descriptionRect;
+                    var cacheColor = GUI.color;
+                    GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 0.4f);
+                    PlatformDrawer.DrawLabel(textRect, string.Format("{0}\nNo Description", selectedItem.Title), CachedStyles.WizardSubBoxTitleStyle, DrawingAlignment.MiddleCenter);
+                    GUI.color = cacheColor;
+                }
+                else
+                {
+                    var titleRect = descriptionRect.WithHeight(40).PadSides(10);
+                    var desctTextRect = descriptionRect.Below(titleRect).Clip(descriptionRect).PadSides(10);
+                    PlatformDrawer.DrawLabel(titleRect, selectedItem.Title, CachedStyles.WizardActionTitleStyle, DrawingAlignment.TopLeft);
+                    PlatformDrawer.DrawLabel(desctTextRect, selectedItem.Description ?? "Please add description to the item", CachedStyles.WizardActionTitleStyle, DrawingAlignment.TopLeft);
+                }
+
+
             }
 
             if (_focusNeeded)
@@ -146,6 +160,7 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public void ShowSelectionMenu(SelectionMenu menu, Vector2? position = null, bool useWindow = false)
         {
+            
             TreeModel = ConstructViewModel(menu);
             SearchCriteria = null;
             EnableContent = true;

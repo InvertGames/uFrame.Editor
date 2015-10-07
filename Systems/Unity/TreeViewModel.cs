@@ -199,7 +199,7 @@ public class TreeViewModel
                 }
 
                 item.ColorMark = ColorMarkSelector != null ? ColorMarkSelector(data) : null;
-                item.Icon = treeData == null ? (SingleIconSelector == null ? SingleItemIcon : SingleIconSelector(data)) : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
+                item.Icon = treeData == null || !treeData.Children.Any() ? (SingleIconSelector == null ? SingleItemIcon : SingleIconSelector(data)) : treeData.Expanded ? "MinusIcon_Micro" : "PlusIcon_Micro";
                 
                 if (data.Title == null) continue;
                 if (data.Title.Length > LargestString.Length) LargestString = data.Title;

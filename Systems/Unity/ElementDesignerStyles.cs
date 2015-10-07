@@ -2020,6 +2020,7 @@ namespace Invert.Common
                 .WithInputIcons("ConnectorCircleEmpty", "ConnectorCircleFilled")
                 .WithOutputIcons("ConnectorCircleEmpty", "ConnectorCircleFilled")
                 .WithTwoWayIcons("ConnectorCircleEmpty", "ConnectorCircleFilled")
+                .WithPad(2,0,0,0)
                 ); }
         }
 
@@ -2119,6 +2120,7 @@ namespace Invert.Common
             {
                 return _listItemTitleStyle ?? (_listItemTitleStyle = new GUIStyle()
                 {
+                    richText = true,
                     wordWrap = true,
                     alignment = TextAnchor.LowerCenter
                 }).WithFont("Verdana", 11)
