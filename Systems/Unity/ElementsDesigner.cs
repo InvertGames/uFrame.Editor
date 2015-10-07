@@ -11,7 +11,7 @@ namespace Invert.Core.GraphDesigner.Unity
     {
         public static ElementsDesigner Instance { get; set; }
 
-        [MenuItem("Window/uFrame/Graph Window", false, 1)]
+        [MenuItem("Window/uFrame/Graph Window #&u", false, 1)]
         public static void Init()
         {
             // Get existing open window or if none, make a new one:
@@ -42,7 +42,7 @@ namespace Invert.Core.GraphDesigner.Unity
         {
             if (InvertGraphEditor.Container != null)
             {
-                InvertApplication.SignalEvent<IDrawDesignerWindow>(_=>_.DrawDesigner());
+                InvertApplication.SignalEvent<IDrawDesignerWindow>(_=>_.DrawDesigner(position.width, position.height));
             }
         }
 

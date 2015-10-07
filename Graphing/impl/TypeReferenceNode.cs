@@ -31,6 +31,12 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
+        public override IEnumerable<IDiagramNodeItem> PersistedItems
+        {
+            get { yield break; }
+            set { base.PersistedItems = value; }
+        }
+
         public string ClassName
         {
             get { return Name; }

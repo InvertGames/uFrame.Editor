@@ -2,6 +2,6 @@ namespace Invert.Core.GraphDesigner.Unity
 {
     public interface IDrawDesignerWindow
     {
-        void DrawDesigner();
+        void DrawDesigner(float width, float height);
     }
 }

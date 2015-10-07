@@ -37,5 +37,6 @@ namespace Invert.Core.GraphDesigner
         void Validate(List<ErrorInfo> info);
         void Document(IDocumentationBuilder docs);
         ErrorInfo[] Errors { get; set; }
+        int Order { get; set; }
     }
 }

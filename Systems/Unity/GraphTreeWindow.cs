@@ -67,7 +67,7 @@ namespace Assets.UnderConstruction.Editor
         }
 
 
-     [MenuItem("uFrame/Graph Explorer %T")]
+     [MenuItem("Window/uFrame/Graph Explorer %T")]
         public static void Init()
         {
             var window = GetWindow<GraphTreeWindow>();

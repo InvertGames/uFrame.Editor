@@ -130,7 +130,7 @@ namespace Invert.Core.GraphDesigner
                 var breadCrumbsRect = new Rect(0, tabsRect.y + tabsRect.height, width, 30);
 
                 diagramRect = new Rect(0f, breadCrumbsRect.y + breadCrumbsRect.height, width,
-                    height - ((toolbarTopRect.height * 2)) - breadCrumbsRect.height - 20 - 32);
+                    height - ((toolbarTopRect.height * 2)) - breadCrumbsRect.height - 31);
                 var toolbarBottomRect = new Rect(0f, diagramRect.y + diagramRect.height, width,
                     toolbarTopRect.height);
 

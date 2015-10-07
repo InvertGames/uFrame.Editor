@@ -208,7 +208,7 @@ namespace Invert.Core.GraphDesigner
             if (section1.GenericSelector != null && section1.ReferenceType == null)
             {
                 
-                foreach (var item in section1.GenericSelector(GraphItem).OfType<IDiagramNodeItem>())
+                foreach (var item in section1.GenericSelector(GraphItem).OfType<IDiagramNodeItem>().OrderBy(p=>p.Order))
                 {
                     
                     if (section.SourceType.IsAssignableFrom(item.GetType()))

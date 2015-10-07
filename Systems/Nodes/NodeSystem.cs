@@ -13,6 +13,17 @@ namespace Invert.Core.GraphDesigner
     public interface IDemoVersionLimitZero
     {
 
+
+    }
+
+    public class MoveItemUpCommand : Command
+    {
+        public IDiagramNodeItem Item;
+    }
+
+    public class MoveItemDownCommand : Command
+    {
+        public IDiagramNodeItem Item;
     }
     public class NodeSystem : DiagramPlugin,
         IContextMenuQuery,
@@ -23,12 +34,37 @@ namespace Invert.Core.GraphDesigner
         IExecuteCommand<HideCommand>,
         IExecuteCommand<PullNodeCommand>,
         IExecuteCommand<ApplyRenameCommand>,
+        IExecuteCommand<MoveItemUpCommand>,
+        IExecuteCommand<MoveItemDownCommand>,
         IOnMouseUpEvent
     {
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
         {
-
+            var diagramNodeItem = objs.FirstOrDefault() as ItemViewModel;
+            if (diagramNodeItem != null)
+            {
+                var item = diagramNodeItem.DataObject as IDiagramNodeItem;
+                if (item != null)
+                {
+                    ui.AddCommand(new ContextMenuItem()
+                    {
+                        Title = "Move Up",
+                        Command = new MoveItemUpCommand()
+                        {
+                            Item = item
+                        }
+                    });
+                    ui.AddCommand(new ContextMenuItem()
+                    {
+                        Title = "Move Down",
+                        Command = new MoveItemDownCommand()
+                        {
+                            Item = item
+                        }
+                    });
+                }
+            }
             var diagramNode = objs.FirstOrDefault() as DiagramNodeViewModel;
             if (diagramNode != null)
             {
@@ -137,7 +173,7 @@ namespace Invert.Core.GraphDesigner
             if (typeof(IDemoVersionLimit).IsAssignableFrom(command.NodeType))
             {
                 var nodeCount = command.GraphData.Repository.AllOf<IDiagramNode>().Count(p => p.GetType() == command.NodeType);
-                if (nodeCount >= 10)
+                if (nodeCount >= 7)
                 {
                     Signal<INotify>(_ => _.NotifyWithActions("You've reached the max number of nodes of this type, upgrade to full version.", NotificationIcon.Warning, new NotifyActionItem()
                     {
@@ -231,6 +267,30 @@ namespace Invert.Core.GraphDesigner
 
             command.Item.Rename(command.Name);
             command.Item.EndEditing();
+        }
+
+        public void Execute(MoveItemUpCommand command)
+        {
+            var items = command.Item.Node.PersistedItems.Where(p => p.GetType() == command.Item.GetType()).ToArray().ToList();
+            var index = items.IndexOf(command.Item);
+            items.Move(index,true);
+            for (int i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                item.Order = i;
+            }
+        }
+
+        public void Execute(MoveItemDownCommand command)
+        {
+            var items = command.Item.Node.PersistedItems.Where(p => p.GetType() == command.Item.GetType()).ToArray().ToList();
+            var index = items.IndexOf(command.Item);
+            items.Move(index, false);
+            for (int i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                item.Order = i;
+            }
         }
     }
 }

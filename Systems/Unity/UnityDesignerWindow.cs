@@ -75,7 +75,7 @@ namespace Invert.Core.GraphDesigner.Unity
                 _scrollPosition.y = DesignerWindow.DiagramRect.height - DesignerWindow.DiagramRect.y;
             }
         }
-        public void DrawDesigner()
+        public void DrawDesigner(float width, float height)
         {
             if (EditorApplication.isCompiling)
             {
@@ -86,7 +86,7 @@ namespace Invert.Core.GraphDesigner.Unity
                 
             }
 
-            InvertApplication.SignalEvent<IDrawUFrameWindow>(_ => _.Draw(Screen.width + 1, Screen.height, _scrollPosition, 1f));
+            InvertApplication.SignalEvent<IDrawUFrameWindow>(_ => _.Draw(width, height, _scrollPosition, 1f));
         }
 
         public void DesignerWindowLostFocus()

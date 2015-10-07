@@ -19,7 +19,15 @@ namespace Invert.Core.GraphDesigner
         {
             get { return Repository.All<FilterItem>().Where(p => p.NodeId == this.Identifier); }
         }
-
+        [JsonProperty]
+        public int Order
+        {
+            get { return _order; }
+            set
+            {
+                this.Changed("Order", ref _order, value);
+            }
+        }
         public virtual IFilterItem FilterLocation
         {
             get { return FilterLocations.FirstOrDefault(); }
@@ -227,6 +235,7 @@ namespace Invert.Core.GraphDesigner
         private bool _expanded;
         private IGraphData _graph;
         private NodeConfigBase _nodeConfig;
+        private int _order;
 
         public IEnumerable<FlagItem> Flags
         {
@@ -313,7 +322,7 @@ namespace Invert.Core.GraphDesigner
         {
             get
             {
-                return Repository.AllOf<IDiagramNodeItem>().Where(p => p.NodeId == this.Identifier);
+                return Repository.AllOf<IDiagramNodeItem>().Where(p => p.NodeId == this.Identifier).OrderBy(p=>p.Order);
             }
             set
             {

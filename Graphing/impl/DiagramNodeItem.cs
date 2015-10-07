@@ -11,6 +11,8 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
 {
     public virtual string Title { get { return Name; } }
 
+    
+
     public virtual string Group
     {
         get { return Node.Name; }
@@ -121,6 +123,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
     private Rect _position;
     private string _nodeId;
     private GraphNode _node;
+    private int _order;
 
     public abstract string FullLabel { get; }
 
@@ -147,7 +150,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
 
     public virtual bool IsSelectable { get { return true; } }
 
-    [ JsonProperty]
+    [JsonProperty]
     public string NodeId
     {
         get { return _nodeId; }
@@ -157,6 +160,15 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
         }
     }
 
+    [JsonProperty]
+    public int Order
+    {
+        get { return _order; }
+        set
+        {
+            this.Changed("Order", ref _order, value);
+        }
+    }
     public GraphNode Node
     {
         get { return _node ?? (_node = Repository.GetById<GraphNode>(NodeId)); }
@@ -172,14 +184,6 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
         get { return _isSelected; }
         set
         {
-            //if (value == false && _isSelected)
-            //{
-            //    EndEditing();
-            //}
-            //else if (value == true && !_isSelected)
-            //{
-            //    BeginEditing();
-            //}
             _isSelected = value;
         }
     }

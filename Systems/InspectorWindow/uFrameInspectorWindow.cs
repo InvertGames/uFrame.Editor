@@ -76,7 +76,7 @@ public class uFrameNavigationHistoryWindow : EditorWindow
 {
     private Vector2 _scrollPosition;
 
-    [MenuItem("uFrame/Navigation History #&l")]
+    [MenuItem("Window/uFrame/Navigation History #&l")]
     internal static void ShowWindow()
     {
         var window = GetWindow<uFrameNavigationHistoryWindow>();
