@@ -245,6 +245,7 @@ namespace Invert.Core.GraphDesigner
             command.Configuration.Namespace = command.Namespace;
             command.Configuration.CodeOutputPath = command.CodePath;
             command.Configuration.Database.Commit();
+            Signal<INotify>(_=>_.Notify(string.Format("Changes to {0} database were applied!", command.Configuration.Title),NotificationIcon.Info));
         }
 
         public void RecordRemoving(IDataRecord record)

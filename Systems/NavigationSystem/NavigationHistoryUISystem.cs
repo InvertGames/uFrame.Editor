@@ -64,7 +64,7 @@ namespace Assets.Plugins.Editor.uFrame.Editor.Systems.NavigationSystem
             }
 
 
-            var clearButton = new Rect().WithSize(80, 30).InnerAlignWithBottomRight(rect).Translate(0, -20);
+            var clearButton = new Rect().WithSize(80, 33).InnerAlignWithBottomRight(rect).PadSides(5);
             Drawer.DoButton(clearButton, "Clear", ElementDesignerStyles.ButtonStyle,
                 m =>
                 {
@@ -77,7 +77,7 @@ namespace Assets.Plugins.Editor.uFrame.Editor.Systems.NavigationSystem
             if (NavHistoryTree == null) return;
             if (NavHistoryTree.IsDirty) NavHistoryTree.Refresh();
 
-            Signal<IDrawTreeView>(_ => _.DrawTreeView(rect.AddHeight(-64), NavHistoryTree, (m, i) =>
+            Signal<IDrawTreeView>(_ => _.DrawTreeView(rect.AddHeight(-28).PadSides(5), NavHistoryTree, (m, i) =>
             {
 
                                var bp = i as NavHistoryItem;

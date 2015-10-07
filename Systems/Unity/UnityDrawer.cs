@@ -797,7 +797,7 @@ var                 labelWidtho = GUILayout.Width(140);
                 {
                     EditorGUI.BeginChangeCheck();
                     GUI.Label(labelArea, d.Name, labelStyle);
-                    d.CachedValue = EditorGUI.Vector2Field(fieldArea, string.Empty, (Vector3)d.CachedValue);
+                    d.CachedValue = EditorGUI.Vector2Field(fieldArea, string.Empty, (Vector2)d.CachedValue);
                     SetTooltipForRect(rect, d.InspectorTip);
 
                     if (EditorGUI.EndChangeCheck())

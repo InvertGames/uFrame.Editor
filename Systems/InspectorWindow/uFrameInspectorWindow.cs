@@ -90,7 +90,7 @@ public class uFrameNavigationHistoryWindow : EditorWindow
     public void OnGUI()
     {
         Instance = this;
-        var rect = new Rect(0f, 0f, Screen.width, Screen.height);
+        var rect = new Rect(0f, 0f, this.position.width, this.position.height);
 
         GUILayout.BeginArea(rect);
         _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);

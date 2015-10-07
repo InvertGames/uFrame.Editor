@@ -480,6 +480,7 @@ namespace Invert.Core.GraphDesigner
                     TextStyle = HeaderTextStyle,
                     ViewModelObject = ViewModelObject,
                     StyleSchema = ViewModel.StyleSchema,
+                    IconTooltip = ViewModel.Comments,
                     ParentDrawer = this
                 });
             }

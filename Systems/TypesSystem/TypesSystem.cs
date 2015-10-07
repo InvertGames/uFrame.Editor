@@ -82,11 +82,14 @@ namespace Invert.Core.GraphDesigner
                         if (record != null)
                         {
                             command.ItemViewModel.RelatedType = record.Identifier;
+
                         }
                         else
                         {
                             command.ItemViewModel.RelatedType = type1.FullName;
                         }
+
+                        if (command.OnSelectionFinished != null) command.OnSelectionFinished();
                     }));
                 }
                 

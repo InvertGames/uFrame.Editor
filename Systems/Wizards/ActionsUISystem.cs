@@ -119,11 +119,11 @@ namespace Invert.Core.GraphDesigner.Unity.Wizards
                 var titleRect = itemRect
                     .Below(imageRect)
                     .Clip(itemRect)
-                    .Pad(15, 0, 30, 0)
+                    .Pad(5, 0, 10, 0)
                     .Translate(0, -2);
 
                 platform.DrawImage(imageRect, string.IsNullOrEmpty(action.Icon) ? "CreateEmptyDatabaseIcon" : action.Icon, true);
-                platform.DrawLabel(titleRect, action.Title, CachedStyles.WizardActionTitleStyle, DrawingAlignment.MiddleCenter);
+                platform.DrawLabel(titleRect, action.Title, CachedStyles.ListItemTitleStyle, DrawingAlignment.MiddleCenter);
 
                 buttonIndex++;
 

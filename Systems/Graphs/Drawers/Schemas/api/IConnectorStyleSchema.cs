@@ -11,5 +11,7 @@ namespace Invert.Core.GraphDesigner
         IConnectorStyleSchema WithOutputIcons(string emptyIcon, string filledIcon);
         IConnectorStyleSchema WithTwoWayIcons(string emptyIcon, string filledIcon);
         IConnectorStyleSchema WithDefaultIcons();
+        IConnectorStyleSchema WithPad(float left, float top, float right, float bottom);
+        Rect Padding { get; set; }
     }
 }

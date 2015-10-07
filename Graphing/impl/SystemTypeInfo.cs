@@ -153,8 +153,8 @@ public class SystemTypeInfo : ITypeInfo
     }
 
     public virtual string Title { get { return TypeName; } }
-    public string Group { get { return Namespace; } }
-    public string SearchTag { get { return FullName; } }
-    public string Description { get; set; }
+    public virtual string Group { get { return Namespace; } }
+    public virtual string SearchTag { get { return FullName; } }
+    public virtual  string Description { get; set; }
     public string Identifier { get {return FullName;} set {}}
 }

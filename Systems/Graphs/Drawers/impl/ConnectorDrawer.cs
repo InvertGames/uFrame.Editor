@@ -398,7 +398,9 @@ namespace Invert.Core.GraphDesigner
                 Bounds = new Rect(pos.x, pos.y, TextureWidth, TextureHeight);
 
             }
-                
+
+            var padding = ViewModel.StyleSchema.Padding;
+            Bounds = Bounds.Pad(padding.x, padding.y, padding.width, padding.height);
 
             var bounds = Bounds.Scale(scale);
           // if (ViewModel.IsMouseOver)

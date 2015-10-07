@@ -10,6 +10,10 @@ namespace Invert.Core.GraphDesigner
     {
         protected NodeConfigBase _nodeConfig;
 
+        public override string Comments
+        {
+            get { return GraphItem != null ? GraphItem.Comments : null; }
+        }
 
         protected override ConnectorViewModel CreateInputConnector()
         {

@@ -68,6 +68,14 @@ namespace Invert.Core.GraphDesigner
                    WithOutputIcons("DiagramArrowRightEmpty", "DiagramArrowRight");
         }
 
+        public IConnectorStyleSchema WithPad(float left, float top, float right, float bottom)
+        {
+            Padding = new Rect(left, top, right, bottom);
+            return this;
+        }
+
+        public Rect Padding { get; set; }
+
         internal struct SideDirectionItem
         {
             public ConnectorSide Side { get; set; }
