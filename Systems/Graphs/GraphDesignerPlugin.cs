@@ -8,8 +8,6 @@ using UnityEngine;
 namespace Invert.Core.GraphDesigner
 {
     public class GraphDesignerPlugin : DiagramPlugin, 
-        IPrefabNodeProvider, 
-        ICommandEvents, 
         IConnectionEvents,
         ICommandExecuted, 
         IQueryPossibleConnections,
@@ -26,7 +24,7 @@ namespace Invert.Core.GraphDesigner
 
         public override void Initialize(UFrameContainer container)
         {
-            container.RegisterToolbarCommand<DeleteGraphCommand>();
+            //
 //#if UNITY_EDITOR
         
 //            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -122,26 +120,6 @@ namespace Invert.Core.GraphDesigner
         public override void Loaded(UFrameContainer container)
         {
             InvertGraphEditor.DesignerPluginLoaded();
-        }
-
-        public IEnumerable<QuickAddItem> PrefabNodes(INodeRepository nodeRepository)
-        {
-            yield break;
-            //return nodeRepository.GetImportableItems(nodeRepository.CurrentFilter).OfType<DiagramNode>().Select(p=>new QuickAddItem("Show Item",p.Name,
-            //    _ =>
-            //    {
-            //        nodeRepository.SetItemLocation(p, _.MousePosition);
-            //    }));
-        }
-
-        public void CommandExecuting(ICommandHandler handler, IEditorCommand command, object o)
-        {
-            
-        }
-
-        public void CommandExecuted(ICommandHandler handler, IEditorCommand command, object o)
-        {
-
         }
 
         public void ConnectionApplying(IGraphData graph, IConnectable output, IConnectable input)

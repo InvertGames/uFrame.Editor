@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -125,11 +125,7 @@ namespace Invert.Core.GraphDesigner
 
             OutputConnectorType = graphItemObject.GetType();
             InputConnectorType = graphItemObject.GetType();
-            ToggleNode = new SimpleEditorCommand<DiagramNodeViewModel>(_ =>
-            {
-                this.IsCollapsed = !IsCollapsed;
-            });
-           
+    
         }
         
         public override void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
@@ -607,7 +603,6 @@ namespace Invert.Core.GraphDesigner
             get { return GraphItemObject.Errors; }
         }
 
-        public IEditorCommand ToggleNode { get; set; }
         public bool SaveImage { get; set; }
 
         public bool IsCurrentFilter
@@ -630,10 +625,10 @@ namespace Invert.Core.GraphDesigner
             GraphItemObject.RemoveFromDiagram();
         }
 
-        public void Hide()
-        {
-            DiagramViewModel.GraphData.CurrentFilter.HideInFilter(GraphItemObject);
-        }
+        //public void Hide()
+        //{
+        //    DiagramViewModel.GraphData.CurrentFilter.HideInFilter(GraphItemObject);
+        //}
 
 
         public virtual void CtrlClicked()

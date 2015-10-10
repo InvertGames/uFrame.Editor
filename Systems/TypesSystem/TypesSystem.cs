@@ -66,7 +66,7 @@ namespace Invert.Core.GraphDesigner
             {
                 menu.AddItem(new SelectionMenuItem("", "None", () =>
                 {
-                    command.ItemViewModel.RelatedType = null;
+                    command.Item.RelatedType = null;
                 }));
             }
 
@@ -81,12 +81,12 @@ namespace Invert.Core.GraphDesigner
                         var record = type1 as IDataRecord;
                         if (record != null)
                         {
-                            command.ItemViewModel.RelatedType = record.Identifier;
+                            command.Item.RelatedType = record.Identifier;
 
                         }
                         else
                         {
-                            command.ItemViewModel.RelatedType = type1.FullName;
+                            command.Item.RelatedType = type1.FullName;
                         }
 
                         if (command.OnSelectionFinished != null) command.OnSelectionFinished();
@@ -94,64 +94,8 @@ namespace Invert.Core.GraphDesigner
                 }
                 
             }
-            //if (command.AllowNone)
-            //{
-            //    menu.AddItem(new SelectionMenuItem("", "None", () =>
-            //    {
-            //        command.ItemViewModel.RelatedType = null;
-            //    }));
-            //}
-
-            //var categories = types.Where(_=>!string.IsNullOrEmpty(_.Group)).Select(_ => _.Group).Distinct().Select(_ => new SelectionMenuCategory()
-            //{
-            //    Title = _
-            //});
-
-            //foreach (var category in categories)
-            //{
-            //    menu.AddItem(category);
-            //    var category1 = category;
-            //    foreach (var type in types.Where(_=>_.Group == category1.Title))
-            //    {
-            //        var type1 = type;
-                    
-            //        menu.AddItem(new SelectionMenuItem(type, () =>
-            //        {
-            //            var record = type1 as IDataRecord;
-            //            if (record != null)
-            //            {
-            //                command.ItemViewModel.RelatedType = record.Identifier;
-            //            }
-            //            else
-            //            {
-            //                command.ItemViewModel.RelatedType = type.TypeName;
-            //            }
-                       
-            //        }),category);
-            //    }
-            //}
-
-            //foreach (var source in types.Where(_=>string.IsNullOrEmpty(_.Group)))
-            //{
-            //    var type1 = source;
-            //    menu.AddItem(new SelectionMenuItem(type1, () =>
-            //    {
-            //        var record = type1 as IDataRecord;
-            //        if (record != null)
-            //        {
-            //            command.ItemViewModel.RelatedType = record.Identifier;
-            //        }
-            //        else
-            //        {
-            //            command.ItemViewModel.RelatedType = type1.TypeName;
-            //        }
-            //    }));
-            //}
-
+        
             Signal<IShowSelectionMenu>(_=>_.ShowSelectionMenu(menu));
-//
-//
-//            InvertGraphEditor.WindowManager.InitItemWindow(types.ToArray(),,command.AllowNone);
         }
         public virtual IEnumerable<ITypeInfo> GetRelatedTypes(SelectTypeCommand command)
         {
@@ -174,10 +118,5 @@ namespace Invert.Core.GraphDesigner
                 typeInfo.Add(item);
             }
         }
-    }
-
-    public interface IQueryTypes
-    {
-        void QueryTypes(List<ITypeInfo> typeInfo);
     }
 }

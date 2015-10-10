@@ -8,10 +8,7 @@ using Invert.IOC;
 
 namespace Invert.Core.GraphDesigner
 {
-    public interface IAlwaysGenerate : IDataRecord
-    {
-        
-    }
+
     public class CompilingSystem : DiagramPlugin
         , IToolbarQuery
         , IContextMenuQuery

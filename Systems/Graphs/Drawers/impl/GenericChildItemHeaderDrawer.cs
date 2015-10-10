@@ -19,16 +19,6 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-        public delegate void AddItemClickedEventHandler();
-
-        public event AddItemClickedEventHandler OnAddItem;
-
-        protected virtual void OnOnAddItem()
-        {
-           
-            AddItemClickedEventHandler handler = OnAddItem;
-            if (handler != null) handler();
-        }
 
         public override void Refresh(IPlatformDrawer platform, Vector2 position, bool hardRefresh = true)
         {

@@ -277,57 +277,94 @@ namespace Invert.Core.GraphDesigner
         {
             if (section1.AllowAdding && section1.ReferenceType != null && !section1.HasPredefinedOptions)
             {
-                if (section.AddCommandType != null)
-                {
-                }
-                if (section1.AllowDuplicates)
-                {
-                    InvertGraphEditor.WindowManager.InitItemWindow(section1.GenericSelector(GraphItem).ToArray(),
-                        (selected) => { GraphItem.AddReferenceItem(selected, section1); });
-                }
-                else
-                {
-                    InvertGraphEditor.WindowManager.InitItemWindow(
-                        section1.GenericSelector(GraphItem).ToArray()
-                            .Where(
-                                p =>
-                                    !GraphItem.PersistedItems.OfType<GenericReferenceItem>()
-                                        .Select(x => x.SourceIdentifier)
-                                        .Contains(p.Identifier)),
-                        (selected) => { GraphItem.AddReferenceItem(selected, section1); });
-                }
+                SelectReferenceItem(section, section1);
             }
             else
             {
                 if (section1.GenericSelector != null && section1.HasPredefinedOptions)
                 {
-                    InvertGraphEditor.WindowManager.InitItemWindow(section1.GenericSelector(GraphItem).ToArray(),
-                        (selected) =>
-                        {
-                            var item = selected as GenericNodeChildItem;
-                          
-                            item.Node = vm.GraphItemObject as GraphNode;
-                            DiagramViewModel.CurrentRepository.Add(item);
-                            if (section1.OnAdd != null)
-                                section1.OnAdd(item);
-                            else
-                            {
-                                item.Name = item.Repository.GetUniqueName(section1.Name);
-                            }
-
-                            item.IsEditing = true;
-                            OnAdd(section1, item);
-                        });
+                    SelectFromOptions(section1, vm);
                 }
                 else
                 {
-                    var item = Activator.CreateInstance(section1.SourceType) as GenericNodeChildItem;
+                    CreateNewSectionItem(section1, vm);
+                }
+            }
+        }
+
+        private void CreateNewSectionItem(NodeConfigSectionBase section1, DiagramNodeViewModel vm)
+        {
+            var item = Activator.CreateInstance(section1.SourceType) as GenericNodeChildItem;
+            item.Node = vm.GraphItemObject as GraphNode;
+            DiagramViewModel.CurrentRepository.Add(item);
+            item.Name = item.Repository.GetUniqueName(section1.Name);
+          
+            OnAdd(section1, item);
+
+            if (typeof (ITypedItem).IsAssignableFrom(section1.SourceType))
+            {
+                InvertApplication.Execute(new SelectTypeCommand()
+                {
+                    PrimitiveOnly = false,
+                    AllowNone = false,
+                    IncludePrimitives = true,
+                    Item = item as ITypedItem,
+                    OnSelectionFinished = () =>
+                    {
+                        item.IsSelected = true;
+                        item.IsEditing = true;
+                    }
+                });
+            }
+            else
+            {
+                item.IsEditing = true;
+                
+            }
+       
+        }
+
+        private void SelectFromOptions(NodeConfigSectionBase section1, DiagramNodeViewModel vm)
+        {
+            InvertGraphEditor.WindowManager.InitItemWindow(section1.GenericSelector(GraphItem).ToArray(),
+                (selected) =>
+                {
+                    var item = selected as GenericNodeChildItem;
+
                     item.Node = vm.GraphItemObject as GraphNode;
                     DiagramViewModel.CurrentRepository.Add(item);
-                    item.Name = item.Repository.GetUniqueName(section1.Name);
+                    if (section1.OnAdd != null)
+                        section1.OnAdd(item);
+                    else
+                    {
+                        item.Name = item.Repository.GetUniqueName(section1.Name);
+                    }
+
                     item.IsEditing = true;
                     OnAdd(section1, item);
-                }
+                });
+        }
+
+        private void SelectReferenceItem(NodeConfigSectionBase section, NodeConfigSectionBase section1)
+        {
+            if (section.AddCommandType != null)
+            {
+            }
+            if (section1.AllowDuplicates)
+            {
+                InvertGraphEditor.WindowManager.InitItemWindow(section1.GenericSelector(GraphItem).ToArray(),
+                    (selected) => { GraphItem.AddReferenceItem(selected, section1); });
+            }
+            else
+            {
+                InvertGraphEditor.WindowManager.InitItemWindow(
+                    section1.GenericSelector(GraphItem).ToArray()
+                        .Where(
+                            p =>
+                                !GraphItem.PersistedItems.OfType<GenericReferenceItem>()
+                                    .Select(x => x.SourceIdentifier)
+                                    .Contains(p.Identifier)),
+                    (selected) => { GraphItem.AddReferenceItem(selected, section1); });
             }
         }
 

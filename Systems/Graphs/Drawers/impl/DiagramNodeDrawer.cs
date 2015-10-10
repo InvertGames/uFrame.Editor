@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -459,10 +459,6 @@ namespace Invert.Core.GraphDesigner
             ViewModel.IsMouseOver = true;
         }
 
-        public virtual IEditorCommand RemoveItemCommand
-        {
-            get { return InvertGraphEditor.Container.Resolve<IEditorCommand>("RemoveNodeItem"); }
-        }
 
         public virtual bool ShowHeader
         {

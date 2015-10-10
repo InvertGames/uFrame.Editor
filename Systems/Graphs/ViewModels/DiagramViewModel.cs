@@ -13,33 +13,12 @@ namespace Invert.Core.GraphDesigner
     public class DiagramViewModel : Invert.Core.GraphDesigner.ViewModel, IDataRecordInserted, IDataRecordRemoved, IDataRecordPropertyChanged
     {
         private ObservableCollection<GraphItemViewModel> _graphItems = new ObservableCollection<GraphItemViewModel>();
-        private IEnumerable<IDiagramContextCommand> _diagramContextCommands;
+    
 
         private InspectorViewModel _inspectorViewModel;
         private GraphDesignerNavigationViewModel _navigationViewModel;
 
-        public IEnumerable<ErrorInfo> Issues
-        {
-            get
-            {
-                var project = CurrentRepository as IProjectRepository;
-                if (project != null)
-                {
-                    foreach (var graph in project.Graphs)
-                    {
-                        if (graph != null)
-                            foreach (var item in graph.Validate())
-                                yield return item;
-                    }
-                }
-                else
-                {
-                    foreach (var item in GraphData.Validate())
-                        yield return item;
-                }
 
-            }
-        }
         public float SnapSize
         {
             get
@@ -52,12 +31,6 @@ namespace Invert.Core.GraphDesigner
         public ElementDiagramSettings Settings
         {
             get { return GraphData.Settings; }
-        }
-
-        public IEnumerable<IDiagramContextCommand> DiagramContextCommands
-        {
-            get { return _diagramContextCommands ?? (_diagramContextCommands = InvertGraphEditor.Container.ResolveAll<IDiagramContextCommand>()); }
-            set { _diagramContextCommands = value; }
         }
 
         public IEnumerable<GraphItemViewModel> AllViewModels
@@ -184,7 +157,6 @@ namespace Invert.Core.GraphDesigner
             if (diagram == null) throw new Exception("Diagram not found");
             CurrentRepository = diagram.Repository;
             DataObject = diagram;
-            GraphData.Prepare();
 
         }
 
@@ -773,15 +745,7 @@ namespace Invert.Core.GraphDesigner
 
         public bool IsLoading { get; set; }
 
-        public void CommandExecuted(IEditorCommand command)
-        {
-            this.Load();
-        }
 
-        public void CommandExecuting(IEditorCommand command)
-        {
-
-        }
 
         public void NavigateTo(string identifier)
         {
@@ -927,10 +891,5 @@ namespace Invert.Core.GraphDesigner
                 item.PropertyChanged(record, name, previousValue, nextValue);
             }
         }
-    }
-
-    public interface IGraphLoaded
-    {
-        void GraphLoaded();
     }
 }

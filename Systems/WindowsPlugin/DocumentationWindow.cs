@@ -61,7 +61,7 @@ public class DocumentationWindow : EditorWindow
         foreach (var item in drawer.Children)
         {
             //if (!(item is DiagramNodeDrawer)) continue;
-            if (item is ScreenshotNodeDrawer) continue;
+            //if (item is ScreenshotNodeDrawer) continue;
             item.Draw(InvertGraphEditor.PlatformDrawer, 1f);
         }
 

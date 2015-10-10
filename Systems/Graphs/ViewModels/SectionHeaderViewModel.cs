@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
@@ -7,7 +7,7 @@ namespace Invert.Core.GraphDesigner
         public override Vector2 Position { get; set; }
         public override string Name { get; set; }
 
-        public IEditorCommand AddCommand { get; set; }
+    
 
     }
 }

@@ -6,25 +6,6 @@ using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
 {
-    public interface IDemoVersionLimit
-    {
-
-    }
-    public interface IDemoVersionLimitZero
-    {
-
-
-    }
-
-    public class MoveItemUpCommand : Command
-    {
-        public IDiagramNodeItem Item;
-    }
-
-    public class MoveItemDownCommand : Command
-    {
-        public IDiagramNodeItem Item;
-    }
     public class NodeSystem : DiagramPlugin,
         IContextMenuQuery,
         IExecuteCommand<CreateNodeCommand>,

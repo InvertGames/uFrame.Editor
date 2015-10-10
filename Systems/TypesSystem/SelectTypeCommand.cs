@@ -11,6 +11,6 @@ namespace Invert.Core.GraphDesigner
         public bool IncludePrimitives { get; set; }
         public Action OnSelectionFinished { get; set; }
         public Predicate<ITypeInfo> Filter { get; set; }
-        public TypedItemViewModel ItemViewModel { get; set; }
+        public ITypedItem Item { get; set; }
     }
 }

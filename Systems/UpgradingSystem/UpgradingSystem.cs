@@ -9,10 +9,6 @@ using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class FixTypes : Command
-    {
-        
-    }
     public class UpgradingSystem : DiagramPlugin
         , IExecuteCommand<Import16Command>
         , IExecuteCommand<FixTypes>

@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Invert.Data;
 using UnityEngine;
@@ -40,8 +41,13 @@ namespace Invert.Core.GraphDesigner
             set { base.IsNewLine = value; }
         }
 
-        private IEditorCommand _removeItemCommand;
+
         private bool _isEditable = true;
+
+        public virtual IEnumerable<string> Tags
+        {
+            get { yield break; }
+        }
 
         public ItemViewModel()
         {
@@ -132,11 +138,6 @@ namespace Invert.Core.GraphDesigner
             set { _isEditable = value; }
         }
 
-        public IEditorCommand RemoveItemCommand
-        {
-            get { return _removeItemCommand ?? (_removeItemCommand = new RemoveNodeItemCommand()); }
-            set { _removeItemCommand = value; }
-        }
 
         public string Highlighter { get; set; }
 

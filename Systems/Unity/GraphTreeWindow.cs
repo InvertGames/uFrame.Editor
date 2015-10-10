@@ -1,12 +1,11 @@
 using System.Globalization;
 using System.Linq;
-using Assets.Plugins.Editor.uFrame.Editor.Systems.GraphUI;
 using Invert.Common;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
 using UnityEditor;
 using UnityEngine;
-
+using Invert.uFrame.Editor;
 namespace Assets.UnderConstruction.Editor
 {
     public class GraphTreeWindow : EditorWindow
@@ -15,7 +14,7 @@ namespace Assets.UnderConstruction.Editor
 
         private Vector2 _scrollPosition;
 
-        [MenuItem("uFrame/Graph Explorer %T")]
+        [MenuItem("Window/uFrame/Graph Explorer %T")]
 
         internal static void ShowWindow()
         {

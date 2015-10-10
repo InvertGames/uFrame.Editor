@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Invert.Common;
 using UnityEngine;
 
@@ -43,16 +43,16 @@ namespace Invert.Core.GraphDesigner
 
 //            GUI.Box(Bounds.Scale(scale), ViewModel.Name, style);
             platform.DrawLabel(Bounds.Scale(scale),ViewModel.Name,CachedStyles.ItemTextEditingStyle, DrawingAlignment.MiddleLeft);
-            if (ViewModel.AddCommand != null && ViewModel.Enabled)
-            {
-                platform.DoButton(_AddButtonRect.Scale(scale), string.Empty, CachedStyles.AddButtonStyle, () =>
-                {
-                    this.ViewModel.Select();
-                    // TODO 2.0 AddCommand ????
-                    //InvertGraphEditor.ExecuteCommand(ViewModel.AddCommand);
-                });
+            //if (ViewModel.AddCommand != null && ViewModel.Enabled)
+            //{
+            //    platform.DoButton(_AddButtonRect.Scale(scale), string.Empty, CachedStyles.AddButtonStyle, () =>
+            //    {
+            //        this.ViewModel.Select();
+            //        // TODO 2.0 AddCommand ????
+            //        //InvertGraphEditor.ExecuteCommand(ViewModel.AddCommand);
+            //    });
 
-            }
+            //}
 
         }
 

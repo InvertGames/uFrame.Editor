@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -7,7 +7,7 @@ namespace Invert.Core.GraphDesigner
     public class DesignerViewModel : ViewModel<Workspace>
     {
         private ObservableCollection<TabViewModel> _tabs;
-        private IToolbarCommand[] _allCommands;
+ 
         private WorkspaceService _workspaceService;
 
         public override void DataObjectChanged()
@@ -38,10 +38,6 @@ namespace Invert.Core.GraphDesigner
             Data.CurrentGraph = graphData;
         }
 
-        public IToolbarCommand[] AllCommands
-        {
-            get { return _allCommands ?? (_allCommands = InvertGraphEditor.Container.ResolveAll<IToolbarCommand>().ToArray()); }
-            set { _allCommands = value; }
-        }
+
     }
 }

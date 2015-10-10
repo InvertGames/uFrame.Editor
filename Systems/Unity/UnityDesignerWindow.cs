@@ -316,9 +316,4 @@ namespace Invert.Core.GraphDesigner.Unity
             scroll = _forceScrollPosition ?? _scrollPosition;
         }
     }
-
-    public interface IQueryDiagramScroll
-    {
-        void QueryDiagramScroll(ref Vector2 scroll);
-    }
 }

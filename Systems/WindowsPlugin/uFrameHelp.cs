@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using Invert.Core.GraphDesigner.Unity;
 using UnityEditor;
 using UnityEngine;
 
-public class uFrameHelp : EditorWindow, IDocumentationBuilder, ICommandEvents, INodeItemEvents
+public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
 {
     public static Dictionary<string, Texture> ImageCache
     {
@@ -1342,15 +1342,7 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, ICommandEvents, I
         //a.Ctx.Render
     }
 
-    public void CommandExecuting(ICommandHandler handler, IEditorCommand command, object o)
-    {
 
-    }
-
-    public void CommandExecuted(ICommandHandler handler, IEditorCommand command, object o)
-    {
-        Repaint();
-    }
 
     private Action disposer;
     private static GUIStyle _eventButtonStyleSmall;

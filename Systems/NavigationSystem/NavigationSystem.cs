@@ -125,14 +125,12 @@ namespace Invert.Core.GraphDesigner {
                 if (diagramViewModel.SelectedNode.GraphItemObject == diagramViewModel.GraphData.CurrentFilter)
                 {
                     diagramViewModel.GraphData.PopFilter();
-                    diagramViewModel.GraphData.UpdateLinks();
 
                 }
                 else
                 {
                     var graphFilter = diagramViewModel.SelectedNode.GraphItemObject as IGraphFilter;
                     diagramViewModel.GraphData.PushFilter(graphFilter);
-                    diagramViewModel.GraphData.UpdateLinks();
                 }
              //   if (command.SaveInHistory) SaveNewStep(null);
 
@@ -420,50 +418,6 @@ namespace Invert.Core.GraphDesigner {
 
     }
 
-    public class SaveNavigationHistoryStepCommand : Command
-    {
-    }
-
-    public class ScrollGraphCommand : Command
-    {
-        public Vector2 Position;
-
-        public string Title
-        {
-            get { return "ScrollTo"; }
-            set { }
-        }
-    }
-
-    public class FilterBySelectionCommand : Command
-    {
-    }
-
-    public class NavigateByHistoryItemCommand : Command
-    {
-        public NavHistoryItem Item { get; set; }
-    }
-
-    public class NavigateByNameCommand : Command
-    {
-        public string FilterId { get; set; }
-        public string ItemName { get; set; }
-    }
-
-    public class NavigateByIdCommand : Command
-    {
-        public string Identifier { get; set; }
-        public string FilterId { get; set; }
-    }
-
-    public class NavigateBackCommand : Command
-    {
-    }
-
-    public class NavigateForwardCommand : Command
-    {
-    }
-
     public class NavigateToNodeCommand : Command
     {
         public IDiagramNode Node;
@@ -471,14 +425,4 @@ namespace Invert.Core.GraphDesigner {
         public string FilterId { get; set; }
 
     }
-
-    public class NavigateCommand : Command
-    {
-        public string FilterId { get; set; }
-        public string ItemId { get; set; }
-        public string GraphId { get; set; }
-        public string Workspaceid { get; set; }
-        public Vector2 Scroll { get; set; }
-    }
-
 }

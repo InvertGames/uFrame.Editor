@@ -70,7 +70,6 @@ namespace Invert.Core.GraphDesigner.Unity
             container.RegisterInstance<IGraphEditorSettings>(new UFrameSettings());
             // Where the generated code files are placed
             container.Register<ICodePathStrategy, DefaultCodePathStrategy>("Default");
-            container.RegisterInstance<IToolbarCommand>(new DiagramSettingsCommand() { Title = "Settings" }, "SettingsCommand");
             container.RegisterInstance<IWindowManager>(new UnityWindowManager());
 
         }

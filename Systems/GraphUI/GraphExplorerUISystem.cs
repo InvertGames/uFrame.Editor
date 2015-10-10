@@ -10,7 +10,7 @@ using Invert.Data;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Plugins.Editor.uFrame.Editor.Systems.GraphUI
+namespace Invert.uFrame.Editor
 {
     public class GraphExplorerUISystem : DiagramPlugin, IDrawGraphExplorer, IDataRecordInserted, IDataRecordRemoved, ICommandExecuted
     {
@@ -216,10 +216,5 @@ namespace Assets.Plugins.Editor.uFrame.Editor.Systems.GraphUI
 
 
 
-    }
-
-    public interface IDrawGraphExplorer
-    {
-        void DrawGraphExplorer(Rect r);
     }
 }
