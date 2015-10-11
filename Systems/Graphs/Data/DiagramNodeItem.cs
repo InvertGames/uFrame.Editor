@@ -37,15 +37,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
         get { return true; }
     }
 
-    public IGraphItem Copy()
-    {
-        var jsonNode = new JSONClass();
-        Serialize(jsonNode);
-        var copy = Activator.CreateInstance(this.GetType()) as DiagramNodeItem;
-        copy.Deserialize(jsonNode);
-        copy._identifier = null;
-        return copy;
-    }
+
     public IEnumerable<FlagItem> Flags
     {
         get { return Repository.All<FlagItem>().Where(p => p.ParentIdentifier == this.Identifier); }
@@ -76,39 +68,9 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
             }
         }
     }
-    public DataBag DataBag
-    {
-        get { return _dataBag ?? (_dataBag = new DataBag()); }
-        set { _dataBag = value; }
-    }
+
 
     public bool IsEditing { get; set; }
-    private DataBag _dataBag = new DataBag();
-
-    public virtual void Serialize(JSONClass cls)
-    {
-        cls.Add("Name", new JSONData(_name));
-        cls.Add("Identifier", new JSONData(_identifier));
-        cls.Add("Precompiled", new JSONData(Precompiled));
-  
-        cls.AddObject("DataBag", DataBag);
-    }
-
-    public virtual void Deserialize(JSONClass cls)
-    {
-        _name = cls["Name"].Value;
-        _identifier = cls["Identifier"].Value;
-        if (cls["Precompiled"] != null)
-        {
-            Precompiled = cls["Precompiled"].AsBool;
-        }
-        if (cls["DataBag"] is JSONClass)
-        {
-            var flags = cls["DataBag"].AsObject;
-            DataBag = new DataBag();
-            DataBag.Deserialize(flags);
-        }
-    }
 
     private string _identifier;
 
@@ -276,7 +238,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
     {
         if (this is ITypedItem)
         {
-            var typeItem = this as IBindableTypedItem;
+            var typeItem = this as ITypedItem;
             if (typeItem != null && typeItem.RelatedType == nodeData.Identifier)
             {
                 typeItem.RemoveType();
@@ -323,11 +285,6 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
     {
         //if (arg1.GetType() == arg2.GetType()) return false;
         return true;
-    }
-
-    public virtual void Document(IDocumentationBuilder docs)
-    {
-        docs.Title3(Name);
     }
 
     public ErrorInfo[] Errors { get; set; }

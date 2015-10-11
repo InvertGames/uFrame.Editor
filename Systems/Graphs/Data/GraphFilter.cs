@@ -6,12 +6,9 @@ using Invert.Json;
 namespace Invert.Core.GraphDesigner
 {
   
-    public class GraphFilter : IGraphFilter, IJsonObject
+    public class GraphFilter : IGraphFilter
     {
         private Type[] _allowedTypes;
-
-        private FilterLocations _locations = new FilterLocations();
-        private FilterCollapsedDictionary _collapsedValues = new FilterCollapsedDictionary();
 
         private string _identifier;
 
@@ -44,11 +41,6 @@ namespace Invert.Core.GraphDesigner
 
         public bool IsExplorerCollapsed { get; set; }
 
-        public FilterLocations Locations
-        {
-            get { return _locations; }
-            set { _locations = value; }
-        }
 
         public virtual string Name
         {
@@ -75,11 +67,6 @@ namespace Invert.Core.GraphDesigner
 
         public string InfoLabel { get; private set; }
 
-        public FilterCollapsedDictionary CollapsedValues
-        {
-            get { return _collapsedValues; }
-            set { _collapsedValues = value; }
-        }
 
         public virtual bool IsItemAllowed(object item, Type t)
         {
@@ -91,22 +78,5 @@ namespace Invert.Core.GraphDesigner
             return true;
         }
 
-        public void Serialize(JSONClass cls)
-        {
-            cls.Add("Identifier", Identifier);
-            cls.Add("Locations", _locations.Serialize());
-            cls.Add("CollapsedValues", _collapsedValues.Serialize());
-        }
-
-        public void Deserialize(JSONClass cls)
-        {
-            if (cls["Identifier"] != null)
-            {
-                Identifier = cls["Identifier"].Value;
-            }
-            Locations.Deserialize(cls["Locations"].AsObject);
-            CollapsedValues.Deserialize(cls["CollapsedValues"].AsObject);
-
-        }
     }
 }

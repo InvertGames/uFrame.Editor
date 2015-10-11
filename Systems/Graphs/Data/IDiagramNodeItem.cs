@@ -6,7 +6,7 @@ using Invert.Json;
 
 namespace Invert.Core.GraphDesigner
 {
-    public interface IDiagramNodeItem : ISelectable, IJsonObject, IItem, IConnectable, IDataRecord
+    public interface IDiagramNodeItem : ISelectable, IItem, IConnectable, IDataRecord
     {
         bool Precompiled { get; set; }
         string Name { get; set; }
@@ -14,8 +14,6 @@ namespace Invert.Core.GraphDesigner
         string FullLabel { get; }
         bool IsSelectable { get;}
         GraphNode Node { get; set; }
-        [Browsable(false)]
-        DataBag DataBag { get; set; }
         
         /// <summary>
         /// Is this node currently in edit mode/ rename mode.
@@ -35,7 +33,6 @@ namespace Invert.Core.GraphDesigner
         void NodeAdded(IDiagramNode data);
         void NodeItemAdded(IDiagramNodeItem data);
         void Validate(List<ErrorInfo> info);
-        void Document(IDocumentationBuilder docs);
         ErrorInfo[] Errors { get; set; }
         int Order { get; set; }
     }

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Invert.Data;
 using Invert.Json;
 
@@ -48,18 +48,7 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-        public override void Deserialize(JSONClass cls)
-        {
-            base.Deserialize(cls);
-            SourceIdentifier = cls["SourceIdentifier"].Value;
-        }
 
-        public override void Serialize(JSONClass cls)
-        {
-            base.Serialize(cls);
-            if (!string.IsNullOrEmpty(SourceIdentifier))
-                cls.Add("SourceIdentifier", SourceIdentifier);
-        }
 
         public string RelatedType
         {

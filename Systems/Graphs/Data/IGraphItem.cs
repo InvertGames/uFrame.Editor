@@ -8,7 +8,7 @@ namespace Invert.Core.GraphDesigner
     {
         string Label { get; }
         bool IsValid { get; }
-        IGraphItem Copy();
+
 
     }
 

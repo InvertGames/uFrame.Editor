@@ -110,7 +110,7 @@ namespace Invert.Core.GraphDesigner
             get { return Config.Name; }
         }
 
-        [GeneratorProperty, JsonProperty]
+        [JsonProperty]
         public override string Name
         {
             get { return base.Name; }
@@ -156,66 +156,6 @@ namespace Invert.Core.GraphDesigner
         public void AddReferenceItem(IGraphItem item, NodeConfigSectionBase mirrorSection)
         {
             AddReferenceItem(PersistedItems.Where(p => p.GetType() == mirrorSection.ReferenceType).Cast<GenericReferenceItem>().ToArray(), item, mirrorSection);
-        }
-
-        public override void Deserialize(JSONClass cls)
-        {
-            base.Deserialize(cls);
-            var inputSlotInfos = GetInputSlotInfos(this.GetType());
-            foreach (var item in inputSlotInfos)
-            {
-                var propertyName = item.Key.Name;
-                if (cls[propertyName] == null) continue;
-                var slotObject = cls[propertyName].DeserializeObject( item.Key.PropertyType.GetGenericArguments().FirstOrDefault()) as GenericSlot;
-                if (slotObject == null) continue;
-
-                slotObject.Node = this;
-                slotObject.Name = item.Value.Name;
-                if (item.Key.PropertyType.IsAssignableFrom(slotObject.GetType()))
-                {
-                    item.Key.SetValue(this, slotObject, null);
-                }
-                else
-                {
-                    // If the type has changed lets keep that same identifier for connections
-                    var value = Activator.CreateInstance(item.Key.PropertyType) as GenericSlot;
-                    value.Identifier = slotObject.Identifier;
-                    value.Node = this;
-                    
-                    item.Key.SetValue(this,value,null);
-                }
-                    
-            }
-            var outputSlotInfos = GetOutputSlotInfos(this.GetType());
-            foreach (var item in outputSlotInfos)
-            {
-                var propertyName = item.Key.Name;
-                if (cls[propertyName] == null) continue;
-                var slotObject = cls[propertyName].DeserializeObject( item.Key.PropertyType.GetGenericArguments().FirstOrDefault()) as GenericSlot;
-                if (slotObject == null) continue;
-                slotObject.Node = this;
-                slotObject.Name = item.Value.Name;
-                if (item.Key.PropertyType.IsAssignableFrom(slotObject.GetType()))
-                {
-                    item.Key.SetValue(this, slotObject, null);
-                }
-                else
-                {
-                    
-                    // If the type has changed lets keep that same identifier for connections
-                    var value = Activator.CreateInstance(item.Key.PropertyType) as GenericSlot;
-                    value.Identifier = slotObject.Identifier;
-                    value.Node = this;
-                    item.Key.SetValue(this, value, null);
-                }
-            }
-
-            var properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var property in properties)
-            {
-                if (property.GetCustomAttributes(typeof(JsonProperty), true).Length < 1) continue;
-                this.DeserializeProperty(property, cls);
-            }
         }
 
         public TType GetConnectionReference<TType>()
@@ -302,42 +242,6 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-        public override void Serialize(JSONClass cls)
-        {
-            base.Serialize(cls);
-            if (Config == null)
-            {
-                throw new Exception(string.Format("Config for node {0} couldn't be found.", this.GetType().Name));
-            }
-            var inputSlotInfos = Config.InputSlots;
-            foreach (var item in inputSlotInfos)
-            {
-                if (item.Key == null) continue;
-                var propertyName = item.Key.Name;
-                var slot = item.Key.GetValue(this, null) as GenericSlot;
-                if (slot == null) continue;
-                cls.AddObject(propertyName, slot);
-            }
-            var outputSlotInfos =Config.OutputSlots;
-            foreach (var item in outputSlotInfos)
-            {
-                if (item.Key == null) continue;
-                ;
-                var propertyName = item.Key.Name;
-                var slot = item.Key.GetValue(this, null) as GenericSlot;
-                if (slot == null) continue;
-                cls.AddObject(propertyName, slot);
-            }
-             
-           // var properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var property in Config.SerializedProperties)
-            {
-                // if (property.GetCustomAttributes(typeof(JsonProperty), true).Length < 1) continue;
-                this.SerializeProperty(property, cls);
-            }
-        }
-
-       
 
         private void UpdateReferences()
         {

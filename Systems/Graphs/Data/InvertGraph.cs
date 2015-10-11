@@ -11,13 +11,11 @@ namespace Invert.Core.GraphDesigner
 {
     public class InvertGraph : IGraphData, IItem, IJsonTypeResolver, IDataRecordRemoved, ITreeItem
     {
-        private FilterPositionData _positionData;
+
 
         private List<IDiagramNode> _nodes = new List<IDiagramNode>();
 
         private string _identifier;
-
-        private ElementDiagramSettings _settings = new ElementDiagramSettings();
 
         //private FilterState _filterState = new FilterState();
 
@@ -44,9 +42,6 @@ namespace Invert.Core.GraphDesigner
         {
         }
 
-
-        public ICodePathStrategy CodePathStrategy { get; set; }
-
         public IEnumerable<IGraphItem> AllGraphItems
         {
             get
@@ -60,31 +55,6 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-        public IEnumerable<ConnectionData> Connections
-        {
-            get
-            {
-                var connectionProvider = CurrentFilter as IConnectionDataProvider;
-
-                if (connectionProvider != null)
-                {
-                    foreach (var item in connectionProvider.Connections)
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in ConnectedItems)
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        public FilterPositionData PositionData
-        {
-            get { return _positionData ?? (_positionData = new FilterPositionData()); }
-            set { _positionData = value; }
-        }
 
         public IGraphFilter[] FilterStack
         {
@@ -184,11 +154,7 @@ namespace Invert.Core.GraphDesigner
             get { yield return RootFilterId; }
         }
 
-        public ElementDiagramSettings Settings
-        {
-            get { return _settings; }
-            set { _settings = value; }
-        }
+
 
         //#if UNITY_EDITOR
 
@@ -405,11 +371,6 @@ namespace Invert.Core.GraphDesigner
 
 #endif
 
-        public List<ConnectionData> ConnectedItems
-        {
-            get { return _connections ?? (_connections = new List<ConnectionData>()); }
-            set { _connections = value; }
-        }
 
         public void RemoveItem(IDiagramNodeItem nodeItem)
         {

@@ -97,4 +97,13 @@ namespace Invert.Core.GraphDesigner
             }
         }
     }
+    public static class NodeConfigTemplateExtensions
+    {
+        public static void AddCodeTemplate<TNode,TGeneratorTemplate>(this NodeConfig<TNode> nodeConfig ) where TGeneratorTemplate : class, IClassTemplate<TNode>, new() where TNode : GenericNode
+        {
+            RegisteredTemplateGeneratorsFactory.RegisterTemplate<TNode, TGeneratorTemplate>();
+        
+        }
+    }
+
 }

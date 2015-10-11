@@ -208,13 +208,11 @@ namespace Invert.Core.GraphDesigner
 
         }
 
-        private FilterCollapsedDictionary _collapsedValues = new FilterCollapsedDictionary();
+
 
         private IGraphData _data;
 
-        private DataBag _dataBag = new DataBag();
 
-        private FlagsDictionary _flags = new FlagsDictionary();
 
 
         private string _identifier;
@@ -222,10 +220,6 @@ namespace Invert.Core.GraphDesigner
         private bool _isCollapsed;
 
         private Vector2 _location = new Vector2(45f, 45f);
-
-
-        private FilterLocations _locations = new FilterLocations();
-
 
         private string _name;
 
@@ -309,15 +303,6 @@ namespace Invert.Core.GraphDesigner
 
         }
 
-        public IGraphItem Copy()
-        {
-            var jsonNode = new JSONClass();
-            Serialize(jsonNode);
-            var copy = Activator.CreateInstance(this.GetType()) as GraphNode;
-            copy.Deserialize(jsonNode);
-            copy._identifier = null;
-            return copy;
-        }
         /// <summary>
         /// The items that should be persisted with this diagram node.
         /// </summary>
@@ -345,12 +330,7 @@ namespace Invert.Core.GraphDesigner
                 return InvertApplication.FindType(FullName);
             }
         }
-        [Browsable(false)]
-        public DataBag DataBag
-        {
-            get { return _dataBag ?? (_dataBag = new DataBag()); }
-            set { _dataBag = value; }
-        }
+
         [Browsable(false)]
         public Vector2 DefaultLocation
         {
@@ -718,8 +698,6 @@ namespace Invert.Core.GraphDesigner
                 if (item != this)
                     item.NodeRemoved(nodeData);
             }
-
-            DataBag[nodeData.Identifier] = null;
             this[nodeData.Identifier] = false;
         }
 
@@ -756,18 +734,6 @@ namespace Invert.Core.GraphDesigner
             Name = newName;
         }
 
-        public virtual void Serialize(JSONClass cls)
-        {
-            cls.Add("Name", new JSONData(_name));
-            cls.Add("Identifier", new JSONData(_identifier));
-
-            cls.AddObjectArray("Items", PersistedItems.Where(p => !p.Precompiled));
-
-   
-
-            
-            cls.AddObject("DataBag", DataBag);
-        }
 
 
         public void RemoveItem(IDiagramNodeItem item)
@@ -805,17 +771,6 @@ namespace Invert.Core.GraphDesigner
         public CodeTypeReference GetPropertyType()
         {
             return new CodeTypeReference(this.Name);
-        }
-
-
-
-        public virtual void Document(IDocumentationBuilder docs)
-        {
-            docs.Section(this.Node.Name);
-            docs.NodeImage(this);
-            docs.Paragraph(this.Comments);
-            foreach (var item in PersistedItems)
-                item.Document(docs);
         }
 
         public ErrorInfo[] Errors { get; set; }

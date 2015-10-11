@@ -145,11 +145,11 @@ public class UnityGraphData: ScriptableObject, IGraphData,  IItem
     }
 
 
-    public ElementDiagramSettings Settings
-    {
-        //set { Graph.Settings = value; }
-        get { return Graph.Settings; }
-    }
+    //public ElementDiagramSettings Settings
+    //{
+    //    //set { Graph.Settings = value; }
+    //    get { return Graph.Settings; }
+    //}
 
     private string _name;
     private List<IGraphItemEvents> _listeners;

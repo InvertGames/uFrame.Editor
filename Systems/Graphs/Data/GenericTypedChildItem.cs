@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using Invert.Data;
 using Invert.Json;
 
 
-public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, ISerializeablePropertyData, IDataRecordRemoved, IMemberInfo
+public class GenericTypedChildItem : GenericNodeChildItem, IDataRecordRemoved, IMemberInfo, ITypedItem
 {
     protected string _type = string.Empty;
 
@@ -97,10 +97,6 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
         }
     }
 
-    public void SetType(IDesignerType input)
-    {
-        this.RelatedType = input.Identifier;
-    }
 
     public void RemoveType()
     {
@@ -114,19 +110,6 @@ public class GenericTypedChildItem : GenericNodeChildItem, IBindableTypedItem, I
         return this.RelatedNode();
     }
 
-    public override void Serialize(JSONClass cls)
-    {
-        base.Serialize(cls);
-        cls.Add("ItemType", new JSONData(_type ?? string.Empty));
-    }
-
-    public override void Deserialize(JSONClass cls)
-    {
-        base.Deserialize(cls);
-
-        if (cls["ItemType"] != null)
-            _type = cls["ItemType"].Value.Split(',')[0].Split('.').Last();
-    }
 
     public override string FullLabel
     {

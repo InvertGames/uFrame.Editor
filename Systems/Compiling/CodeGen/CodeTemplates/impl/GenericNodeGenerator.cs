@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,13 +102,6 @@ namespace Invert.Core.GraphDesigner
                     Decleration.BaseTypes.Add(GeneratorConfig.BaseType.GetValue(Data));
                 }
                 
-                Decleration.Members.AddRange( GeneratorConfig.GetChildMembers(Decleration, Data, TemplateLocation.DesignerFile,true).ToArray());
-
-                var memberGenerators = GeneratorConfig.GetMembers(Decleration, Data, TemplateLocation.DesignerFile,true);
-                foreach (var generator in memberGenerators)
-                {
-                    Decleration.Members.Add(generator);
-                }
                 InitializeDesignerFile();
                
             }
@@ -119,16 +112,7 @@ namespace Invert.Core.GraphDesigner
                     Decleration = GeneratorConfig.Declaration.GetValue(Data);
                 }
                 Decleration.BaseTypes.Add(NameAsDesignerClass);
-                var designerMemberGenerators = GeneratorConfig.GetChildMembers(Decleration, Data, TemplateLocation.EditableFile,false);
-                foreach (var generator in designerMemberGenerators)
-                {
-                    Decleration.Members.Add(generator);
-                }
-                var memberGenerators = GeneratorConfig.GetMembers(Decleration, Data, TemplateLocation.EditableFile,false);
-                foreach (var generator in memberGenerators)
-                {
-                    Decleration.Members.Add(generator);
-                }
+                
                 InitializeEditableFile();
             }
             Namespace.Types.Add(Decleration);

@@ -10,7 +10,7 @@ namespace Invert.Core.GraphDesigner
 	{
 		string SystemPath {get;set;}
 		string SystemDirectory {get;}
-		ElementDiagramSettings Settings {get;}
+		//ElementDiagramSettings Settings {get;}
 		IEnumerable<IGraphItem> AllGraphItems {get;}
 		IEnumerable<IDiagramNode> NodeItems {get;}
 		IGraphFilter CurrentFilter {get;}

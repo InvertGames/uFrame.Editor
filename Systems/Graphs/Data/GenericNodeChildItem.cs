@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,31 +23,8 @@ namespace Invert.Core.GraphDesigner
         {
 
         }
-        public override void Serialize(JSONClass cls)
-        {
-            base.Serialize(cls);
-            var properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var property in properties)
-            {
-         
-                if (property.GetCustomAttributes(typeof(JsonProperty), true).Length < 1) continue;
-                this.SerializeProperty(property, cls);
-           
-            
-            }
 
-        }
-        public override void Deserialize(JSONClass cls)
-        {
-            base.Deserialize(cls);
-            var properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var property in properties)
-            {
-                if (property.GetCustomAttributes(typeof(JsonProperty), true).Length < 1) continue;
-                this.DeserializeProperty(property,cls);
-            }
 
-        }
 
         public override void OnConnectedToInput(IConnectable input)
         {
