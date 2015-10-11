@@ -73,8 +73,8 @@ namespace Invert.Core.GraphDesigner
         {
             get { return _position; }
             set {
-               
-                _position = value;
+
+                _position = new Vector2(value.x < 0 ? 0 : value.x, value.y < 0 ? 0 : value.y);
                 Changed = true;
             }
         }

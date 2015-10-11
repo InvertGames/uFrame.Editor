@@ -45,7 +45,7 @@ public class TreeViewModel
 
     public TreeViewItem SelectedItem
     {
-        get { return SelectedIndex > -1 && SelectedIndex < TreeData.Count ? TreeData[SelectedIndex] : TreeData.First(); }
+        get { return SelectedIndex > -1 && SelectedIndex < TreeData.Count ? TreeData[SelectedIndex] : TreeData.FirstOrDefault(); }
     }
 
     public Func<IItem, Color?> ColorMarkSelector { get; set; } 

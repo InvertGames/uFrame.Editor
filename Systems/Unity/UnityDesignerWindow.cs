@@ -160,6 +160,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     else if (e.clickCount > 1)
                     {
                         handler.OnMouseDoubleClick(mouse);
+                        mouse.IsMouseDown = false;
                     }
                     else
                     {

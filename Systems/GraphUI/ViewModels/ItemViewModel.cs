@@ -163,6 +163,11 @@ namespace Invert.Core.GraphDesigner
             
             IsEditing = true;
         }
+        public override void OnDeselected()
+        {
+            base.OnDeselected();
+            if (IsEditing) EndEditing();
+        }
 
         public void EndEditing()
         {
@@ -188,11 +193,7 @@ namespace Invert.Core.GraphDesigner
         
         public override void Select()
         {
-            if (IsSelected)
-            {
-                BeginEditing();
-                return;
-            }
+            if (IsSelected) return;
             var items = NodeViewModel.DiagramViewModel.SelectedNodeItems.ToArray();
             foreach (var item in items)
                 item.IsSelected = false;
