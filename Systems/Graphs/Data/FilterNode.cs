@@ -42,7 +42,10 @@ namespace Invert.Core.GraphDesigner
         public Vector2 Position
         {
             get { return _position1; }
-            set { this.Changed("Position", ref _position1, value); }
+            set
+            {
+                this.Changed("Position", ref _position1, new Vector2(value.x < 0 ? 0 : value.x, value.y < 0 ? 0 : value.y));
+            }
         }
 
         public override void RecordRemoved(IDataRecord record)

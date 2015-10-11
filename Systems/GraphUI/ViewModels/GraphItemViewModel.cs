@@ -64,24 +64,38 @@ namespace Invert.Core.GraphDesigner
 
         public const string IsSelectedProperty = "IsSelected";
 
+
         public virtual bool IsSelected
         {
             get
             {
-                
+
                 return _isSelected;
             }
             set
             {
                 if (value == false)
-                foreach (var item in ContentItems)
                 {
-                    item.IsSelected = false;
+                    foreach (var item in ContentItems)
+                    {
+                        item.IsSelected = false;
+                    }
                 }
                 _isSelected = value;
                 //SetProperty(ref _isSelected, value, IsSelectedProperty);
                 OnPropertyChanged("IsSelected");
+                if (value) OnSelected();
+                else OnDeselected();
             }
+        }
+
+        public virtual void OnSelected()
+        {
+        }
+
+        public virtual void OnDeselected()
+        {
+
         }
         public int Column { get; set; }
         public virtual void Select()

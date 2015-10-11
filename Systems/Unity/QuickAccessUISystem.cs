@@ -13,7 +13,8 @@ namespace Invert.Core.GraphDesigner.Unity
         IQueryDesignerWindowOverlayContent, 
         IOverlayDrawer, 
         IShowSelectionMenu, 
-        IHideSelectionMenu
+        IHideSelectionMenu,
+         IGraphSelectionEvents
     {
 
         public const int QuickAccessWidth = 300;
@@ -148,6 +149,7 @@ namespace Invert.Core.GraphDesigner.Unity
             if (RequestPosition.HasValue)
             {
 
+                if (TreeModel == null) return new Rect(0,0,0,0);
                 var selectedItem = TreeModel.SelectedData as IItem;
 
                 var rect = new Rect().WithSize(QuickAccessWidth, selectedItem == null ? QuickAccessHeigth - 200 : QuickAccessHeigth).WithOrigin(RequestPosition.Value.x, RequestPosition.Value.y);
@@ -160,7 +162,8 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public void ShowSelectionMenu(SelectionMenu menu, Vector2? position = null, bool useWindow = false)
         {
-            
+            HideSelection();
+
             TreeModel = ConstructViewModel(menu);
             SearchCriteria = null;
             EnableContent = true;
@@ -202,6 +205,11 @@ namespace Invert.Core.GraphDesigner.Unity
                     Drawer = this,
                     DisableTransparency = true
                 });
+        }
+
+        public void SelectionChanged(GraphItemViewModel selected)
+        {
+            HideSelection();
         }
     }
 }
