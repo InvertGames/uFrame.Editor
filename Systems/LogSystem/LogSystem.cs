@@ -40,13 +40,13 @@ namespace Invert.Core.GraphDesigner.Unity.LogSystem
         }
 
 
-        [MenuItem("uFrame Dev/Multithreading/Start Infinite Loop")]
+      //  [MenuItem("uFrame Dev/Multithreading/Start Infinite Loop")]
         public static void RunInfiniteLoop()
         {
             Task = InvertApplication.ExecuteInBackground(new InfiniteLoopCommand());
         }
 
-        [MenuItem("uFrame Dev/Multithreading/Stop Infinite Loop")]
+    //    [MenuItem("uFrame Dev/Multithreading/Stop Infinite Loop")]
         public static void StopInfiniteLoop()
         {
             Task.Cancel();

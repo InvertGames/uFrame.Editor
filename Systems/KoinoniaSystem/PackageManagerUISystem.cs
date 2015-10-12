@@ -51,7 +51,7 @@ namespace Invert.Core.GraphDesigner.Unity.KoinoniaSystem
         }
 
 
-        [MenuItem("uFrame Dev/Package Manager")]
+      //  [MenuItem("uFrame Dev/Package Manager")]
         public static void OpenPackageManagerWindow()
         {
             var c = InvertApplication.Container;
