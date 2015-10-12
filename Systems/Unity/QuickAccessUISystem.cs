@@ -45,8 +45,13 @@ namespace Invert.Core.GraphDesigner.Unity
             if (!EnableContent ) return;
 
             var searcbarRect = bouds.WithHeight(30).PadSides(5);
-            var listRect = bouds.Below(searcbarRect).WithHeight(300).PadSides(5);
+
+            var leftHeight = bouds.height - searcbarRect.height;
+
+            var listRect = bouds.Below(searcbarRect).WithHeight(leftHeight * 0.6f).PadSides(5);
+
             var searchIconRect = new Rect().WithSize(30, 30).InnerAlignWithBottomRight(searcbarRect).AlignHorisonallyByCenter(searcbarRect).PadSides(10);
+
             var descriptionRect = bouds.Below(listRect).Clip(bouds).PadSides(5);
 
             GUI.SetNextControlName("SelectionMenu_Search");
@@ -153,11 +158,19 @@ namespace Invert.Core.GraphDesigner.Unity
                 var selectedItem = TreeModel.SelectedData as IItem;
 
                 var rect = new Rect().WithSize(QuickAccessWidth, selectedItem == null ? QuickAccessHeigth - 200 : QuickAccessHeigth).WithOrigin(RequestPosition.Value.x, RequestPosition.Value.y);
+                if (rect.height > diagramRect.height) rect = rect.WithHeight(Mathf.Max(diagramRect.height, 230));
+
                 if (rect.yMax > diagramRect.yMax) rect = rect.WithOrigin(rect.x, diagramRect.yMax - rect.height - 15 );
                 if (rect.xMax > diagramRect.xMax) rect = rect.WithOrigin(diagramRect.xMax - rect.width - 15, rect.y);
+
                 return rect;
+
+
             }
-            return new Rect().WithSize(QuickAccessWidth, QuickAccessHeigth).CenterInsideOf(diagramRect);
+            var rectNorm =  new Rect().WithSize(QuickAccessWidth, QuickAccessHeigth).CenterInsideOf(diagramRect);
+            if (rectNorm.height > diagramRect.height) rectNorm = rectNorm.WithHeight(Mathf.Max(diagramRect.height, 230));
+            return rectNorm;
+
         }
 
         public void ShowSelectionMenu(SelectionMenu menu, Vector2? position = null, bool useWindow = false)
