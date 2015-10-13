@@ -46,7 +46,7 @@ namespace Invert.Core.GraphDesigner.Unity.WindowsPlugin
         }
 
 
-        [MenuItem("uFrame Dev/Console")]
+     //  [MenuItem("uFrame Dev/Console")]
         public static void ShowConsole()
         {
             InvertApplication.SignalEvent<IOpenWindow>(_=>_.OpenWindow(ConsoleViewModel,WindowType.Normal,null,new Vector2(400,600)));
