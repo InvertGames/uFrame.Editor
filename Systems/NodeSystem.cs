@@ -18,6 +18,8 @@ namespace Invert.Core.GraphDesigner
         IExecuteCommand<MoveItemUpCommand>,
         IExecuteCommand<MoveItemDownCommand>,
         IOnMouseUpEvent
+  
+        
     {
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
@@ -273,5 +275,7 @@ namespace Invert.Core.GraphDesigner
                 item.Order = i;
             }
         }
+
+	
     }
 }

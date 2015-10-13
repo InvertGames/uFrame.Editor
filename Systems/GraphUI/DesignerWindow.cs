@@ -26,7 +26,7 @@ namespace Invert.Core.GraphDesigner
         private DesignerViewModel _designerViewModel;
 
         private bool _drawToolbar = true;
-
+        
         private WorkspaceService _workspaceService;
 
         public Toolbars Toolbars
