@@ -103,6 +103,11 @@ namespace Invert.Core.GraphDesigner
         public void Execute(CreateWorkspaceCommand command)
         {
             var workspace = Activator.CreateInstance(command.WorkspaceType) as Workspace;
+
+            if (workspace == null)
+            {
+                throw new Exception("Workspace cannot be created! If you are using custom workspace type, make sure it derives from Workspace class.");
+            }
             workspace.Name = command.Name;
             command.Result = workspace;
             Repository.Add(workspace);
