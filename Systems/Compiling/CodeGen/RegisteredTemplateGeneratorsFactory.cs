@@ -73,11 +73,8 @@ namespace Invert.Core.GraphDesigner
 
                 //template.AssetDirectory = graphItem.Graph.Project.SystemDirectory;
                 template.AssetDirectory = config.CodeOutputPath;
-
-                if (template.IsValid())
-                {
-                    yield return template;
-                }
+                yield return template;
+          
 
 
             }
@@ -88,11 +85,8 @@ namespace Invert.Core.GraphDesigner
                 template.IsDesignerFile = false;
                 template.AssetDirectory = config.CodeOutputPath;
 
-
-                if (template.IsValid())
-                {
-                    yield return template;
-                }
+                yield return template;
+        
 
             }
         }
