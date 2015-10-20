@@ -275,12 +275,12 @@ namespace Invert.Core.GraphDesigner
             var graphItemGenerators = Container.ResolveAll<DesignerGeneratorFactory>().ToArray();
 
 
-            foreach (var outputGenerator in GetAllCodeGeneratorsForItems(graphConfiguration, graphItemGenerators, items))
+            foreach (var outputGenerator in GetAllCodeGeneratorsForItems(graphConfiguration, graphItemGenerators, items,includeDisabled))
                 yield return outputGenerator;
         }
 
         private static IEnumerable<OutputGenerator> GetAllCodeGeneratorsForItems(IGraphConfiguration graphConfiguration,
-            DesignerGeneratorFactory[] graphItemGenerators, IDataRecord[] items)
+            DesignerGeneratorFactory[] graphItemGenerators, IDataRecord[] items, bool includeDisabled = false)
         {
             foreach (var graphItemGenerator in graphItemGenerators)
             {
@@ -293,6 +293,7 @@ namespace Invert.Core.GraphDesigner
                         var codeGenerators = generator.GetGenerators(graphConfiguration, item);
                         foreach (var codeGenerator in codeGenerators)
                         {
+                            if ( !includeDisabled && !codeGenerator.IsValid()) continue;
                             // TODO Had to remove this?
                             //if (!codeGenerator.IsEnabled(prsteroject)) continue;
 

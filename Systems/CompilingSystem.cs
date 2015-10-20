@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Invert.Data;
 using Invert.IOC;
+using UnityEditor;
 
 namespace Invert.Core.GraphDesigner
 {
@@ -173,23 +174,7 @@ namespace Invert.Core.GraphDesigner
                     continue;
                 }
 
-                // Get the path to the directory
-                var directory = System.IO.Path.GetDirectoryName(fileInfo.FullName);
-                // Create it if it doesn't exist
-                if (directory != null && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                try
-                {
-                    // Write the file
-                    File.WriteAllText(fileInfo.FullName, codeFileGenerator.ToString());
-                }
-                catch (Exception ex)
-                {
-                    InvertApplication.LogException(ex);
-                    InvertApplication.Log("Coudln't create file " + fileInfo.FullName);
-                }
+                GenerateFile(fileInfo, codeFileGenerator);
                 CodeFileGenerator generator = codeFileGenerator;
                 InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
             }
@@ -209,6 +194,27 @@ namespace Invert.Core.GraphDesigner
 #endif
         }
 
+        private static void GenerateFile(FileInfo fileInfo, CodeFileGenerator codeFileGenerator)
+        {
+// Get the path to the directory
+            var directory = System.IO.Path.GetDirectoryName(fileInfo.FullName);
+            // Create it if it doesn't exist
+            if (directory != null && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            try
+            {
+                // Write the file
+                File.WriteAllText(fileInfo.FullName, codeFileGenerator.ToString());
+            }
+            catch (Exception ex)
+            {
+                InvertApplication.LogException(ex);
+                InvertApplication.Log("Coudln't create file " + fileInfo.FullName);
+            }
+        }
+
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
         {
@@ -216,20 +222,45 @@ namespace Invert.Core.GraphDesigner
             if (node != null)
             {
                 var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
-                var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, new [] {node.DataObject as IDataRecord}).ToArray();
+                var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, new [] {node.DataObject as IDataRecord},true).ToArray();
                 foreach (var file in fileGenerators)
                 {
                     var file1 = file;
+                    if (File.Exists(file1.SystemPath))
                     ui.AddCommand(new ContextMenuItem()
                     {
-                        Title = "Open " + Path.GetFileName(file.AssetPath),
+                        Title = "Open " + (file.AssetPath.Replace("/","\\")),
                         Group = "Open",
                         Command = new LambdaCommand("Open File", () =>
                         {
-                            
                             InvertGraphEditor.Platform.OpenScriptFile(file1.AssetPath);
                         })
                     });
+
+                    
+                }
+
+                foreach (var file in fileGenerators)
+                {
+                    var file1 = file;
+                    var outputGen = file1.Generators.FirstOrDefault();
+                    if (outputGen == null) continue;
+                    var templateClassGen = outputGen as ITemplateClassGenerator;
+                    if (templateClassGen != null && typeof(IOnDemandTemplate).IsAssignableFrom(templateClassGen.TemplateType))
+                    {
+                        ui.AddCommand(new ContextMenuItem()
+                        {
+                            Title = "Create Editable " + Path.GetFileName(file.AssetPath),
+                            Group = "Open",
+                            Command = new LambdaCommand("Create Editable File", () =>
+                            {
+                                GenerateFile(new FileInfo(file1.SystemPath), file1);
+                                AssetDatabase.Refresh();
+                                InvertGraphEditor.Platform.OpenScriptFile(file1.AssetPath);
+                            })
+                        });
+                    }
+                
                 }
             }
         }

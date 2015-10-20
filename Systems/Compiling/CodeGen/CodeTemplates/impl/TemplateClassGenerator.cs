@@ -107,6 +107,7 @@ namespace Invert.Core.GraphDesigner
         {
             
             var template = new TTemplateType {Ctx = new TemplateContext<TData>(TemplateType) {DataObject = Data}};
+            if (template is IOnDemandTemplate) return false;
             return template.CanGenerate;
         }
 

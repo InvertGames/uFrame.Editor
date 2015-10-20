@@ -18,6 +18,8 @@ namespace Invert.Core.GraphDesigner
         IExecuteCommand<MoveItemUpCommand>,
         IExecuteCommand<MoveItemDownCommand>,
         IOnMouseUpEvent
+  
+        
     {
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
@@ -94,7 +96,7 @@ namespace Invert.Core.GraphDesigner
             {
 
                 var filter = diagram.GraphData.CurrentFilter;
-                foreach (var nodeType in FilterExtensions.AllowedFilterNodes[filter.GetType()])
+                foreach (var nodeType in FilterExtensions.AllowedFilterNodes[filter.GetType()].OrderBy(p=>p.FullName))
                 {
                     if (nodeType.IsAbstract) continue;
                     var config = Container.GetNodeConfig(nodeType);
@@ -273,5 +275,7 @@ namespace Invert.Core.GraphDesigner
                 item.Order = i;
             }
         }
+
+	
     }
 }

@@ -20,13 +20,13 @@ namespace Invert.Core.GraphDesigner.Unity
         public void DrawPolyLine(Vector2[] lines, Color color)
         {
             Handles.color = color;
-            Handles.DrawPolyLine(lines.Select(x => new Vector3(x.x, x.y, 0)).ToArray()); 
+            Handles.DrawPolyLine(lines.Select(x => new Vector3(x.x, x.y, 0)).ToArray());
         }
 
         public void DrawLine(Vector3[] lines, Color color)
         {
             Handles.color = color;
-            Handles.DrawPolyLine(lines); 
+            Handles.DrawPolyLine(lines);
         }
 
         private string currentTooltip;
@@ -60,14 +60,14 @@ namespace Invert.Core.GraphDesigner.Unity
         // TODO DRAWER Add Scale parameter
         public Vector2 CalculateTextSize(string text, object styleObject)
         {
-            var style = ((GUIStyle) styleObject);
+            var style = ((GUIStyle)styleObject);
             return style.CalcSize(new GUIContent(text));
         }
 
         // TODO DRAWER Add Scale parameter
         public float CalculateTextHeight(string text, object styleObject, float width)
         {
-            var style = (GUIStyle) styleObject;
+            var style = (GUIStyle)styleObject;
             return style.CalcHeight(new GUIContent(text), width);
         }
 
@@ -98,22 +98,22 @@ namespace Invert.Core.GraphDesigner.Unity
             var s = (GUIStyle)style;
             s.alignment = ((TextAnchor)(int)alignment);
             //GUI.Label(rect, label, s);
-            GUI.Label(rect, new GUIContent(label,ElementDesignerStyles.GetSkinTexture(iconName)), s);
+            GUI.Label(rect, new GUIContent(label, ElementDesignerStyles.GetSkinTexture(iconName)), s);
         }
 
 
         public void DrawStretchBox(Rect scale, object nodeBackground, float offset)
         {
-            DrawExpandableBox(scale, nodeBackground , string.Empty, offset);
+            DrawExpandableBox(scale, nodeBackground, string.Empty, offset);
         }
 
-        
+
         public void DrawStretchBox(Rect scale, object nodeBackground, Rect offset)
         {
             //var rectOffset = new RectOffset(Mathf.RoundToInt(offset.x), Mathf.RoundToInt(offset.y), Mathf.RoundToInt(offset.width), Mathf.RoundToInt(offset.height));
-            
+
             var rectOffset = new RectOffset((int)offset.x, (int)offset.y, (int)offset.width, (int)offset.height);
-            
+
             DrawExpandableBox(scale, (GUIStyle)nodeBackground,
                 string.Empty, rectOffset);
         }
@@ -143,7 +143,7 @@ namespace Invert.Core.GraphDesigner.Unity
         public void DoButton(Rect scale, string label, object style, Action action, Action rightClick = null)
         {
             var s = style == null ? ElementDesignerStyles.EventSmallButtonStyle : (GUIStyle)style;
-       
+
             if (GUI.Button(scale, label, s))
             {
                 if (Event.current.button == 0) action();
@@ -163,7 +163,7 @@ namespace Invert.Core.GraphDesigner.Unity
             if (GUI.Button(scale, label, s))
             {
                 var mousePos = GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - new Vector2(0, 22);
-                if (Event.current.button == 0) action(mousePos); 
+                if (Event.current.button == 0) action(mousePos);
                 else
                 {
                     if (rightClick != null)
@@ -203,7 +203,7 @@ namespace Invert.Core.GraphDesigner.Unity
             //base.Draw(scale);
             GUILayout.BeginArea(fieldViewModel.Bounds.Scale(scale), ElementDesignerStyles.SelectedItemStyle);
             EditorGUIUtility.labelWidth = fieldViewModel.Bounds.width * 0.55f;
-            DrawInspector(fieldViewModel, new GUIStyle(EditorStyles.boldLabel) {normal = new GUIStyleState() {textColor = new Color(0.77f,0.77f,0.77f)}});
+            DrawInspector(fieldViewModel, new GUIStyle(EditorStyles.boldLabel) { normal = new GUIStyleState() { textColor = new Color(0.77f, 0.77f, 0.77f) } });
             GUILayout.EndArea();
         }
 
@@ -212,37 +212,37 @@ namespace Invert.Core.GraphDesigner.Unity
             //base.Draw(scale);
             //GUILayout.BeginArea(fieldViewModel.Bounds.Scale(scale), ElementDesignerStyles.SelectedItemStyle);
             //EditorGUIUtility.labelWidth = fieldViewModel.Bounds.width * 0.55f;
-            DrawInspector(r, fieldViewModel, new GUIStyle(EditorStyles.boldLabel) {normal = new GUIStyleState() {textColor = new Color(0.77f,0.77f,0.77f)}});
+            DrawInspector(r, fieldViewModel, new GUIStyle(EditorStyles.boldLabel) { normal = new GUIStyleState() { textColor = new Color(0.77f, 0.77f, 0.77f) } });
             //GUILayout.EndArea();
         }
 
- 
+
 
         public void EndRender()
         {
-            EditorGUI.FocusTextInControl("EditingField");            
+            EditorGUI.FocusTextInControl("EditingField");
         }
 
         public void DrawRect(Rect boundsRect, Color color)
         {
-            EditorGUI.DrawRect(boundsRect,color);
+            EditorGUI.DrawRect(boundsRect, color);
         }
 
         public void DrawNodeHeader(Rect boxRect, object backgroundStyle, bool isCollapsed, float scale, object image)
         {
-            if(image != null) (backgroundStyle as GUIStyle).ForNormalState(image as Texture2D);
+            if (image != null) (backgroundStyle as GUIStyle).ForNormalState(image as Texture2D);
 
             Rect adjustedBounds;
             if (isCollapsed)
             {
                 //adjustedBounds = new Rect(boxRect.x - 9, boxRect.y + 1, boxRect.width + 19, boxRect.height + 9);
-                adjustedBounds = new Rect(boxRect.x, boxRect.y, boxRect.width, (boxRect.height)*scale);
+                adjustedBounds = new Rect(boxRect.x, boxRect.y, boxRect.width, (boxRect.height) * scale);
                 DrawStretchBox(adjustedBounds, backgroundStyle, 20 * scale);
             }
             else
             {
                 //adjustedBounds = new Rect(boxRect.x - 9, boxRect.y + 1, boxRect.width + 19, boxRect.height-6 * scale);
-                adjustedBounds = new Rect(boxRect.x, boxRect.y, boxRect.width, (boxRect.height)*scale);
+                adjustedBounds = new Rect(boxRect.x, boxRect.y, boxRect.width, (boxRect.height) * scale);
                 DrawStretchBox(adjustedBounds,
                     backgroundStyle,
                     new Rect(20 * scale, 20 * scale, 35 * scale, 22 * scale)
@@ -253,7 +253,7 @@ namespace Invert.Core.GraphDesigner.Unity
         public void DoToolbar(Rect toolbarTopRect, DesignerWindow designerWindow, ToolbarPosition position)
         {
             if (designerWindow == null) throw new ArgumentNullException("designerWindow");
-        
+
             if (designerWindow.Toolbar == null) throw new ArgumentNullException("designerWindow.Toolbar");
             GUILayout.BeginArea(toolbarTopRect);
             if (toolbarTopRect.y > 20)
@@ -270,14 +270,14 @@ namespace Invert.Core.GraphDesigner.Unity
         public void DoTabs(Rect tabsRect, DesignerWindow designerWindow)
         {
             EditorGUI.DrawRect(tabsRect, InvertGraphEditor.Settings.BackgroundColor);
-            var color = new Color(InvertGraphEditor.Settings.BackgroundColor.r*0.8f,
-                InvertGraphEditor.Settings.BackgroundColor.g*0.8f, InvertGraphEditor.Settings.BackgroundColor.b*0.8f);
+            var color = new Color(InvertGraphEditor.Settings.BackgroundColor.r * 0.8f,
+                InvertGraphEditor.Settings.BackgroundColor.g * 0.8f, InvertGraphEditor.Settings.BackgroundColor.b * 0.8f);
             EditorGUI.DrawRect(tabsRect, color);
             if (designerWindow != null && designerWindow.Designer != null)
             {
                 GUILayout.BeginArea(tabsRect);
                 GUILayout.BeginHorizontal();
-                
+
                 foreach (var tab in designerWindow.Designer.Tabs.ToArray())
                 {
                     if (tab == null) continue;
@@ -287,32 +287,32 @@ namespace Invert.Core.GraphDesigner.Unity
                     if (GUILayout.Button(tab.Name,
                         isCurrent
                             ? ElementDesignerStyles.TabStyle
-                            : ElementDesignerStyles.TabInActiveStyle,GUILayout.MinWidth(150)))
+                            : ElementDesignerStyles.TabInActiveStyle, GUILayout.MinWidth(150)))
                     {
                         var projectService = InvertGraphEditor.Container.Resolve<WorkspaceService>();
-                   
+
                         if (Event.current.button == 1)
                         {
-                         
+
                             var isLastGraph = projectService.CurrentWorkspace.Graphs.Count() <= 1;
 
                             if (!isLastGraph)
                             {
                                 var tab1 = tab;
-                                projectService.Repository.RemoveAll<WorkspaceGraph>(p=>p.WorkspaceId == projectService.CurrentWorkspace.Identifier && p.GraphId == tab1.Identifier);
+                                projectService.Repository.RemoveAll<WorkspaceGraph>(p => p.WorkspaceId == projectService.CurrentWorkspace.Identifier && p.GraphId == tab1.Identifier);
                                 var lastGraph = projectService.CurrentWorkspace.Graphs.LastOrDefault();
                                 if (isCurrent && lastGraph != null)
                                 {
                                     designerWindow.SwitchDiagram(lastGraph);
                                 }
-                            
+
                             }
                         }
                         else
                         {
-                            designerWindow.SwitchDiagram(projectService.CurrentWorkspace.Graphs.FirstOrDefault(p => p.Identifier == tab.Identifier));    
+                            designerWindow.SwitchDiagram(projectService.CurrentWorkspace.Graphs.FirstOrDefault(p => p.Identifier == tab.Identifier));
                         }
-                        
+
                     }
                 }
                 GUILayout.FlexibleSpace();
@@ -324,7 +324,7 @@ namespace Invert.Core.GraphDesigner.Unity
         public void DisableInput()
         {
             if (!GUI.enabled) return;
-            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, GUI.color.a*2);
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, GUI.color.a * 2);
             GUI.enabled = false;
         }
 
@@ -332,7 +332,7 @@ namespace Invert.Core.GraphDesigner.Unity
         {
             if (GUI.enabled) return;
             GUI.enabled = true;
-            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, GUI.color.a/2);
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, GUI.color.a / 2);
         }
 
         public void BeginRender(object sender, MouseEvent mouseEvent)
@@ -427,8 +427,8 @@ namespace Invert.Core.GraphDesigner.Unity
                     text = item.Label;
                 }
                 //GUILayout.BeginHorizontal();
-               
-                if (GUILayout.Button(d.Label + ": " + text,ElementDesignerStyles.ButtonStyle))
+
+                if (GUILayout.Button(d.Label + ": " + text, ElementDesignerStyles.ButtonStyle))
                 {
                     var type = d.Type;
 
@@ -448,14 +448,14 @@ namespace Invert.Core.GraphDesigner.Unity
                         }));
                     }
 
-                    InvertApplication.SignalEvent<IShowSelectionMenu>(_=>_.ShowSelectionMenu(menu));
+                    InvertApplication.SignalEvent<IShowSelectionMenu>(_ => _.ShowSelectionMenu(menu));
 
 
 
-//
-//                    InvertGraphEditor.WindowManager.InitItemWindow(items, 
-//                        
-//                    },true);
+                    //
+                    //                    InvertGraphEditor.WindowManager.InitItemWindow(items, 
+                    //                        
+                    //                    },true);
 
                 }
                 SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
@@ -464,26 +464,26 @@ namespace Invert.Core.GraphDesigner.Unity
                 //GUILayout.EndHorizontal();
                 return;
             }
-       
+
 
             if (d.Type == typeof(string))
             {
                 if (d.InspectorType == InspectorType.TextArea)
                 {
-                    EditorGUILayout.LabelField(d.Name,labelWidtho);
-                    SetTooltipForRect(GUILayoutUtility.GetLastRect(),d.InspectorTip);
+                    EditorGUILayout.LabelField(d.Name, labelWidtho);
+                    SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
                     EditorGUI.BeginChangeCheck();
                     d.CachedValue = EditorGUILayout.TextArea((string)d.CachedValue, GUILayout.Height(50));
                     if (EditorGUI.EndChangeCheck())
-                    { 
+                    {
                         d.Setter(d.DataObject, d.CachedValue);
-                        
+
                     }
                     if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                     {
                         InvertApplication.Execute(() =>
                         {
-                            
+
                         });
                     }
                 }
@@ -498,7 +498,7 @@ namespace Invert.Core.GraphDesigner.Unity
                         // TODO 2.0 Open Selection?
                     }
                     SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-                    
+
 
                     GUILayout.EndHorizontal();
                 }
@@ -511,7 +511,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     d.CachedValue = EditorGUILayout.TextField((string)d.CachedValue);
                     GUILayout.EndHorizontal();
                     SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
-                    
+
                     if (EditorGUI.EndChangeCheck())
                     {
                         d.Setter(d.DataObject, d.CachedValue);
@@ -554,7 +554,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     EditorGUI.BeginChangeCheck();
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(d.Name, labelStyle, labelWidtho);
-                    d.CachedValue = EditorGUILayout.Vector2Field(string.Empty,(Vector3)d.CachedValue);
+                    d.CachedValue = EditorGUILayout.Vector2Field(string.Empty, (Vector3)d.CachedValue);
                     GUILayout.EndHorizontal();
                     SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
 
@@ -569,7 +569,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     EditorGUI.BeginChangeCheck();
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(d.Name, labelStyle, labelWidtho);
-                    d.CachedValue = EditorGUILayout.Vector3Field(string.Empty ,(Vector3)d.CachedValue);
+                    d.CachedValue = EditorGUILayout.Vector3Field(string.Empty, (Vector3)d.CachedValue);
                     GUILayout.EndHorizontal();
                     SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
 
@@ -627,7 +627,7 @@ namespace Invert.Core.GraphDesigner.Unity
                     EditorGUI.BeginChangeCheck();
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(d.Name, labelStyle, labelWidtho);
-                    d.CachedValue = EditorGUILayout.EnumPopup( (Enum)d.CachedValue);
+                    d.CachedValue = EditorGUILayout.EnumPopup((Enum)d.CachedValue);
                     GUILayout.EndHorizontal();
                     SetTooltipForRect(GUILayoutUtility.GetLastRect(), d.InspectorTip);
 
@@ -637,7 +637,7 @@ namespace Invert.Core.GraphDesigner.Unity
                         {
                             d.Setter(d.DataObject, d.CachedValue);
                         });
-                    
+
                     }
                 }
                 else if (d.Type == typeof(Type))
@@ -652,7 +652,8 @@ namespace Invert.Core.GraphDesigner.Unity
 
         public GUIStyle TextWrappingTextArea
         {
-            get {
+            get
+            {
                 if (_textWrappingTextArea == null)
                 {
                     _textWrappingTextArea = new GUIStyle(EditorStyles.textArea);
@@ -669,7 +670,7 @@ namespace Invert.Core.GraphDesigner.Unity
             GUI.color = Color.white;
             var labelArea = rect.LeftHalf();
             var fieldArea = rect.RightHalf();
-var                 labelWidtho = GUILayout.Width(140);
+            var labelWidtho = GUILayout.Width(140);
 
             if (d.InspectorType == InspectorType.GraphItems)
             {
@@ -680,34 +681,41 @@ var                 labelWidtho = GUILayout.Width(140);
                     text = item.Label;
                 }
                 //GUILayout.BeginHorizontal();
-               
-                if (GUI.Button(rect,d.Label + ": " + text,ElementDesignerStyles.ButtonStyle))
+
+                if (GUI.Button(rect, d.Label + ": " + text, ElementDesignerStyles.ButtonStyle))
                 {
                     var type = d.Type;
 
                     var items = InvertGraphEditor.CurrentDiagramViewModel.CurrentRepository.AllOf<IGraphItem>().Where(p => type.IsAssignableFrom(p.GetType()));
 
                     var menu = new SelectionMenu();
-                    
+                    menu.AddItem(new SelectionMenuItem(string.Empty,"[None]", () =>
+                    {
+                        InvertApplication.Execute(() =>
+                        {
+                            d.Setter(d.DataObject, null);
+                        });
+                    }));
                     foreach (var graphItem in items)
                     {
-                        menu.AddItem(new SelectionMenuItem(graphItem, () =>
+                        var graphItem1 = graphItem;
+                        menu.AddItem(new SelectionMenuItem(graphItem1, () =>
                         {
                             InvertApplication.Execute(() =>
                             {
-                                d.Setter(d.DataObject, graphItem);
+                                d.Setter(d.DataObject, graphItem1);
                             });
                         }));
                     }
 
-                    InvertApplication.SignalEvent<IShowSelectionMenu>(_=>_.ShowSelectionMenu(menu));
+                    InvertApplication.SignalEvent<IShowSelectionMenu>(_ => _.ShowSelectionMenu(menu));
 
 
 
-//
-//                    InvertGraphEditor.WindowManager.InitItemWindow(items, 
-//                        
-//                    },true);
+                    //
+                    //                    InvertGraphEditor.WindowManager.InitItemWindow(items, 
+                    //                        
+                    //                    },true);
 
                 }
                 SetTooltipForRect(rect, d.InspectorTip);
@@ -716,7 +724,7 @@ var                 labelWidtho = GUILayout.Width(140);
                 //GUILayout.EndHorizontal();
                 return;
             }
-       
+
 
             if (d.Type == typeof(string))
             {
@@ -725,9 +733,9 @@ var                 labelWidtho = GUILayout.Width(140);
                     labelArea = rect.WithHeight(17).InnerAlignWithUpperRight(rect);
                     fieldArea = rect.Below(labelArea).Clip(rect).PadSides(2);
                     EditorGUI.LabelField(labelArea, d.Name, labelStyle);
-                    SetTooltipForRect(rect,d.InspectorTip);
+                    SetTooltipForRect(rect, d.InspectorTip);
                     EditorGUI.BeginChangeCheck();
-                    d.CachedValue = EditorGUI.TextArea(fieldArea,(string)d.CachedValue,TextWrappingTextArea);
+                    d.CachedValue = EditorGUI.TextArea(fieldArea, (string)d.CachedValue, TextWrappingTextArea);
                     if (EditorGUI.EndChangeCheck())
                     {
                         d.Setter(d.DataObject, d.CachedValue);
@@ -736,20 +744,20 @@ var                 labelWidtho = GUILayout.Width(140);
                     {
                         InvertApplication.Execute(() =>
                         {
-                            
+
                         });
                     }
                 }
                 else if (d.InspectorType == InspectorType.TypeSelection)
                 {
 
-                    if (GUI.Button(rect,(string)d.CachedValue))
+                    if (GUI.Button(rect, (string)d.CachedValue))
                     {
                         d.NodeViewModel.Select();
                         // TODO 2.0 Open Selection?
                     }
                     SetTooltipForRect(rect, d.InspectorTip);
-                    
+
 
                 }
 
@@ -757,9 +765,9 @@ var                 labelWidtho = GUILayout.Width(140);
                 {
                     EditorGUI.BeginChangeCheck();
                     EditorGUI.LabelField(labelArea, d.Name, labelStyle);
-                    d.CachedValue = EditorGUI.TextField(fieldArea,(string)d.CachedValue);
+                    d.CachedValue = EditorGUI.TextField(fieldArea, (string)d.CachedValue);
                     SetTooltipForRect(rect, d.InspectorTip);
-                    
+
                     if (EditorGUI.EndChangeCheck())
                     {
                         d.Setter(d.DataObject, d.CachedValue);
@@ -772,8 +780,8 @@ var                 labelWidtho = GUILayout.Width(140);
                 if (d.Type == typeof(int))
                 {
                     EditorGUI.BeginChangeCheck();
-                    GUI.Label(labelArea,d.Name, labelStyle);
-                    d.CachedValue = EditorGUI.IntField(fieldArea,(int)d.CachedValue);
+                    GUI.Label(labelArea, d.Name, labelStyle);
+                    d.CachedValue = EditorGUI.IntField(fieldArea, (int)d.CachedValue);
                     SetTooltipForRect(rect, d.InspectorTip);
 
                     if (EditorGUI.EndChangeCheck())
@@ -823,7 +831,7 @@ var                 labelWidtho = GUILayout.Width(140);
                 {
                     EditorGUI.BeginChangeCheck();
                     GUI.Label(labelArea, d.Name, labelStyle);
-                    d.CachedValue = EditorGUI.ColorField(fieldArea,(Color)d.CachedValue);
+                    d.CachedValue = EditorGUI.ColorField(fieldArea, (Color)d.CachedValue);
                     SetTooltipForRect(rect, d.InspectorTip);
 
                     if (EditorGUI.EndChangeCheck())
@@ -848,7 +856,7 @@ var                 labelWidtho = GUILayout.Width(140);
                 {
                     EditorGUI.BeginChangeCheck();
                     GUI.Label(labelArea, d.Name, labelStyle);
-                    d.CachedValue = EditorGUI.Toggle(fieldArea,(bool)d.CachedValue);
+                    d.CachedValue = EditorGUI.Toggle(fieldArea, (bool)d.CachedValue);
                     SetTooltipForRect(rect, d.InspectorTip);
 
                     if (EditorGUI.EndChangeCheck())
@@ -870,7 +878,7 @@ var                 labelWidtho = GUILayout.Width(140);
                         {
                             d.Setter(d.DataObject, d.CachedValue);
                         });
-                    
+
                     }
                 }
                 else if (d.Type == typeof(Type))
@@ -882,7 +890,7 @@ var                 labelWidtho = GUILayout.Width(140);
             GUI.color = colorCache;
 
         }
-     
+
         public void DrawConnector(float scale, ConnectorViewModel viewModel)
         {
 
