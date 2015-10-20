@@ -56,34 +56,38 @@ namespace Invert.Core.GraphDesigner.Unity
 
             GUI.SetNextControlName("SelectionMenu_Search");
             EditorGUI.BeginChangeCheck();
-            SearchCriteria = GUI.TextField(searcbarRect, SearchCriteria ?? "",ElementDesignerStyles.SearchBarTextStyle);
+            var newSearchCrit = GUI.TextField(searcbarRect, SearchCriteria ?? "",ElementDesignerStyles.SearchBarTextStyle);
             PlatformDrawer.DrawImage(searchIconRect, "SearchIcon", true);
             if (EditorGUI.EndChangeCheck())
             {
-               
-                if (string.IsNullOrEmpty(SearchCriteria))
+                if (newSearchCrit != SearchCriteria)
                 {
-                    TreeModel.Predicate = null;
-                }
-                else
-                {
-                     var sc = SearchCriteria.ToLower();
-                    TreeModel.Predicate = i =>
+                    SearchCriteria = newSearchCrit;
+                    TreeModel.SelectedIndex = -1;
+                    if (string.IsNullOrEmpty(SearchCriteria))
                     {
-                        if (string.IsNullOrEmpty(i.Title)) return false;
+                        TreeModel.Predicate = null;
+                    }
+                    else
+                    {
+                        var sc = SearchCriteria.ToLower();
+                        TreeModel.Predicate = i =>
+                        {
+                            if (string.IsNullOrEmpty(i.Title)) return false;
 
-                        if (
-                            CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.Title, SearchCriteria,
-                                CompareOptions.IgnoreCase) != -1) return true;
+                            if (
+                                CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.Title, SearchCriteria,
+                                    CompareOptions.IgnoreCase) != -1) return true;
 
-                        if (!string.IsNullOrEmpty(i.SearchTag) &&
-                            CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.SearchTag, SearchCriteria,
-                                CompareOptions.IgnoreCase) != -1) return true;
+                            if (!string.IsNullOrEmpty(i.SearchTag) &&
+                                CultureInfo.CurrentCulture.CompareInfo.IndexOf(i.SearchTag, SearchCriteria,
+                                    CompareOptions.IgnoreCase) != -1) return true;
 
-                        return false;
-                    };
+                            return false;
+                        };
+                    }
+                    TreeModel.IsDirty = true;
                 }
-                TreeModel.IsDirty = true;
             }
 
             if (TreeModel.IsDirty) TreeModel.Refresh();

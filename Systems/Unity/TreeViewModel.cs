@@ -8,7 +8,7 @@ public class TreeViewModel
 {
     private List<IItem> _data;
     private Func<IItem, bool> _predicate;
-    private int _selectedIndex;
+    private int _selectedIndex = -1;
     private List<TreeViewItem> _treeData;
     private string _singleItemIcon;
 
@@ -45,7 +45,12 @@ public class TreeViewModel
 
     public TreeViewItem SelectedItem
     {
-        get { return SelectedIndex > -1 && SelectedIndex < TreeData.Count ? TreeData[SelectedIndex] : TreeData.FirstOrDefault(); }
+        get
+        {
+            return SelectedIndex > -1 && SelectedIndex < TreeData.Count
+                ? TreeData[SelectedIndex]
+                : TreeData.FirstOrDefault(_ => !(_.Data is ITreeItem));
+        }
     }
 
     public Func<IItem, Color?> ColorMarkSelector { get; set; } 
@@ -56,6 +61,11 @@ public class TreeViewModel
         {
             if (_selectedIndex < 0 && TreeData.Count > 0)
             {
+                if(Predicate != null)
+                foreach (var treeViewItem in TreeData)
+                {
+                    if (treeViewItem.Visible && !(treeViewItem.Data is ITreeItem)) return treeViewItem.Index;
+                }
                 return 0;
             }
             return _selectedIndex;
