@@ -79,10 +79,8 @@ namespace Invert.Core.GraphDesigner
 
             _endPos = e.MousePosition;
 
-            endViewModel = ViewModelAtMouse as ConnectorViewModel;
+            endViewModel = ConnectorAtMouse;
             color = Color.green;
-
-
 
             if (endViewModel == null)
             {
@@ -139,6 +137,7 @@ namespace Invert.Core.GraphDesigner
             }
             else
             {
+
 
                 foreach (var strategy in InvertGraphEditor.ConnectionStrategies)
                 {

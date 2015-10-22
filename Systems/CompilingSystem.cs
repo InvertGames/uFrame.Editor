@@ -150,9 +150,9 @@ namespace Invert.Core.GraphDesigner
             {
                 yield return a.Current;
             }
-            if (ValidationSystem.ErrorNodes.Count > 0)
+            if (ValidationSystem.ErrorNodes.SelectMany(n=>n.Errors).Any(e => e.Siverity == ValidatorType.Error))
             {
-                Signal<INotify>(_ => _.Notify("Please fix all issues before compiling.", NotificationIcon.Error));
+                Signal<INotify>(_ => _.Notify("Please, fix all errors before compiling.", NotificationIcon.Error));
                 yield break;
             }
             // Grab all the file generators

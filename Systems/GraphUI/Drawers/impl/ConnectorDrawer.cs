@@ -310,9 +310,16 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
+        //uncomment to debug connector bounds
+        //Color bc = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value,0.3f);
+
         public override void Draw(IPlatformDrawer platform, float scale)
         {
             base.Draw(platform, scale);
+        
+            //uncomment to debug connector bounds
+            //platform.DrawRect(Bounds,bc);
+            
             //InvertGraphEditor.PlatformDrawer.DrawConnector(scale, ViewModel);
             var connectorFor = ViewModel.ConnectorFor;
             var connectorBounds = ViewModel.ConnectorFor.ConnectorBounds;

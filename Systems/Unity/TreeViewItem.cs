@@ -9,7 +9,7 @@ public class TreeViewItem
     {
         get { return Parent == null ? null : Parent.Data as ITreeItem; }
     }
-
+    public bool IsChecked { get; set; }
     public IItem Data { get; set; }
     public int Index { get; set; }
     public bool Visible { get; set; }

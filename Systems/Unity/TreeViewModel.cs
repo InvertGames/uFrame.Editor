@@ -30,6 +30,19 @@ public class TreeViewModel
         }
     }
 
+    public IEnumerable<IItem> CheckedData
+    {
+        get { return TreeData.Where(i => i.IsChecked).Select(i => i.Data); }
+    }
+
+    public Func<IItem, bool> InitialToggleSelector { get; set; }
+
+    public Action<IItem, bool> OnItemToggleChanged { get; set; }
+
+    public bool ShowToggle { get; set; }
+
+    public bool AllowManualToggle { get; set; }
+
     public string SingleItemIcon
     {
         get { return _singleItemIcon ?? (_singleItemIcon = "DotIcon"); }
@@ -234,7 +247,8 @@ public class TreeViewModel
             Data = data,
             Index = items.Count,
             Parent = parent,
-            Indent = ident
+            Indent = ident,
+            IsChecked = InitialToggleSelector != null ? InitialToggleSelector(data) : false
         };
  
         items.Add(treeViewItem);
@@ -279,5 +293,28 @@ public class TreeViewModel
     public void ScrollToItem(TreeViewItem item)
     {
         ScrollTarget = item;
+    }
+
+    public void ToggleItem(TreeViewItem treeViewItem,bool value)
+    {
+        if(treeViewItem.IsChecked == value) return;
+
+        treeViewItem.IsChecked = value;
+        if (OnItemToggleChanged != null) OnItemToggleChanged(treeViewItem.Data, value);
+
+        if (treeViewItem.Data is ITreeItem)
+        {
+            foreach (var item in TreeData.ToArray())
+            {
+                if (item.Parent == treeViewItem)
+                {
+                    ToggleItem(item,value);
+                }
+            }
+        }
+
+
+
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
 using Invert.Core.GraphDesigner.Systems.GraphUI;
+using UnityEditor;
 using UnityEngine;
 
 /*
@@ -181,6 +182,22 @@ public class TreeViewUISystem : DiagramPlugin, IDrawTreeView, IQueryDesignerWind
                 PlatformDrawer.DrawRect(colorMarkRect,treeViewItem.ColorMark.Value);
             }
 
+            if (viewModel.ShowToggle)
+            {
+                EditorGUI.BeginChangeCheck();
+                var toggleRect = new Rect().WithSize(16, 16).InnerAlignWithUpperRight(itemRect).Translate(-50, 0);
+                GUI.enabled = viewModel.AllowManualToggle;
+                var toggle = GUI.Toggle(toggleRect, treeViewItem.IsChecked, "");
+                GUI.enabled = true;
+
+                if (treeViewItem.IsChecked != toggle)
+                {
+                    viewModel.ToggleItem(treeViewItem, toggle);
+                    return;
+                }
+
+            }
+
             var item1 = treeViewItem;
             PlatformDrawer.DoButton(itemRect.Translate(25, 0), "", CachedStyles.ClearItemStyle,
                 m =>
@@ -189,6 +206,8 @@ public class TreeViewUISystem : DiagramPlugin, IDrawTreeView, IQueryDesignerWind
                     //TODO PUBLISH EVENT
                     if (itemClicked != null) itemClicked(m, item1.Data);
                 }, m => { if (itemRightClicked != null) itemRightClicked(m, item1.Data); });
+
+      
 
             if (treeData != null)
                 PlatformDrawer.DoButton(imageRect, "", CachedStyles.ClearItemStyle,
