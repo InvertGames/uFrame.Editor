@@ -7,6 +7,10 @@ namespace Invert.Core.GraphDesigner
         public GraphItemViewModel ViewModelAtMouse { get; set; }
         public DiagramViewModel DiagramViewModel { get; set; }
 
+        public ConnectorViewModel ConnectorAtMouse { get; set; }
+
+
+
         public DiagramInputHander(DiagramViewModel diagramViewModel)
         {
             DiagramViewModel = diagramViewModel;
@@ -24,8 +28,17 @@ namespace Invert.Core.GraphDesigner
 
         public virtual void OnMouseMove(MouseEvent e)
         {
-            ViewModelAtMouse = DiagramViewModel.GraphItems.Reverse().FirstOrDefault(p => p.Bounds.Contains(e.MousePosition));
-
+            ConnectorAtMouse = null;
+            ViewModelAtMouse = null;
+            foreach (var source in DiagramViewModel.GraphItems.Reverse())
+            {
+                if (source.Bounds.Contains(e.MousePosition))
+                {
+                    if (source is ConnectorViewModel) ConnectorAtMouse = (ConnectorViewModel) source;
+                    else ViewModelAtMouse = ConnectorAtMouse;
+                }
+                if(ConnectorAtMouse != null) break;
+            }
 
         }
 

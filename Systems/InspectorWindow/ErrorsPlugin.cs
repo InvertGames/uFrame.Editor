@@ -148,7 +148,14 @@ public class ErrorsPlugin : DiagramPlugin
     private void UpdateList()
     {
         if (ErrorInfoList == null) ErrorInfoList = new TreeViewModel();
-        ErrorInfoList.SingleItemIcon = "Breakpoint";
+        ErrorInfoList.SingleIconSelector = i =>
+        {
+            var item = i as ErrorInfo;
+            if (item == null) return "DotIcon";
+            if (item.Siverity == ValidatorType.Error) return "ErrorIcon_Micro";
+            if (item.Siverity == ValidatorType.Warning) return "WarningIcon_Micro";
+            return "DotIcon";
+        };
         ErrorInfoList.Data = ErrorInfo.OfType<IItem>().ToList();
         ErrorInfoList.Submit = i =>
         {

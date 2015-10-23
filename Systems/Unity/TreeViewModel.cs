@@ -8,7 +8,7 @@ public class TreeViewModel
 {
     private List<IItem> _data;
     private Func<IItem, bool> _predicate;
-    private int _selectedIndex;
+    private int _selectedIndex = -1;
     private List<TreeViewItem> _treeData;
     private string _singleItemIcon;
 
@@ -30,6 +30,19 @@ public class TreeViewModel
         }
     }
 
+    public IEnumerable<IItem> CheckedData
+    {
+        get { return TreeData.Where(i => i.IsChecked).Select(i => i.Data); }
+    }
+
+    public Func<IItem, bool> InitialToggleSelector { get; set; }
+
+    public Action<IItem, bool> OnItemToggleChanged { get; set; }
+
+    public bool ShowToggle { get; set; }
+
+    public bool AllowManualToggle { get; set; }
+
     public string SingleItemIcon
     {
         get { return _singleItemIcon ?? (_singleItemIcon = "DotIcon"); }
@@ -45,7 +58,12 @@ public class TreeViewModel
 
     public TreeViewItem SelectedItem
     {
-        get { return SelectedIndex > -1 && SelectedIndex < TreeData.Count ? TreeData[SelectedIndex] : TreeData.FirstOrDefault(); }
+        get
+        {
+            return SelectedIndex > -1 && SelectedIndex < TreeData.Count
+                ? TreeData[SelectedIndex]
+                : TreeData.FirstOrDefault(_ => !(_.Data is ITreeItem));
+        }
     }
 
     public Func<IItem, Color?> ColorMarkSelector { get; set; } 
@@ -56,6 +74,11 @@ public class TreeViewModel
         {
             if (_selectedIndex < 0 && TreeData.Count > 0)
             {
+                if(Predicate != null)
+                foreach (var treeViewItem in TreeData)
+                {
+                    if (treeViewItem.Visible && !(treeViewItem.Data is ITreeItem)) return treeViewItem.Index;
+                }
                 return 0;
             }
             return _selectedIndex;
@@ -224,7 +247,8 @@ public class TreeViewModel
             Data = data,
             Index = items.Count,
             Parent = parent,
-            Indent = ident
+            Indent = ident,
+            IsChecked = InitialToggleSelector != null ? InitialToggleSelector(data) : false
         };
  
         items.Add(treeViewItem);
@@ -269,5 +293,28 @@ public class TreeViewModel
     public void ScrollToItem(TreeViewItem item)
     {
         ScrollTarget = item;
+    }
+
+    public void ToggleItem(TreeViewItem treeViewItem,bool value)
+    {
+        if(treeViewItem.IsChecked == value) return;
+
+        treeViewItem.IsChecked = value;
+        if (OnItemToggleChanged != null) OnItemToggleChanged(treeViewItem.Data, value);
+
+        if (treeViewItem.Data is ITreeItem)
+        {
+            foreach (var item in TreeData.ToArray())
+            {
+                if (item.Parent == treeViewItem)
+                {
+                    ToggleItem(item,value);
+                }
+            }
+        }
+
+
+
+
     }
 }

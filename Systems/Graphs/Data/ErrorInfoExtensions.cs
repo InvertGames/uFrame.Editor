@@ -22,6 +22,23 @@ namespace Invert.Core.GraphDesigner
                 list.Add(error);
             return error;
         }
+
+        public static ErrorInfo AddWarning(this List<ErrorInfo> list, string message, IDataRecord record,
+        Action autoFix = null)
+        {
+            var error = new ErrorInfo()
+            {
+                Message = message,
+                Identifier = record.Identifier,
+                Record = record,
+                AutoFix = autoFix,
+                Siverity = ValidatorType.Warning
+            };
+            if (!list.Any(p => p.Equals(error)))
+                list.Add(error);
+            return error;
+        }
+
         //public static ErrorInfo AddError(this List<ErrorInfo> list, string message, string identifier = null,
         //    Action autoFix = null)
         //{
