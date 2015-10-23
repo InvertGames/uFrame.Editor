@@ -166,14 +166,16 @@ namespace Invert.Core.GraphDesigner.Unity
                     {
                         handler.OnMouseDown(mouse);
                     }
-
+                    InvertApplication.SignalEvent<IMouseDown>(_=>_.MouseDown(mouse));
                     LastMouseDownEvent = e;
+                    
                 }
                 if (e.rawType == EventType.MouseUp)
                 {
                     mouse.MouseUpPosition = mouse.MousePosition;
                     mouse.IsMouseDown = false;
                     handler.OnMouseUp(mouse);
+                    InvertApplication.SignalEvent<IMouseUp>(_ => _.MouseUp(mouse));
                 }
                 else if (e.rawType == EventType.KeyDown)
                 {

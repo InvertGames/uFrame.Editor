@@ -15,7 +15,10 @@ public class UnityGraphData: ScriptableObject, IGraphData,  IItem
     [SerializeField, HideInInspector]
     public string _jsonData;
 
-
+	public IEnumerable<IDataRecord> ChildRecords {
+		get {
+			yield break;
+		}}
     public IGraphData Graph
     {
         get
@@ -199,10 +202,11 @@ public class UnityGraphData: ScriptableObject, IGraphData,  IItem
         get { return Graph.RootFilter; }
     }
 
-    public virtual IGraphFilter CreateDefaultFilter()
+    public virtual IGraphFilter CreateDefaultFilter(string identifier = null)
     {
         return Graph.CreateDefaultFilter();
     }
+
 
     public void CleanUpDuplicates()
     {

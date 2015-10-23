@@ -1,12 +1,13 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Invert.Data;
 using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
 
-    public interface IDiagramNode : IDiagramNodeItem
+    public interface IDiagramNode : IDiagramNodeItem, IDataHeirarchy
     {
 
     

@@ -174,11 +174,11 @@ namespace Invert.Core.GraphDesigner
         {
             get
             {
-                if (Repository != null)
+                if (Repository != null && RootFilter != null)
                 {
                     return RootFilter.Name;
                 }
-                return this.GetType().Name;
+                return "Problem with:" + this.Identifier;
             }
             set
             {
@@ -275,6 +275,11 @@ namespace Invert.Core.GraphDesigner
                     {
                         asNode.GraphId = this.Identifier;
                     }
+                    if (_rootFilter == null)
+                    {
+                        _rootFilter = CreateDefaultFilter(RootFilterId);
+                    }
+
                 }
                 else
                 {
@@ -388,7 +393,7 @@ namespace Invert.Core.GraphDesigner
     
 
 
-        public virtual IGraphFilter CreateDefaultFilter()
+        public virtual IGraphFilter CreateDefaultFilter(string identifier = null)
         {
             return null;
         }
@@ -566,6 +571,11 @@ namespace Invert.Core.GraphDesigner
             {
                 this.Changed("Expanded", ref _expanded, value);
             }
+        }
+
+        public IEnumerable<IDataRecord> ChildRecords
+        {
+	        get { return NodeItems.OfType<IDataRecord>(); }
         }
     }
 }

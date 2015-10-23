@@ -46,7 +46,19 @@ namespace Invert.Core.GraphDesigner
 
         public virtual IEnumerable<string> Tags
         {
-            get { yield break; }
+	        get { 
+		        if (GraphNodeItem == null) yield break;
+		        foreach (var item in GraphNodeItem.Flags.Select(p=>p.Name)) 
+			        yield return item;
+	        }
+        }
+
+        public DiagramNodeItem GraphNodeItem
+        {
+            get
+            {
+                return DataObject as DiagramNodeItem;
+            }
         }
 
         public ItemViewModel()

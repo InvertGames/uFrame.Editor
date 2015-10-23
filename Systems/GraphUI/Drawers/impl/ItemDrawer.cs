@@ -163,10 +163,12 @@ namespace Invert.Core.GraphDesigner
             for (int index = 0; index < _cachedFlags.Length; index++)
             {
                 var item = _cachedFlags[index];
+                if (!FlagSystem.FlagByName.ContainsKey(item)) continue;
                 var boundsRect = new Rect(this.Bounds);
                 boundsRect.x += (4f * index);
                 boundsRect.width = 4f;
-	            platform.DrawRect(boundsRect, Color.blue);
+                    
+	            platform.DrawRect(boundsRect, FlagSystem.FlagByName[item].Color);
             }
         }
 

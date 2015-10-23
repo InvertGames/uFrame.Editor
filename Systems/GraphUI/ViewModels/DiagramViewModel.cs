@@ -795,26 +795,23 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordInserted(IDataRecord record)
         {
+
             if (record is ConnectionData)
             {
                 RefreshConnectors();
-                return;
             }
-            //if (record == GraphData)
-            //{
-            //    Load(true);
-            //    return;
-            //}
-
-            var filterItem = record as IFilterItem;
-            if (filterItem != null)
+            else
             {
-                if (filterItem.FilterId == GraphData.CurrentFilter.Identifier)
+                var filterItem = record as IFilterItem;
+                if (filterItem != null)
                 {
-                    var e = AddGraphItems(new[] {filterItem.Node});
-                    while (e.MoveNext())
+                    if (filterItem.FilterId == GraphData.CurrentFilter.Identifier)
                     {
-                        
+                        var e = AddGraphItems(new[] { filterItem.Node });
+                        while (e.MoveNext())
+                        {
+
+                        }
                     }
                 }
             }

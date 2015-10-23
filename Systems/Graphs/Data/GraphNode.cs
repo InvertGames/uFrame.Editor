@@ -10,6 +10,7 @@ using Invert.Json;
 using UnityEngine;
 namespace Invert.Core.GraphDesigner
 {
+
     /// <summary>
     /// The base data class for all diagram nodes.
     /// </summary>
@@ -354,7 +355,11 @@ namespace Invert.Core.GraphDesigner
         {
             get
             {
-                if (string.IsNullOrEmpty(GraphId)) return null;
+                if (string.IsNullOrEmpty(GraphId))
+                {
+                 
+                    return null;
+                }
                 return _graph ?? (_graph = Repository.GetById<IGraphData>(GraphId));
             }
             set
@@ -404,7 +409,7 @@ namespace Invert.Core.GraphDesigner
 
         public bool Changed { get; set; }
 
-        public IEnumerable<string> ForeignKeys
+        public virtual IEnumerable<string> ForeignKeys
         {
             get { yield return GraphId; }
         }
@@ -542,6 +547,7 @@ namespace Invert.Core.GraphDesigner
         {
             get
             {
+                if (Graph == null) return string.Empty;
                 return Graph.Namespace;
             }
             set
@@ -800,6 +806,11 @@ namespace Invert.Core.GraphDesigner
             {
                 this.Changed("Expanded", ref _expanded, value);
             }
+        }
+
+        public IEnumerable<IDataRecord> ChildRecords
+        {
+	        get { return this.GraphItems.OfType<IDataRecord>(); }
         }
     }
 }

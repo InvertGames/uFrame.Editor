@@ -16,6 +16,17 @@ namespace Invert.Core.GraphDesigner
             get { return false; }
         }
 
+        public override ITypeInfo BaseTypeInfo
+        {
+            get
+            {
+                if (BaseNode != null)
+                {
+                    return BaseNode;
+                }
+                return null;
+            }
+        }
 
         [Browsable(false)]
         public virtual GenericInheritableNode BaseNode

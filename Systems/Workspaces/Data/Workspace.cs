@@ -6,7 +6,7 @@ using Invert.Json;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class Workspace : IDataRecord, IDataRecordRemoved, ITreeItem
+    public class Workspace : IDataRecord, IDataRecordRemoved, ITreeItem, IDataHeirarchy
     {
         private string _name;
         private string _currentGraphId;
@@ -142,5 +142,10 @@ namespace Invert.Core.GraphDesigner
 
         [JsonProperty]
         public bool Expanded { get; set; }
+
+        public IEnumerable<IDataRecord> ChildRecords
+        {
+	        get { return Graphs.OfType<IDataRecord>(); }
+        }
     }
 }

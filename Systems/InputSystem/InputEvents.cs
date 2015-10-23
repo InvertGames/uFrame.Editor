@@ -19,11 +19,11 @@ namespace Invert.Core.GraphDesigner
 
     public interface IMouseDown
     {
-
+        void MouseDown(MouseEvent mouse);
     }
 
     public interface IMouseUp
     {
-
+        void MouseUp(MouseEvent mouse);
     }
 }

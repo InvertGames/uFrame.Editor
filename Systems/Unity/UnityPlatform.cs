@@ -6,8 +6,14 @@ using UnityEngine;
 
 namespace Invert.Core.GraphDesigner.Unity
 {
-    public class UnityPlatform : IPlatformOperations, IDebugLogger
+    public class UnityPlatform : DiagramPlugin, IPlatformOperations, IDebugLogger
     {
+
+        //public void ShowFileDialog(string title)
+        //{
+        //    EditorUtility.OpenFilePanel(title,directory,)
+        //}
+
         public void OpenScriptFile(string filePath)
         {
             var scriptAsset = AssetDatabase.LoadAssetAtPath(filePath, typeof(TextAsset));

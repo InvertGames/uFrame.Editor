@@ -6,7 +6,7 @@ using Invert.Json;
 
 namespace Invert.Core.GraphDesigner
 {
-    public interface IGraphData : IItem, IDataRecord
+    public interface IGraphData : IItem, IDataRecord, IDataHeirarchy
 	{
 		string SystemPath {get;set;}
 		string SystemDirectory {get;}
@@ -16,7 +16,7 @@ namespace Invert.Core.GraphDesigner
 		IGraphFilter CurrentFilter {get;}
 		string Name {get;set;}
     	string Namespace {get;}
-        string Identifier { get; set; }
+
 
         int RefactorCount { get; set; }
     
@@ -41,7 +41,7 @@ namespace Invert.Core.GraphDesigner
         void RemoveConnection(IConnectable output, IConnectable input);
         void ClearOutput(IConnectable output);
         void ClearInput(IConnectable input); 
-        IGraphFilter CreateDefaultFilter();
+        IGraphFilter CreateDefaultFilter(string identifier = null);
         void CleanUpDuplicates();
      
         void PushFilter(IGraphFilter filter);

@@ -28,5 +28,6 @@ namespace Invert.Data
 
         TObjectType GetSingleLazy<TObjectType>(ref string keyProperty, Action<TObjectType> created) where TObjectType : class,IDataRecord, new();
         TObjectType GetSingle<TObjectType>() where TObjectType : class, IDataRecord, new();
+
     }
 }

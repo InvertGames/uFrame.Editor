@@ -13,4 +13,23 @@ public interface ITypeInfo : IItem, IValueItem
     string Namespace { get; }
     IEnumerable<IMemberInfo> GetMembers();
     bool IsAssignableTo(ITypeInfo info);
+    ITypeInfo BaseTypeInfo { get; }
+}
+
+public static class TypeInfoExtensions
+{
+    public static IEnumerable<IMemberInfo> GetAllMembers(this ITypeInfo typeInfo)
+    {
+        if (typeInfo == typeof (void)) yield break;
+        foreach (var item in typeInfo.GetMembers())
+        {
+            yield return item;
+        }
+        var baseType = typeInfo.BaseTypeInfo;
+        if (baseType != null && baseType != typeInfo)
+        foreach (var item in baseType.GetAllMembers())
+        {
+            yield return item;
+        }
+    }
 }

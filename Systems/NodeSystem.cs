@@ -1,11 +1,124 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Invert.Data;
+using Invert.IOC;
+using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
+    public class FlagConfig 
+    {
+        public FlagConfig(Type @for, string flagName, Color color)
+        {
+            For = @for;
+            FlagName = flagName;
+            Color = color;
+        }
+
+        public Type For { get; set; }
+
+        public string FlagName { get; set; }
+
+        public Color Color { get; set; }
+
+        public PropertyInfo PropertyInfo { get; set; }
+
+        public bool GetValue(IDiagramNodeItem obj)
+        {
+            if (PropertyInfo != null)
+            {
+                return (bool)PropertyInfo.GetValue(obj, null);
+            }
+            return obj[FlagName];
+        }
+        public void SetValue(IDiagramNodeItem obj, bool value)
+        {
+            if (PropertyInfo != null)
+            {
+                PropertyInfo.SetValue(obj,value, null);
+            }
+            else
+            {
+                obj[FlagName] = value;
+            }
+          
+        }
+    }
+
+    public class FlagSystem : DiagramPlugin
+        , IContextMenuQuery
+    {
+        //private static Dictionary<Type, FlagConfig> _flagConfigs = new Dictionary<Type, FlagConfig>();
+
+        //public static Dictionary<Type, FlagConfig> FlagConfigs
+        //{
+        //    get { return _flagConfigs; }
+        //    private set { _flagConfigs = value; }
+        //}
+        private static Dictionary<string, FlagConfig> _flagsByName = new Dictionary<string, FlagConfig>();
+
+        public static Dictionary<string, FlagConfig> FlagByName
+        {
+            get { return _flagsByName; }
+            private set { _flagsByName = value; }
+        }
+        public override decimal LoadPriority
+        {
+            get { return 500000; }
+        }
+
+        public override void Loaded(UFrameContainer container)
+        {
+            base.Loaded(container);
+            FlagByName.Clear();
+            foreach (var item in InvertApplication.GetDerivedTypes<IDiagramNodeItem>())
+            {
+
+                var flagProperties = item.GetProperties(BindingFlags.Default | BindingFlags.Public | BindingFlags.Instance).Where(p => p.IsDefined(typeof (NodeFlag), true)).ToArray();
+                foreach (var property in flagProperties)
+                {
+                    var attr = property.GetCustomAttributes(typeof (NodeFlag), true).OfType<NodeFlag>().FirstOrDefault();
+                    FlagByName.Add(attr.Name, new FlagConfig(item,attr.Name,attr.Color)
+                    {
+                        PropertyInfo = property
+                    });
+                }
+            }
+
+            foreach (var item in container.ResolveAll<FlagConfig>())
+            {
+                FlagByName.Add(item.FlagName,item);
+            }
+        }
+
+        public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
+        {
+            var item = obj.OfType<GraphItemViewModel>().FirstOrDefault();
+            if (item == null) return;
+
+            foreach (var flag in FlagByName.Values)
+            {
+                if (flag.For.GetType().IsAssignableFrom(item.DataObject.GetType()) || flag.For == item.DataObject.GetType())
+                {
+                    var value = flag.GetValue(item.DataObject as IDiagramNodeItem);
+                    ui.AddCommand(new ContextMenuItem()
+                    {
+                        Title = flag.FlagName,
+                        Checked = value,
+                        Command = new LambdaCommand("Set Flag",() =>
+                        {
+                            flag.SetValue(item.DataObject as IDiagramNodeItem, !value);
+                        })
+                    });
+                }
+            }
+        }
+    }
+
+
     public class NodeSystem : DiagramPlugin,
         IContextMenuQuery,
         IExecuteCommand<CreateNodeCommand>,
@@ -18,9 +131,8 @@ namespace Invert.Core.GraphDesigner
         IExecuteCommand<MoveItemUpCommand>,
         IExecuteCommand<MoveItemDownCommand>,
         IOnMouseUpEvent
-  
-        
     {
+
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
         {

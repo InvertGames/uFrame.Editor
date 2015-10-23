@@ -4,10 +4,16 @@ using Invert.Data;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class SelectionFor<TFor, TValue> : GenericSlot
+    public class SelectionFor<TFor, TValue> : GenericSlot, IDynamicDataRecord, IDataHeirarchy, IDataRecordRemoved
         where TValue : InputSelectionValue, new()
         where TFor : class, IValueItem
     {
+        public override void RecordRemoved(IDataRecord record)
+        {
+            base.RecordRemoved(record);
+            if (record == _item || record.IsNear(this))
+                _item = null;
+        }
 
         private TFor _item;
 
@@ -31,6 +37,7 @@ namespace Invert.Core.GraphDesigner
                 //}
                 return SelectedItem;
             }
+            set { _item = value; }
         }
 
         public override bool AllowInputs
@@ -118,5 +125,15 @@ namespace Invert.Core.GraphDesigner
         {
             yield break;
         }
+
+        public IEnumerable<IDataRecord> ChildRecords
+        {
+            get
+            {
+                if (SelectedValue != null)
+                    yield return SelectedValue;
+            }
+        }
+
     }
 }

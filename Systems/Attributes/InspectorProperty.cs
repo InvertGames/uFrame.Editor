@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
@@ -35,6 +36,24 @@ namespace Invert.Core.GraphDesigner
         public InspectorProperty(InspectorType inspectorType)
         {
             InspectorType = inspectorType;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class NodeFlag : Attribute
+    {
+        public Color Color { get; set; }
+        public string Name { get; set; }
+
+        public NodeFlag(string name)
+        {
+            Name = name;
+        }
+
+        public NodeFlag(string name, Color color)
+        {
+            Color = color;
+            Name = name;
         }
     }
 }

@@ -64,6 +64,11 @@ namespace Invert.Core.GraphDesigner
             return info.FullName == FullName;
         }
 
+        public virtual ITypeInfo BaseTypeInfo
+        {
+            get { return null; }
+        }
+
         public override void MoveItemDown(IDiagramNodeItem nodeItem)
         {
             base.MoveItemDown(nodeItem);
@@ -224,6 +229,7 @@ namespace Invert.Core.GraphDesigner
         public override void Validate(List<ErrorInfo> errors)
         {
             base.Validate(errors);
+
             if (Repository.AllOf<IClassNode>().Any(p => p != this && p.FullName == this.FullName))
             {
                 errors.AddError(string.Format("The name {0} is already taken", this.Name), this);

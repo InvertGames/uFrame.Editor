@@ -59,11 +59,13 @@ namespace Invert.Core.GraphDesigner
         protected override void DataContextChanged()
         {
             base.DataContextChanged();
-          
+            _cachedTag = null;
+            _cachedTags = null;
             Children.Clear();
             // Anything after its initialized will be manually done
             //Refresh(InvertGraphEditor.Platform);
             RefreshContent();
+            
             if (!ViewModel.IsCollapsed)
             foreach (var item in ViewModel.ContentItems)
             {
@@ -79,6 +81,7 @@ namespace Invert.Core.GraphDesigner
         {
             if (changeArgs.Action == NotifyCollectionChangedAction.Reset)
             {
+
                 RefreshContent();
             }
             if (changeArgs.NewItems != null && !ViewModel.IsCollapsed)
@@ -94,6 +97,9 @@ namespace Invert.Core.GraphDesigner
             {
                 Children.RemoveAll(p => changeArgs.OldItems.Contains(p.ViewModelObject));
             }
+            //_cachedTags = null;
+            //_cachedTag = null;
+            //_cachedTag = string.Join(" | ", ViewModel.Tags.ToArray());
             Refresh(InvertGraphEditor.PlatformDrawer);
         }
    

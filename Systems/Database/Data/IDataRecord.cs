@@ -10,4 +10,14 @@ namespace Invert.Data
 
         IEnumerable<string> ForeignKeys { get; } 
     }
+
+    public interface IDataHeirarchy : IDataRecord
+    {
+        IEnumerable<IDataRecord> ChildRecords { get; } 
+    }
+
+    public interface IDynamicDataRecord : IDataRecord
+    {
+        
+    }
 }

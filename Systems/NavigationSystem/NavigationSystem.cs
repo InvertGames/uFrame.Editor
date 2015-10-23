@@ -23,8 +23,9 @@ namespace Invert.Core.GraphDesigner {
         , IExecuteCommand<NavigateByHistoryItemCommand>
         , IExecuteCommand<SaveNavigationHistoryStepCommand>
         , IWorkspaceChanged
-        , IDataRecordPropertyChanged   
-
+        , IDataRecordPropertyChanged 
+        , IMouseDown
+        , IKeyUp
     {
         private IRepository _repository;
         private GraphSystem _graphSystem;
@@ -229,11 +230,11 @@ namespace Invert.Core.GraphDesigner {
             Profiler.BeginSample("Save Navigation Step");
 
             if (WorkspaceService == null || WorkspaceService.CurrentWorkspace == null ||
-                WorkspaceService.CurrentWorkspace.CurrentGraph == null) return;
+                WorkspaceService.CurrentWorkspace.CurrentGraph == null || WorkspaceService.CurrentWorkspace.CurrentGraph.CurrentFilter == null) return;
             
             var navHistoryItems = Repository.All<NavHistoryItem>().OrderBy(i => i.Time).ToList();
             var activeHistoryItem = navHistoryItems.FirstOrDefault(i => i.IsActive);
-            if (activeHistoryItem != null)
+            if (activeHistoryItem != null) 
             {
                 activeHistoryItem.IsActive = false;
                 Repository.RemoveAll<NavHistoryItem>(i => i.Time > activeHistoryItem.Time);
@@ -416,6 +417,25 @@ namespace Invert.Core.GraphDesigner {
             _saveOnNextUpdate = true;
         }
 
+        public void MouseDown(MouseEvent mouse)
+        {
+            //InvertApplication.Log(mouse.MouseButton.ToString());
+        }
+
+        public bool KeyUp(bool control, bool alt, bool shift, KeyCode character)
+        {
+            if (character == KeyCode.Minus)
+            {
+                Execute(new NavigateBackCommand());
+                return true;
+            }
+            if (character == KeyCode.Plus)
+            {
+                Execute(new NavigateForwardCommand());
+                return true;
+            }
+            return false;
+        }
     }
 
     public class NavigateToNodeCommand : Command

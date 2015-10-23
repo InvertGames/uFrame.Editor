@@ -21,12 +21,6 @@ public class SystemTypeInfo : ITypeInfo
         SystemType = systemType;
     }
 
-    public SystemTypeInfo(Type systemType, ITypeInfo other)
-    {
-        SystemType = systemType;
-        Other = other;
-    }
-
     public bool IsArray
     {
         get
@@ -43,7 +37,11 @@ public class SystemTypeInfo : ITypeInfo
     {
         get { return typeof (IList).IsAssignableFrom(SystemType); }
     }
-
+    public static implicit operator SystemTypeInfo(Type a)
+    {
+        return new SystemTypeInfo(a);
+    }
+  
     public bool IsEnum
     {
         get
@@ -107,13 +105,7 @@ public class SystemTypeInfo : ITypeInfo
 
     public virtual IEnumerable<IMemberInfo> GetMembers()
     {
-        if (Other != null)
-        {
-            foreach (var item in Other.GetMembers())
-            {
-                yield return item;
-            }
-        }
+
         if (SystemType != null)
         {
             if (IsEnum)
@@ -127,18 +119,19 @@ public class SystemTypeInfo : ITypeInfo
             else
             {
 
-                foreach (var item in SystemType.GetFields(BindingFlags.Public | BindingFlags.Instance))
+                foreach (var item in SystemType.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 {
                     if (item == null) continue;
                     yield return new SystemFieldMemberInfo(item);
                 }
-                foreach (var item in SystemType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                foreach (var item in SystemType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 {
                     yield return new SystemPropertyMemberInfo(item);
                 }
             }
          
         }
+
         
     }
 
@@ -150,6 +143,15 @@ public class SystemTypeInfo : ITypeInfo
             return systemInfo.SystemType.IsAssignableFrom(SystemType) || systemInfo.SystemType.IsCastableTo(SystemType);
         }
         return info.FullName == FullName;
+    }
+
+    public ITypeInfo BaseTypeInfo
+    {
+        get
+        {
+            if (SystemType.BaseType == typeof (object)) return null;
+            return (SystemTypeInfo) SystemType.BaseType;
+        }
     }
 
     public virtual string Title { get { return TypeName; } }

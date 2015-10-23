@@ -8,6 +8,9 @@ namespace Invert.Core.GraphDesigner
     {
         private string _codeOutputPath;
         private string _ns;
+        private int _majorVersion;
+        private int _minorVersion;
+        private int _buildVersion;
         public IRepository Repository { get; set; }
         public string Identifier { get; set; }
         public bool Changed { get; set; }
@@ -37,5 +40,26 @@ namespace Invert.Core.GraphDesigner
         public bool IsCurrent { get; set; }
         public string FullPath { get; set; }
         public IRepository Database { get; set; }
+
+        [JsonProperty]
+        public int MajorVersion
+        {
+            get { return _majorVersion; }
+            set { this.Changed("MajorVersion", ref _majorVersion, value); }
+        }
+
+        [JsonProperty]
+        public int MinorVersion
+        {
+            get { return _minorVersion; }
+            set { this.Changed("MinorVersion", ref _minorVersion, value); }
+        }
+
+        [JsonProperty]
+        public int BuildVersion
+        {
+            get { return _buildVersion; }
+            set { this.Changed("BuildVersion", ref _buildVersion, value); }
+        }
     }
 }
