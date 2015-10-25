@@ -26,10 +26,14 @@ public static class TypeInfoExtensions
             yield return item;
         }
         var baseType = typeInfo.BaseTypeInfo;
+
         if (baseType != null && baseType != typeInfo)
-        foreach (var item in baseType.GetAllMembers())
         {
-            yield return item;
+            foreach (var item in baseType.GetAllMembers())
+            {
+                yield return item;
+            }
         }
+
     }
 }
