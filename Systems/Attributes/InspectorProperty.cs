@@ -42,7 +42,7 @@ namespace Invert.Core.GraphDesigner
     [AttributeUsage(AttributeTargets.Property)]
     public class NodeFlag : Attribute
     {
-        public Color Color { get; set; }
+        public NodeColor Color { get; set; }
         public string Name { get; set; }
 
         public NodeFlag(string name)
@@ -50,7 +50,7 @@ namespace Invert.Core.GraphDesigner
             Name = name;
         }
 
-        public NodeFlag(string name, Color color)
+        public NodeFlag(string name, NodeColor color)
         {
             Color = color;
             Name = name;

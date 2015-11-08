@@ -6,7 +6,7 @@ using Invert.Core.GraphDesigner;
 using Invert.Json;
 
 [Serializable]
-public class FilterState : IJsonObject {
+public class FilterState {
     [NonSerialized]
     private Stack<IGraphFilter> _filterStack = new Stack<IGraphFilter>();
 
@@ -65,15 +65,4 @@ public class FilterState : IJsonObject {
         //}
     }
 
-    public void Serialize(JSONClass cls)
-    {
-        cls.AddPrimitiveArray("FilterStack",_persistedFilterStack, i=>new JSONData(i));
-    }
-
-    public void Deserialize(JSONClass cls)
-    {
-        
-        _persistedFilterStack = cls["FilterStack"].DeserializePrimitiveArray(n=>n.Value).ToList();
-        
-    }
 }

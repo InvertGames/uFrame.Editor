@@ -481,7 +481,7 @@ namespace Invert.Core.GraphDesigner
                     BackgroundStyle = HeaderStyle,
                     TextStyle = HeaderTextStyle,
                     ViewModelObject = ViewModelObject,
-                    StyleSchema = ViewModel.StyleSchema,
+                    StyleSchema = NodeSystem.MinimalView && !ViewModel.IsCurrentFilter ? ViewModel.MinimalisticStyleSchema : ViewModel.StyleSchema,
                     IconTooltip = ViewModel.Comments,
                     ParentDrawer = this
                 });

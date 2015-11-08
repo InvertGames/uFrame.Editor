@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Invert.Core;
 using Invert.Data;
@@ -14,6 +15,8 @@ public interface ITypeInfo : IItem, IValueItem
     IEnumerable<IMemberInfo> GetMembers();
     bool IsAssignableTo(ITypeInfo info);
     ITypeInfo BaseTypeInfo { get; }
+
+    bool HasAttribute(Type attribute);
 }
 
 public static class TypeInfoExtensions

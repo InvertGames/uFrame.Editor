@@ -7,14 +7,36 @@ using Invert.Common;
 using Invert.Core;
 using Invert.Core.GraphDesigner;
 using Invert.Data;
+using Invert.IOC;
 using UnityEditor;
 using UnityEngine;
 
 namespace Invert.uFrame.Editor
 {
+
+    public interface IExplorerProvider
+    {
+        string Name { get; }
+        List<IItem> GetItems(IRepository repository);
+    }
+
+    public class GraphExplorerProvider : IExplorerProvider
+    {
+        public string Name { get { return "Graphs"; } }
+        public List<IItem> GetItems(IRepository repository)
+        {
+            return InvertApplication.Container.Resolve<WorkspaceService>().CurrentWorkspace.Graphs.Cast<IItem>().ToList();
+        }
+    }
     public class GraphExplorerUISystem : DiagramPlugin, IDrawGraphExplorer, IDataRecordInserted, IDataRecordRemoved, ICommandExecuted
     {
+        public override void Initialize(UFrameContainer container)
+        {
+            base.Initialize(container);
+            container.RegisterInstance<IExplorerProvider>(new GraphExplorerProvider(),"Graphs");
+        }
 
+        public override decimal LoadPriority { get { return 100000; } }
         private WorkspaceService _workspaceService;
         private TreeViewModel _treeModel;
         public string SearchCriteria { get; set; }
@@ -75,9 +97,35 @@ namespace Invert.uFrame.Editor
             //TreeModel = null;
         }
 
+        public override void Loaded(UFrameContainer container)
+        {
+            base.Loaded(container);
+            ExplorerViews = container.ResolveAll<IExplorerProvider>().ToArray();
+            ExplorerViewsStrings = container.ResolveAll<IExplorerProvider>().Select(p=>p.Name).ToArray();
+        }
 
+        public string[] ExplorerViewsStrings { get; set; }
+
+        public IExplorerProvider[] ExplorerViews { get; set; }
+
+        public int CurrentViewIndex
+        {
+            get { return EditorPrefs.GetInt("CurrentViewIndex", 0); }
+            set { EditorPrefs.SetInt("CurrentViewIndex", value);}
+        }
+
+        public IExplorerProvider CurrentViewProvider
+        {
+            get { return ExplorerViews[CurrentViewIndex]; }
+        }
         public void DrawGraphExplorer(Rect r)
         {
+            var result = EditorGUILayout.Popup(CurrentViewIndex, ExplorerViewsStrings);
+            if (result != CurrentViewIndex)
+            {
+                CurrentViewIndex = result;
+                TreeModel.Data = CurrentViewProvider.GetItems(Container.Resolve<IRepository>());
+            }
             if (_hardDirty)
             {
                 if (TreeModel == null) return;
@@ -87,7 +135,7 @@ namespace Invert.uFrame.Editor
                 }
                 else
                 {
-                    TreeModel.Data = WorkspaceService.CurrentWorkspace.Graphs.Cast<IItem>().ToList();
+                    TreeModel.Data = CurrentViewProvider.GetItems(Container.Resolve<IRepository>());
                     TreeModel.IsDirty = true;
                 }
                 _hardDirty = false;
@@ -97,7 +145,7 @@ namespace Invert.uFrame.Editor
             if (TreeModel.IsDirty) TreeModel.Refresh();
             Rect window = r;
 
-            var searcbarRect = window.WithHeight(32).PadSides(5);
+            var searcbarRect = window.WithHeight(32).Pad(5,22,5,5);
             var listRect = window.Below(searcbarRect).Clip(window).PadSides(5);
             var searchIconRect = new Rect().WithSize(32, 32).InnerAlignWithBottomRight(searcbarRect).AlignHorisonallyByCenter(searcbarRect).PadSides(10);
 

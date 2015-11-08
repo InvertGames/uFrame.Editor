@@ -5,13 +5,14 @@ using System.Reflection;
 using System.Text;
 using Invert.Data;
 using Invert.IOC;
+using UnityEditor;
 using UnityEngine;
 
 namespace Invert.Core.GraphDesigner
 {
     public class FlagConfig 
     {
-        public FlagConfig(Type @for, string flagName, Color color)
+        public FlagConfig(Type @for, string flagName, NodeColor color)
         {
             For = @for;
             FlagName = flagName;
@@ -22,7 +23,7 @@ namespace Invert.Core.GraphDesigner
 
         public string FlagName { get; set; }
 
-        public Color Color { get; set; }
+        public NodeColor Color { get; set; }
 
         public PropertyInfo PropertyInfo { get; set; }
 
@@ -92,6 +93,7 @@ namespace Invert.Core.GraphDesigner
             {
                 FlagByName.Add(item.FlagName,item);
             }
+          
         }
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
@@ -101,6 +103,7 @@ namespace Invert.Core.GraphDesigner
 
             foreach (var flag in FlagByName.Values)
             {
+                var flag1 = flag;
                 if (flag.For.GetType().IsAssignableFrom(item.DataObject.GetType()) || flag.For == item.DataObject.GetType())
                 {
                     var value = flag.GetValue(item.DataObject as IDiagramNodeItem);
@@ -108,9 +111,10 @@ namespace Invert.Core.GraphDesigner
                     {
                         Title = flag.FlagName,
                         Checked = value,
+                        Group = "Flags",
                         Command = new LambdaCommand("Set Flag",() =>
                         {
-                            flag.SetValue(item.DataObject as IDiagramNodeItem, !value);
+                            flag1.SetValue(item.DataObject as IDiagramNodeItem, !value);
                         })
                     });
                 }
@@ -130,12 +134,19 @@ namespace Invert.Core.GraphDesigner
         IExecuteCommand<ApplyRenameCommand>,
         IExecuteCommand<MoveItemUpCommand>,
         IExecuteCommand<MoveItemDownCommand>,
-        IOnMouseUpEvent
+        IOnMouseUpEvent,
+        IToolbarQuery
     {
 
+        public static bool MinimalView
+        {
+            get { return EditorPrefs.GetBool("MinimalView", false); }
+            set { EditorPrefs.SetBool("MinimalView",value); }
+        }
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] objs)
         {
+            
             var diagramNodeItem = objs.FirstOrDefault() as ItemViewModel;
             if (diagramNodeItem != null)
             {
@@ -260,7 +271,7 @@ namespace Invert.Core.GraphDesigner
                     Title = "Buy Now",
                     Action = () =>
                     {
-                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                        InvertGraphEditor.Platform.OpenLink("https://invertgamestudios.com/ecs/purchase");
                     }
                 }));
                 return;
@@ -275,7 +286,7 @@ namespace Invert.Core.GraphDesigner
                         Title = "Buy Now",
                         Action = () =>
                         {
-                            InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                            InvertGraphEditor.Platform.OpenLink("https://invertgamestudios.com/ecs/purchase");
                         }
                     }));
                     return;
@@ -388,6 +399,16 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-	
+
+        public void QueryToolbarCommands(ToolbarUI ui)
+        {
+            ui.AddCommand(new ToolbarItem()
+            {
+                Checked = MinimalView,
+                Title = "Minimal",
+                Command = new LambdaCommand("minimal",()=>MinimalView = !MinimalView),
+                Position = ToolbarPosition.BottomRight
+            });
+        }
     }
 }

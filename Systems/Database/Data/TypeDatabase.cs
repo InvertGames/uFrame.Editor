@@ -114,6 +114,28 @@ namespace Invert.Data
             return item;
         }
 
+        public TObjectType GetSingleLazy<TObjectType>( Action<TObjectType> created = null) where TObjectType : class, IDataRecord, new()
+        {
+            var repo = GetRepositoryFor(typeof(TObjectType));
+            // Try and grab the item
+            var item = this.GetSingle<TObjectType>();
+            // If we found one return it
+            if (item != null) return item;
+            // Otherwise create it
+            item = new TObjectType()
+            {
+                Identifier = Guid.NewGuid().ToString(),
+                Repository = this
+            };
+            item.Changed = true;
+            // Ensure its added to the repository
+            repo.Add(item);
+            if (created != null)
+                created(item);
+            return item;
+        }
+
+
         public TObjectType GetById<TObjectType>(string identifier)
         {
             if (string.IsNullOrEmpty(identifier)) return default(TObjectType);

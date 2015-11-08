@@ -49,7 +49,7 @@ namespace Invert.Core.GraphDesigner
 //                    Title = "Buy Now",
 //                    Action = ()=>
 //                    {
-//                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+//                        InvertGraphEditor.Platform.OpenLink("https://invertgamestudios.com/ecs/purchase");
 //                    }
 //                }));
 //                return;
@@ -60,15 +60,13 @@ namespace Invert.Core.GraphDesigner
         public void Execute(SaveAndCompileCommand command)
         {
 #if DEMO
-
-
             Signal<INotify>(x=> x.NotifyWithActions("You're using the demo version of uFrame ECS.", NotificationIcon.Warning, 
                 new NotifyActionItem()
                 {
                     Title = "Buy Now",
                     Action = () =>
                     {
-                        InvertGraphEditor.Platform.OpenLink("https://www.assetstore.unity3d.com/en/#!/content/46297");
+                        InvertGraphEditor.Platform.OpenLink("https://invertgamestudios.com/ecs/purchase");
                     }
                 },
                 new NotifyActionItem()

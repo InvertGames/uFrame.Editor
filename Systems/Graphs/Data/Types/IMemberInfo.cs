@@ -7,3 +7,10 @@ public interface IMemberInfo
     ITypeInfo MemberType { get; }
     IEnumerable<Attribute> GetAttributes();
 }
+
+public interface IMethodMemberInfo : IMemberInfo
+{
+    string MethodIdentifier { get; }
+    
+    IEnumerable<IMemberInfo> GetParameters();
+}

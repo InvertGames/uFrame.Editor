@@ -128,6 +128,11 @@ public class SystemTypeInfo : ITypeInfo
                 {
                     yield return new SystemPropertyMemberInfo(item);
                 }
+                foreach (var item in SystemType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                {
+                    if (item.IsSpecialName && (item.Name.StartsWith("set_") || item.Name.StartsWith("get_"))) continue;
+                    yield return new SystemMethodMemberInfo(item);
+                }
             }
          
         }
@@ -154,9 +159,14 @@ public class SystemTypeInfo : ITypeInfo
         }
     }
 
+    public bool HasAttribute(Type attribute)
+    {
+        return SystemType.IsDefined(attribute, true);
+    }
+
     public virtual string Title { get { return TypeName; } }
     public virtual string Group { get { return Namespace; } }
     public virtual string SearchTag { get { return FullName; } }
     public virtual  string Description { get; set; }
-    public string Identifier { get {return FullName;} set {}}
+    public virtual string Identifier { get {return FullName;} set {}}
 }

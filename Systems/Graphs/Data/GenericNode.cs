@@ -69,6 +69,15 @@ namespace Invert.Core.GraphDesigner
             get { return null; }
         }
 
+        public bool HasAttribute(Type attribute)
+        {
+            if (BaseTypeInfo == null)
+            {
+                return false;
+            }
+            return BaseTypeInfo.HasAttribute(attribute);
+        }
+
         public override void MoveItemDown(IDiagramNodeItem nodeItem)
         {
             base.MoveItemDown(nodeItem);

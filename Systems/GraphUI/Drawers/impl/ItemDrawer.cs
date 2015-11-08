@@ -168,7 +168,7 @@ namespace Invert.Core.GraphDesigner
                 boundsRect.x += (4f * index);
                 boundsRect.width = 4f;
                     
-	            platform.DrawRect(boundsRect, FlagSystem.FlagByName[item].Color);
+	            platform.DrawRect(boundsRect, CachedStyles.GetColor(FlagSystem.FlagByName[item].Color));
             }
         }
 

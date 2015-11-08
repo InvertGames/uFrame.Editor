@@ -628,24 +628,6 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-        public virtual void Deserialize(JSONClass cls)
-        {
-            _name = cls["Name"].Value;
-            _isCollapsed = cls["IsCollapsed"].AsBool;
-            _identifier = cls["Identifier"].Value;
-            PersistedItems = cls["Items"].AsArray.DeserializeObjectArray<IDiagramNodeItem>();
-
-   
-  
-            if (PersistedItems != null)
-            {
-                foreach (var item in PersistedItems)
-                {
-                    item.Node = this;
-                }
-            }
-        }
-
         public bool EnsureUniqueNames { get; set; }
         public virtual bool EndEditing()
         {

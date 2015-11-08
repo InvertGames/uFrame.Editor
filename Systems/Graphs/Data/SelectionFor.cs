@@ -33,7 +33,7 @@ namespace Invert.Core.GraphDesigner
             {
                 //if (typeof (IConnectable).IsAssignableFrom(typeof (TFor)))
                 //{
-                return _item ?? (_item = this.InputFrom<TFor>() ?? SelectedItem);
+                return _item ?? (_item = SelectedItem ?? this.InputFrom<TFor>());
                 //}
                 return SelectedItem;
             }

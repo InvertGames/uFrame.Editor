@@ -25,6 +25,7 @@ namespace Invert.Core
         {
             foreach (var item in Listeners)
             {
+                //InvertApplication.Log(typeof(T).Name + " was signaled on " + item.GetType().Name);
                 var item1 = item;
                 action(item1);
             }
