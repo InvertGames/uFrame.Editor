@@ -29,6 +29,15 @@ namespace Invert.Core.GraphDesigner
                 this.Changed("Order", ref _order, value);
             }
         }
+
+        public IEnumerable<IFlagItem> DisplayedFlags
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
         public virtual IFilterItem FilterLocation
         {
             get { return FilterLocations.FirstOrDefault(); }

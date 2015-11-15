@@ -4,7 +4,12 @@ using Invert.Json;
 
 namespace Invert.Core.GraphDesigner
 {
-    public class FlagItem : IDataRecord, IDataRecordRemoved
+    public interface IFlagItem
+    {
+        string Name { get; }
+        NodeColor Color { get; }
+    }
+    public class FlagItem : IDataRecord, IDataRecordRemoved,IFlagItem
     {
         private string _parentIdentifier;
         private string _name;
@@ -36,6 +41,14 @@ namespace Invert.Core.GraphDesigner
             {
                 _name = value;
                 Changed = true;
+            }
+        }
+
+        public NodeColor Color
+        {
+            get
+            {
+                return FlagSystem.FlagByName.ContainsKey(Name) ? FlagSystem.FlagByName[Name].Color : NodeColor.Green;
             }
         }
 

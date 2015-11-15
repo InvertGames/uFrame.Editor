@@ -37,6 +37,10 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
         get { return true; }
     }
 
+    public virtual IEnumerable<IFlagItem> DisplayedFlags
+    {
+        get { return Flags.OfType<IFlagItem>(); }
+    } 
 
     public IEnumerable<FlagItem> Flags
     {

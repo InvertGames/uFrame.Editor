@@ -114,7 +114,7 @@ namespace Invert.Core.GraphDesigner
             if (!this.Enabled) return;
             mouseEvent.NoBubble = true;
         }
-	    private string[] _cachedFlags;
+	    private IFlagItem[] _cachedFlags;
         public override void Refresh(IPlatformDrawer platform, Vector2 position, bool hardRefresh = true)
         {
             base.Refresh(platform, position, hardRefresh);
@@ -123,7 +123,7 @@ namespace Invert.Core.GraphDesigner
             
 	        if (hardRefresh || _cachedFlags == null)
             {
-		        _cachedFlags = this.ItemViewModel.Tags.ToArray();
+		        _cachedFlags = this.ItemViewModel.ItemFlags.ToArray();
                 _textSize = platform.CalculateTextSize(CachedName, CachedStyles.ItemTextEditingStyle);// TextStyle.CalcSize(new GUIContent(ItemViewModel.Name));
             }
             var flagWidth = 4f;
@@ -163,12 +163,12 @@ namespace Invert.Core.GraphDesigner
             for (int index = 0; index < _cachedFlags.Length; index++)
             {
                 var item = _cachedFlags[index];
-                if (!FlagSystem.FlagByName.ContainsKey(item)) continue;
+              
                 var boundsRect = new Rect(this.Bounds);
                 boundsRect.x += (4f * index);
                 boundsRect.width = 4f;
                     
-	            platform.DrawRect(boundsRect, CachedStyles.GetColor(FlagSystem.FlagByName[item].Color));
+	            platform.DrawRect(boundsRect, CachedStyles.GetColor(item.Color));
             }
         }
 
