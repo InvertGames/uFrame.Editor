@@ -308,10 +308,12 @@ namespace Invert.Core.GraphDesigner
 
     public class ImportCommand : Command
     {
+        public string Filename { get; set; }
         public IGraphData Graph;
     }
     public class ExportGraphCommand : Command
     {
+        public string Filename { get; set; }
         public IGraphData Graph;
     }
     public class ExportWorkspaceCommand : Command
