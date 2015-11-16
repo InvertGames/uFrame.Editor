@@ -18,10 +18,12 @@ namespace Invert.Core.GraphDesigner
             base.Initialize(container);
          
             container.AddNode<NoteNode, NoteNodeViewModel, NoteNodeDrawer>("Note");
+            container.AddNode<ImageNode, ImageNodeViewModel, ImageNodeDrawer>("Image");
             
             foreach (var node in FilterExtensions.AllowedFilterNodes)
             {
                 node.Value.Add(typeof(NoteNode));       
+                node.Value.Add(typeof(ImageNode));       
             }
         }
     }
