@@ -35,5 +35,6 @@ namespace Invert.Core.GraphDesigner
         void Validate(List<ErrorInfo> info);
         ErrorInfo[] Errors { get; set; }
         int Order { get; set; }
+        IEnumerable<IFlagItem> DisplayedFlags { get; }
     }
 }
