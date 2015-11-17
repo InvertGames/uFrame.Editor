@@ -37,7 +37,7 @@ namespace Invert.Core.GraphDesigner
             });
             ui.AddCommand(new ToolbarItem()
             {
-                Command = new SaveAndCompileCommand(),
+                Command = new SaveAndCompileCommand() {ForceCompileAll = true},
                 Title = "Build All",
                 Position = ToolbarPosition.Right,
                 Description = "Start code generation process. This forces all code to regenerate for everything in the database."

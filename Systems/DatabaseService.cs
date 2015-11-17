@@ -349,6 +349,15 @@ namespace Invert.Core.GraphDesigner
                     Signal<IShowContextMenu>(_ => _.Show(null, new ExportUICommand()));
                 })
             });
+            ui.AddCommand(new ToolbarItem()
+            {
+                Title = "Import",
+                Position = ToolbarPosition.BottomLeft,
+                Command = new ImportCommand()
+                {
+
+                },
+            });
         }
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
@@ -359,15 +368,7 @@ namespace Invert.Core.GraphDesigner
                 var ws = InvertApplication.Container.Resolve<WorkspaceService>();
                 if (ws != null && ws.CurrentWorkspace != null)
                 {
-                    ui.AddCommand(new ContextMenuItem()
-                    {
-                        Title = "Import",
-                        Group = "Import",
-                        Command = new ImportCommand()
-                        {
-                      
-                        },
-                    });
+              
                     ui.AddCommand(new ContextMenuItem()
                     {
                         Title = "Export Database",

@@ -11,6 +11,7 @@ namespace Invert.Core.GraphDesigner
         private int _majorVersion;
         private int _minorVersion;
         private int _buildVersion;
+        private int _buildNumber;
         public IRepository Repository { get; set; }
         public string Identifier { get; set; }
         public bool Changed { get; set; }
@@ -60,6 +61,12 @@ namespace Invert.Core.GraphDesigner
         {
             get { return _buildVersion; }
             set { this.Changed("BuildVersion", ref _buildVersion, value); }
+        }
+        [JsonProperty]
+        public int BuildNumber
+        {
+            get { return _buildNumber; }
+            set { this.Changed("BuildNumber", ref _buildNumber, value); }
         }
     }
 }
