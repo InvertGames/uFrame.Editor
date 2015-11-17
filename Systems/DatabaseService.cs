@@ -136,32 +136,10 @@ namespace Invert.Core.GraphDesigner
         public override void Loaded(UFrameContainer container)
         {
             base.Loaded(container);
-            foreach (var item in Configurations.Values)
-            {
-
-                if (item.MajorVersion < uFrameVersion.MajorVersion)
-                {
-                    Signal<IUpgradeDatabase>(_=> _.UpgradeDatabase(item));
-                }
-                if (item.MajorVersion == uFrameVersion.MajorVersion)
-                {
-                    if (item.MinorVersion < uFrameVersion.MinorVersion)
-                    {
-                        Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(item));
-                    }
-                    if (item.MinorVersion == uFrameVersion.MinorVersion)
-                    {
-                        if (item.BuildVersion < uFrameVersion.BuildVersion)
-                        {
-                            Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(item));
-                        }
-                    }
-                }
-                item.MajorVersion = uFrameVersion.MajorVersion;
-                item.MinorVersion = uFrameVersion.MinorVersion;
-                item.BuildVersion = uFrameVersion.BuildVersion;
-                item.Database.Commit();
-            }
+            //foreach (var item in Configurations.Values)
+            //{
+               
+            //}
         }
 
         public Dictionary<string, uFrameDatabaseConfig> Configurations
@@ -172,16 +150,18 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordInserted(IDataRecord record)
         {
+            if (SilentMode) return;
             InvertApplication.SignalEvent<IDataRecordInserted>(_ =>
             {
                 if (_ != this) _.RecordInserted(record);
             });
         }
 
+        public static bool SilentMode = false;
         public void RecordRemoved(IDataRecord record)
         {
             //TODO Check already invoked in JsonFileRecordManager and FastJsonFileRecordManager
-
+            if (SilentMode) return;
             InvertApplication.SignalEvent<IDataRecordRemoved>(_ =>
             {
                 if (_ != this) _.RecordRemoved(record);
@@ -190,6 +170,7 @@ namespace Invert.Core.GraphDesigner
 
         public void PropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
+            if (SilentMode) return;
             InvertApplication.SignalEvent<IDataRecordPropertyChanged>(_ =>
             {
                 if (_ != this) _.PropertyChanged(record, name, previousValue, nextValue);
@@ -197,6 +178,7 @@ namespace Invert.Core.GraphDesigner
         }
         public void BeforePropertyChanged(IDataRecord record, string name, object previousValue, object nextValue)
         {
+            if (SilentMode) return;
             InvertApplication.SignalEvent<IDataRecordPropertyBeforeChange>(_ =>
             {
                 if (_ != this) _.BeforePropertyChanged(record, name, previousValue, nextValue);
@@ -276,6 +258,7 @@ namespace Invert.Core.GraphDesigner
 
         public void RecordRemoving(IDataRecord record)
         {
+            if (SilentMode) return;
             InvertApplication.SignalEvent<IDataRecordRemoving>(_ =>
             {
                 if (_ != this) _.RecordRemoving(record);
@@ -625,19 +608,29 @@ namespace Invert.Core.GraphDesigner
             var uFrameExport = InvertJsonExtensions.DeserializeObject<uFrameExport>(File.ReadAllText(file));
             if (uFrameExport != null)
             {
-                var currentConfig = Container.Resolve<IGraphConfiguration>();
-                var repository = Container.Resolve<IRepository>() as TypeDatabase;
-                if (repository != null)
+                try
                 {
-                    repository.Import(uFrameExport.Repositories);
+                    DatabaseService.SilentMode = true;
+                    var currentConfig = Container.Resolve<IGraphConfiguration>();
+                    var repository = Container.Resolve<IRepository>() as TypeDatabase;
+                    if (repository != null)
+                    {
+                        repository.Import(uFrameExport.Repositories);
+                    }
+                    foreach (var codeFile in uFrameExport.CodeFiles)
+                    {
+                        var path = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 7),
+                            currentConfig.CodeOutputPath + codeFile.RelativePath);
+                        var dir = Path.GetDirectoryName(path);
+                        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                        File.WriteAllText(path, UpdateNamespace(codeFile.Code, currentConfig.Namespace));
+                    }
                 }
-                foreach (var codeFile in uFrameExport.CodeFiles)
+                finally
                 {
-                    var path = Path.Combine(Application.dataPath.Substring(0,Application.dataPath.Length - 7) , currentConfig.CodeOutputPath +codeFile.RelativePath);
-                    var dir = Path.GetDirectoryName(path);
-                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                    File.WriteAllText(path,UpdateNamespace(codeFile.Code,currentConfig.Namespace));
+                    DatabaseService.SilentMode = false;
                 }
+               
             }
         }
 

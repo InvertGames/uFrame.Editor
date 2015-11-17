@@ -17,7 +17,7 @@ namespace Invert.Core.GraphDesigner
         , IDataRecordInserted
         , IDataRecordRemoved
         , IDataRecordPropertyChanged
-       
+
     {
 
         private List<IDataRecord> _changedRecrods;
@@ -26,41 +26,71 @@ namespace Invert.Core.GraphDesigner
         {
             get { return Container.Resolve<ValidationSystem>(); }
         }
+        public static int CURRENT_BUILD_NUMBER = 1;
         public void QueryToolbarCommands(ToolbarUI ui)
         {
-            ui.AddCommand(new ToolbarItem()
+            var databaseService = Container.Resolve<DatabaseService>();
+            if (databaseService.CurrentConfiguration.BuildNumber < CURRENT_BUILD_NUMBER)
             {
-                Command = new SaveAndCompileCommand(),
-                Title = "Build",
-                Position = ToolbarPosition.Right,
-                Description = "Start code generation process. This generates C# code based on the nodes and items in the diagram."
-            });
-            ui.AddCommand(new ToolbarItem()
+                ui.AddCommand(new ToolbarItem()
+                {
+                    Title = "Upgrade",
+                    Position = ToolbarPosition.Right,
+                    Description = "Upgrade the database and process any code fixes.",
+                    Command = new LambdaCommand("UpgradeDB", () =>
+                    {
+                        var cfg = databaseService.CurrentConfiguration;
+                        Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(cfg));
+                        cfg.MajorVersion = uFrameVersion.MajorVersion;
+                        cfg.MinorVersion = uFrameVersion.MinorVersion;
+                        cfg.BuildVersion = uFrameVersion.BuildVersion;
+                        cfg.BuildVersion = CURRENT_BUILD_NUMBER;
+                        cfg.Database.Commit();
+
+                    })
+                });
+            }
+            else
             {
-                Command = new SaveAndCompileCommand() {ForceCompileAll = true},
-                Title = "Build All",
-                Position = ToolbarPosition.Right,
-                Description = "Start code generation process. This forces all code to regenerate for everything in the database."
-            });
+                ui.AddCommand(new ToolbarItem()
+                {
+                    Command = new SaveAndCompileCommand(),
+                    Title = "Build",
+                    Position = ToolbarPosition.Right,
+                    Description = "Start code generation process. This generates C# code based on the nodes and items in the diagram."
+                });
+                ui.AddCommand(new ToolbarItem()
+                {
+                    Command = new SaveAndCompileCommand() { ForceCompileAll = true },
+                    Title = "Build All",
+                    Position = ToolbarPosition.Right,
+                    Description = "Start code generation process. This forces all code to regenerate for everything in the database."
+                });
+
+            }
+          
+            
+        
+       
         }
 
         public override void Loaded(UFrameContainer container)
         {
             base.Loaded(container);
-//#if DEMO
-         
-         
-//                Signal<INotify>(_=>_.NotifyWithActions("You're using the demo version of uFrame ECS.",NotificationIcon.Warning,new NotifyActionItem()
-//                {
-//                    Title = "Buy Now",
-//                    Action = ()=>
-//                    {
-//                        InvertGraphEditor.Platform.OpenLink("https://invertgamestudios.com/ecs/purchase");
-//                    }
-//                }));
-//                return;
-            
-//#endif
+            //#if DEMO
+
+
+            //                Signal<INotify>(_=>_.NotifyWithActions("You're using the demo version of uFrame ECS.",NotificationIcon.Warning,new NotifyActionItem()
+            //                {
+            //                    Title = "Buy Now",
+            //                    Action = ()=>
+            //                    {
+            //                        InvertGraphEditor.Platform.OpenLink("https://invertgamestudios.com/ecs/purchase");
+            //                    }
+            //                }));
+            //                return;
+
+            //#endif
         }
 
         public void Execute(SaveAndCompileCommand command)
@@ -117,7 +147,7 @@ namespace Invert.Core.GraphDesigner
                     yield return item;
                 }
             }
-          
+
 
             //yield return repository.AllOf<uFrameDatabaseConfig>().FirstOrDefault();
             //var workspaceSvc = InvertApplication.Container.Resolve<WorkspaceService>();
@@ -141,20 +171,20 @@ namespace Invert.Core.GraphDesigner
 
         public IEnumerator Generate(SaveAndCompileCommand command)
         {
-           
+
 
             var repository = InvertGraphEditor.Container.Resolve<IRepository>();
             repository.Commit();
             var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
             var items = GetItems(repository, command.ForceCompileAll).Distinct().ToArray();
-            yield return 
+            yield return
                 new TaskProgress(0f, "Validating");
             var a = ValidationSystem.ValidateNodes(items.OfType<IDiagramNode>().ToArray());
             while (a.MoveNext())
             {
                 yield return a.Current;
             }
-            if (ValidationSystem.ErrorNodes.SelectMany(n=>n.Errors).Any(e => e.Siverity == ValidatorType.Error))
+            if (ValidationSystem.ErrorNodes.SelectMany(n => n.Errors).Any(e => e.Siverity == ValidatorType.Error))
             {
                 Signal<INotify>(_ => _.Notify("Please, fix all errors before compiling.", NotificationIcon.Error));
                 yield break;
@@ -200,7 +230,7 @@ namespace Invert.Core.GraphDesigner
 
         private static void GenerateFile(FileInfo fileInfo, CodeFileGenerator codeFileGenerator)
         {
-// Get the path to the directory
+            // Get the path to the directory
             var directory = System.IO.Path.GetDirectoryName(fileInfo.FullName);
             // Create it if it doesn't exist
             if (directory != null && !Directory.Exists(directory))
@@ -226,22 +256,22 @@ namespace Invert.Core.GraphDesigner
             if (node != null)
             {
                 var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
-                var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, new [] {node.DataObject as IDataRecord},true).ToArray();
+                var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, new[] { node.DataObject as IDataRecord }, true).ToArray();
                 foreach (var file in fileGenerators)
                 {
                     var file1 = file;
                     if (File.Exists(file1.SystemPath))
-                    ui.AddCommand(new ContextMenuItem()
-                    {
-                        Title = "Open " + (file.AssetPath.Replace("/","\\")),
-                        Group = "Open",
-                        Command = new LambdaCommand("Open File", () =>
+                        ui.AddCommand(new ContextMenuItem()
                         {
-                            InvertGraphEditor.Platform.OpenScriptFile(file1.AssetPath);
-                        })
-                    });
+                            Title = "Open " + (file.AssetPath.Replace("/", "\\")),
+                            Group = "Open",
+                            Command = new LambdaCommand("Open File", () =>
+                            {
+                                InvertGraphEditor.Platform.OpenScriptFile(file1.AssetPath);
+                            })
+                        });
 
-                    
+
                 }
 
                 foreach (var file in fileGenerators)
@@ -264,7 +294,7 @@ namespace Invert.Core.GraphDesigner
                             })
                         });
                     }
-                
+
                 }
             }
         }
