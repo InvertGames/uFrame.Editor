@@ -29,12 +29,12 @@ namespace Invert.Core.GraphDesigner
             //    Position = ToolbarPosition.BottomRight,
             //    Title = "Upgrade 1.6 Graph"
             //}); 
-            ui.AddCommand(new ToolbarItem()
-            {
-                Command = new FixTypes(),
-                Position = ToolbarPosition.BottomRight,
-                Title = "Fix Types"
-            });
+            //ui.AddCommand(new ToolbarItem()
+            //{
+            //    Command = new FixTypes(),
+            //    Position = ToolbarPosition.BottomRight,
+            //    Title = "Fix Types"
+            //});
         }
         public IRepository Repository { get; set; }
 

@@ -218,12 +218,12 @@ namespace Invert.Core.GraphDesigner
                 Position = ToolbarPosition.BottomLeft,
                 Order = -1
             });
-            ui.AddCommand(new ToolbarItem()
-            {
-                Title = "Save",
-                Command = new SaveCommand(),
-                Position = ToolbarPosition.Right
-            });
+            //ui.AddCommand(new ToolbarItem()
+            //{
+            //    Title = "Save",
+            //    Command = new SaveCommand(),
+            //    Position = ToolbarPosition.Right
+            //});
         }
 
         public void QueryContextMenu(ContextMenuUI ui, MouseEvent evt, params object[] obj)
@@ -320,12 +320,17 @@ namespace Invert.Core.GraphDesigner
     {
         public Workspace Workspace;
     }
+    public class ExportDatabaseCommand : Command
+    {
+        public uFrameDatabaseConfig Database;
+    }
     public class ImportExportSystem : DiagramPlugin
         , IToolbarQuery
         , IContextMenuQuery
         , IQueryImportable
         , IExecuteCommand<ExportGraphCommand>
         , IExecuteCommand<ExportWorkspaceCommand>
+        , IExecuteCommand<ExportDatabaseCommand>
         , IExecuteCommand<ImportCommand>
     {
         public override void Initialize(UFrameContainer container)
@@ -361,6 +366,15 @@ namespace Invert.Core.GraphDesigner
                         Command = new ImportCommand()
                         {
                       
+                        },
+                    });
+                    ui.AddCommand(new ContextMenuItem()
+                    {
+                        Title = "Export Database",
+                        Group = "Export",
+                        Command = new ExportDatabaseCommand()
+                        {
+                            Database = Container.Resolve<DatabaseService>().CurrentConfiguration
                         },
                     });
                     ui.AddCommand(new ContextMenuItem()
@@ -471,7 +485,14 @@ namespace Invert.Core.GraphDesigner
             var items = new List<IDataRecord>();
             Traverse(command.Graph, items);
             var contents = ExportItems(items, command.Graph.Repository, export);
-            File.WriteAllText("Assets\\Export.json", contents);
+            var fileSave = new ShowSaveFileDialog()
+            {
+                Extension = "ufdata",
+                DefaultName = command.Graph.Name
+            };
+            Execute(fileSave);
+            if (fileSave.Result != null)
+            File.WriteAllText(fileSave.Result, contents);
         }
 
         public void Execute(ExportWorkspaceCommand command)
@@ -480,7 +501,14 @@ namespace Invert.Core.GraphDesigner
             var items = new List<IDataRecord>();
             Traverse(command.Workspace, items);
             var contents = ExportItems(items, command.Workspace.Repository, export);
-            File.WriteAllText("Assets\\Export.json", contents);
+            var fileSave = new ShowSaveFileDialog()
+            {
+                Extension = "ufdata",
+                DefaultName = command.Workspace.Name
+            };
+            Execute(fileSave);
+            if (fileSave.Result != null)
+                File.WriteAllText(fileSave.Result, contents);
         }
 
         public string UpdateNamespace(string fileContents, string ns)
@@ -586,8 +614,14 @@ namespace Invert.Core.GraphDesigner
 
         public void Execute(ImportCommand command)
         {
-            var file = new FileInfo("Assets\\Export.json");
-            var uFrameExport = InvertJsonExtensions.DeserializeObject<uFrameExport>(File.ReadAllText(file.FullName));
+            var fileDialog = new ShowOpenFileDialog()
+            {
+                Filters = new[] { "uFrame Data", ".ufdata" },
+                Title = "Import"
+            };
+            this.Execute(fileDialog);
+            var file = fileDialog.Result;
+            var uFrameExport = InvertJsonExtensions.DeserializeObject<uFrameExport>(File.ReadAllText(file));
             if (uFrameExport != null)
             {
                 var currentConfig = Container.Resolve<IGraphConfiguration>();
@@ -604,6 +638,22 @@ namespace Invert.Core.GraphDesigner
                     File.WriteAllText(path,UpdateNamespace(codeFile.Code,currentConfig.Namespace));
                 }
             }
+        }
+
+        public void Execute(ExportDatabaseCommand command)
+        {
+            var export = new uFrameExport();
+            var items = command.Database.Repository.AllOf<IDataRecord>().Where(p=>!(p is uFrameDatabaseConfig)).ToList();
+        
+            var contents = ExportItems(items, command.Database.Repository, export);
+            var fileSave = new ShowSaveFileDialog()
+            {
+                Extension = "ufdata",
+                DefaultName = command.Database.Title
+            };
+            Execute(fileSave);
+            if (fileSave.Result != null)
+                File.WriteAllText(fileSave.Result, contents);
         }
     }
 

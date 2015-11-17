@@ -31,11 +31,17 @@ namespace Invert.Core.GraphDesigner
             ui.AddCommand(new ToolbarItem()
             {
                 Command = new SaveAndCompileCommand(),
-                Title = "Save & Compile",
+                Title = "Build",
                 Position = ToolbarPosition.Right,
                 Description = "Start code generation process. This generates C# code based on the nodes and items in the diagram."
-            });     
-          
+            });
+            ui.AddCommand(new ToolbarItem()
+            {
+                Command = new SaveAndCompileCommand(),
+                Title = "Build All",
+                Position = ToolbarPosition.Right,
+                Description = "Start code generation process. This forces all code to regenerate for everything in the database."
+            });
         }
 
         public override void Loaded(UFrameContainer container)

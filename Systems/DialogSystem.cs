@@ -16,8 +16,7 @@ public class DialogSystem : DiagramPlugin
 
     public void Execute(ShowSaveFileDialog command)
     {
-        command.Result = EditorUtility.SaveFilePanelInProject(command.Title, command.DefaultName, command.Extension,
-            command.Message);
+        command.Result = EditorUtility.SaveFilePanel(command.Title,command.Directory, command.DefaultName, command.Extension);
     }
 
     public void Execute(ShowOpenFileDialog command)
@@ -41,6 +40,7 @@ public class ShowSaveFileDialog : Command {
     public string DefaultName { get; set; }
     public string Extension { get; set; }
     public string Message { get; set; }
+    public string Directory { get; set; }
 }
 public class ShowOpenFileDialog : Command {
     public string Directory { get; set; }
