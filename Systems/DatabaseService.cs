@@ -616,7 +616,7 @@ namespace Invert.Core.GraphDesigner
         {
             var fileDialog = new ShowOpenFileDialog()
             {
-                Filters = new[] { "uFrame Data", ".ufdata" },
+                Filters = new[] { "uFrame Data", "ufdata" },
                 Title = "Import"
             };
             this.Execute(fileDialog);
