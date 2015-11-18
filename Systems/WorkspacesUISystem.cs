@@ -208,7 +208,7 @@ namespace Invert.Core.GraphDesigner.Systems.GraphUI
         public void QueryToolbarCommands(ToolbarUI ui)
         {
 
-            if (WorkspaceService.Workspaces.Count() < 8)
+            if (WorkspaceService.Workspaces.Count() < 15)
             {
                 ui.AddCommand(new ToolbarItem()
                 { 

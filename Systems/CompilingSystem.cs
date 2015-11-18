@@ -50,7 +50,7 @@ namespace Invert.Core.GraphDesigner
                     })
                 });
             }
-            else
+            //else
             {
                 ui.AddCommand(new ToolbarItem()
                 {
