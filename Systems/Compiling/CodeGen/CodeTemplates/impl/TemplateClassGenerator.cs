@@ -305,9 +305,18 @@ namespace Invert.Core.GraphDesigner
             {
                 item.Invoke(TemplateClass, null);
             }
-            var namespaceSort = TemplateContext.Namespace.Imports.OfType<CodeNamespaceImport>().OrderBy(p => p.Namespace);
+        
+            var list = new List<CodeNamespaceImport>();
+            foreach (var item in TemplateContext.Namespace.Imports)
+            {
+                list.Add((CodeNamespaceImport)item);
+            }
             TemplateContext.Namespace.Imports.Clear();
-            TemplateContext.Namespace.Imports.AddRange(namespaceSort.ToArray());
+            foreach (var item in list.OrderBy(p=>p.Namespace))
+            {
+                TemplateContext.Namespace.Imports.Add(item);
+            }
+          
         }
 
         public List<TemplateMemberResult> Results
