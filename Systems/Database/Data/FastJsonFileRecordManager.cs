@@ -112,14 +112,22 @@ namespace Invert.Data
         private void LoadRecord(string file)
         {
             if (Cached.ContainsKey(Path.GetFileNameWithoutExtension(file))) return;
-            var record = InvertJsonExtensions.DeserializeObject(For, JSON.Parse(ReadFile(file))) as IDataRecord;
-            if (record != null)
+            try
             {
-                record.Repository = this.Repository;
+                var record = InvertJsonExtensions.DeserializeObject(For, JSON.Parse(ReadFile(file))) as IDataRecord;
+                if (record != null)
+                {
+                    record.Repository = this.Repository;
 
-                Cached.Add(record.Identifier, record);
-                record.Changed = false;
+                    Cached.Add(record.Identifier, record);
+                    record.Changed = false;
+                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Error parsing file {0}", file), ex);
+            }
+
         }
 
         public IDataRecord GetSingle(string identifier)

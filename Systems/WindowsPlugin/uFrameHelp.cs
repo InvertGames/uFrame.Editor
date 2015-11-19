@@ -15,7 +15,7 @@ using UnityEngine;
 
 public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
 {
-    public static Dictionary<string, Texture> ImageCache
+    public static Dictionary<string, Texture> ImageCache 
     {
         get { return _imageCache ?? (_imageCache = new Dictionary<string, Texture>()); }
         set { _imageCache = value; }
@@ -114,12 +114,15 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
         ShowWindow(FindPage(Pages, _ => _.Name == name));
     }
 
-   // [MenuItem("Window/uFrame/Documentation")]
+    public static uFrameHelp Instance;
+
+    [MenuItem("Window/uFrame/Documentation")]
     public static void ShowWindow()
     {
         var window = GetWindow<uFrameHelp>();
-        window.minSize = new Vector2(800,500);
+        //window.minSize = new Vector2(800,500);
         window.title = "uFrame Help";
+        Instance = window;
     //   window.minSize = new Vector2(400, 500);
         window.ShowUtility();
     }

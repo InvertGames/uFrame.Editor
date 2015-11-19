@@ -305,7 +305,9 @@ namespace Invert.Core.GraphDesigner
             {
                 item.Invoke(TemplateClass, null);
             }
-          
+            var namespaceSort = TemplateContext.Namespace.Imports.OfType<CodeNamespaceImport>().OrderBy(p => p.Namespace);
+            TemplateContext.Namespace.Imports.Clear();
+            TemplateContext.Namespace.Imports.AddRange(namespaceSort.ToArray());
         }
 
         public List<TemplateMemberResult> Results

@@ -9,7 +9,10 @@ using UnityEditor;
 
 namespace Invert.Core.GraphDesigner
 {
-
+    public interface ICompilingStarted
+    {
+        void CompilingStarted(IRepository repository);
+    }
     public class CompilingSystem : DiagramPlugin
         , IToolbarQuery
         , IContextMenuQuery
@@ -189,8 +192,10 @@ namespace Invert.Core.GraphDesigner
                 Signal<INotify>(_ => _.Notify("Please, fix all errors before compiling.", NotificationIcon.Error));
                 yield break;
             }
+            Signal<ICompilingStarted>(_=>_.CompilingStarted(repository));
             // Grab all the file generators
             var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items).ToArray();
+
             var length = 100f / (fileGenerators.Length + 1);
             var index = 0;
 
