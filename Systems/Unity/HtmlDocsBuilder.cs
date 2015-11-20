@@ -158,6 +158,16 @@ namespace Invert.Core.GraphDesigner.Unity
             } Output.Append("</p>");
         }
 
+        public string EditableParagraph(string text)
+        {
+            Output.Append("<p>");
+
+                Output.AppendLine(text);
+
+            Output.Append("</p>");
+            return text;
+        }
+
         public void Break()
         {
             Output.Append("<br/>");

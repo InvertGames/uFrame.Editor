@@ -24,8 +24,13 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
     }
 
     public virtual string SearchTag { get { return Name; } }
-    
-    public virtual string Description { get; set; }
+
+    [JsonProperty, InspectorProperty]
+    public virtual string Description
+    {
+        get { return _description; }
+        set { this.Changed("Description",ref _description, value); }
+    }
 
     string IGraphItem.Label
     {
@@ -90,6 +95,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
     private string _nodeId;
     private GraphNode _node;
     private int _order;
+    private string _description;
 
     public abstract string FullLabel { get; }
 
