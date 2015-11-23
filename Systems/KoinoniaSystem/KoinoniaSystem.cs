@@ -50,6 +50,11 @@ namespace Invert.Core.GraphDesigner.Unity.KoinoniaSystem
 
         #region Properties
 
+        public override bool Enabled
+        {
+            get { return false; }
+        }
+
         public override decimal LoadPriority
         {
             get { return 9999; }
@@ -413,12 +418,12 @@ namespace Invert.Core.GraphDesigner.Unity.KoinoniaSystem
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsReloaded()
         {
-            Debug.Log(string.Format("Checking {0} packages...", InstalledPackages.Count));
+        //    Debug.Log(string.Format("Checking {0} packages...", InstalledPackages.Count));
 
-            InstalledPackages.ForEach(l =>
-            {
-                l.OnLoaded();
-            });
+      //      InstalledPackages.ForEach(l =>
+    //        {
+          //      l.OnLoaded();
+  //          });
         }
 
         #endregion
