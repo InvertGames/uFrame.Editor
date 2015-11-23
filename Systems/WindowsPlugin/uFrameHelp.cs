@@ -213,6 +213,7 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
 
     public void OnGUI()
     {
+        Instance = this;
         //if (disposer == null)
         //{
         //    disposer = InvertApplication.ListenFor<ICommandEvents>(this);
@@ -379,7 +380,7 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
     {
 
         EditorGUILayout.BeginVertical();
-        foreach (var item in pages.OrderBy(p => p.Order))
+        foreach (var item in pages.OrderBy(p => p.Name))
         {
 
             if (item == null)
@@ -523,6 +524,16 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
 
     }
 
+    public string EditableParagraph(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            GUILayout.Label("Type some helpful information here...", ParagraphStyle);
+        }
+
+        return GUILayout.TextArea(text ?? string.Empty, EditableParagraphStyle, GUILayout.MinWidth(400), GUILayout.MinHeight(40));
+    }
+
     public void Break()
     {
         this.Paragraph(string.Empty);
@@ -558,7 +569,26 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
         }
 
     }
+    public static GUIStyle EditableParagraphStyle
+    {
+        get
+        {
+            if (_editableParagraphStyle == null)
+            {
+                _editableParagraphStyle = new GUIStyle(EditorStyles.textArea)
+                {
+                   
+                    wordWrap = true,
+                    margin = new RectOffset(8, 8, 4, 4)
+                }.WithFont("Verdana", 14);
 
+                _editableParagraphStyle.normal.background = null;
+                _editableParagraphStyle.normal.textColor = new Color(0.2f, 0.2f, 0.2f);
+            }
+               
+           return _editableParagraphStyle;
+        }
+    }
     public static GUIStyle ParagraphStyle
     {
         get
@@ -570,7 +600,6 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
                 margin = new RectOffset(8,8,4,4)
             }).WithFont("Verdana",14);
         }
-
     }
     public void Lines(params string[] lines)
     {
@@ -1363,6 +1392,7 @@ public class uFrameHelp : EditorWindow, IDocumentationBuilder, INodeItemEvents
     private GUIStyle _toggleAreaOffStyle;
     private GUIStyle _tutorialPageStepsContentStyle;
     private GUIStyle _tutorialStepContentStyle;
+    private static GUIStyle _editableParagraphStyle;
 
     public void OnDestory()
     {
