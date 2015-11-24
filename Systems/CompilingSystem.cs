@@ -177,6 +177,15 @@ namespace Invert.Core.GraphDesigner
 
 
             var repository = InvertGraphEditor.Container.Resolve<IRepository>();
+            var remove = repository.AllOf<IDiagramNode>().Where(p => p.Graph == null).ToArray();
+            var remove2 = repository.AllOf<IDiagramNodeItem>().Where(p => p.Node == null).ToArray();
+
+            foreach (var item in remove)
+                repository.Remove(item);
+
+            foreach (var item in remove2)
+                repository.Remove(item);
+
             repository.Commit();
             var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
             var items = GetItems(repository, command.ForceCompileAll).Distinct().ToArray();
@@ -194,7 +203,7 @@ namespace Invert.Core.GraphDesigner
             }
             Signal<ICompilingStarted>(_=>_.CompilingStarted(repository));
             // Grab all the file generators
-            var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items).ToArray();
+            var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items, true).ToArray();
 
             var length = 100f / (fileGenerators.Length + 1);
             var index = 0;
@@ -210,6 +219,12 @@ namespace Invert.Core.GraphDesigner
                 {
                     var fileGenerator = codeFileGenerator;
                     InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileSkipped(fileGenerator));
+
+                    if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate))
+                    {
+                        File.Delete(fileInfo.FullName);
+                    }
+                  
                     continue;
                 }
 

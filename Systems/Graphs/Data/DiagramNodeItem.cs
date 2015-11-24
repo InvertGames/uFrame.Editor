@@ -301,7 +301,12 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
 
     public IGraphData Graph
     {
-        get { return this.Node.Graph; }
+        get
+        {
+            var node = this.Node;
+            if (node == null) return null;
+            return node.Graph;
+        }
     }
 
     public IEnumerable<ConnectionData> Inputs
