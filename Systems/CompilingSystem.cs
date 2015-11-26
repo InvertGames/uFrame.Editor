@@ -26,7 +26,7 @@ namespace Invert.Core.GraphDesigner
         {
             get { return Container.Resolve<ValidationSystem>(); }
         }
-        public static int CURRENT_BUILD_NUMBER = 1;
+        public const int CURRENT_BUILD_NUMBER = 1;
         public void QueryToolbarCommands(ToolbarUI ui)
         {
             var databaseService = Container.Resolve<DatabaseService>();
@@ -190,7 +190,7 @@ namespace Invert.Core.GraphDesigner
                 yield break;
             }
             // Grab all the file generators
-            var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items).ToArray();
+            var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items,true).ToArray();
             var length = 100f / (fileGenerators.Length + 1);
             var index = 0;
 
@@ -207,10 +207,19 @@ namespace Invert.Core.GraphDesigner
                     InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileSkipped(fileGenerator));
                     continue;
                 }
+                if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate && !p.IsValid()))
+                {
+                    fileInfo.Delete();
+                }
+                else
+                {
+                    GenerateFile(fileInfo, codeFileGenerator);
+                    CodeFileGenerator generator = codeFileGenerator;
+                    InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
+                }
 
-                GenerateFile(fileInfo, codeFileGenerator);
-                CodeFileGenerator generator = codeFileGenerator;
-                InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
+                
+            
             }
             ChangedRecrods.Clear();
             InvertApplication.SignalEvent<ICompileEvents>(_ => _.PostCompile(config, items));
