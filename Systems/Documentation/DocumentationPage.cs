@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Invert.Core.GraphDesigner
 {
+
     public abstract class DocumentationPage
     {
         public virtual decimal Order

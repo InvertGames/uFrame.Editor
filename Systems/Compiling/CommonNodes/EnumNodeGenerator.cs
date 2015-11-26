@@ -1,4 +1,5 @@
 using System.CodeDom;
+using System.Linq;
 using Invert.Core.GraphDesigner;
 
 [TemplateClass(TemplateLocation.DesignerFile)]
@@ -18,7 +19,7 @@ public class EnumNodeGenerator : IClassTemplate<EnumNode>, ITemplateCustomFilena
     {
         Ctx.CurrentDeclaration.IsEnum = true;
         Ctx.CurrentDeclaration.BaseTypes.Clear();
-        foreach (var item in Ctx.Data.Items)
+        foreach (var item in Ctx.Data.Items.OrderBy(s=>s.Name))
         {
             this.Ctx.CurrentDeclaration.Members.Add(new CodeMemberField(this.Ctx.CurrentDeclaration.Name, item.Name));
         }

@@ -51,6 +51,11 @@ namespace Invert.Core.GraphDesigner.Unity
             _.AppendLine(text).AppendLine();
         }
 
+        public string EditableParagraph(string text)
+        {
+            return null;
+        }
+
         public void Break()
         {
             _.AppendLine().AppendLine();

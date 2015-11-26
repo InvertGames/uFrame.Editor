@@ -13,6 +13,8 @@ namespace Invert.Core.GraphDesigner
         void LinkToNode(IDiagramNodeItem node, string text = null);
         void NodeImage(GraphNode node);
         void Paragraph(string text, params object[] args);
+        string EditableParagraph(string text);
+
         void Break();
         void Lines( params string[] lines);
         void Title(string text, params object[] args);

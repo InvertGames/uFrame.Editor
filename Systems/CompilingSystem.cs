@@ -9,7 +9,10 @@ using UnityEditor;
 
 namespace Invert.Core.GraphDesigner
 {
-
+    public interface ICompilingStarted
+    {
+        void CompilingStarted(IRepository repository);
+    }
     public class CompilingSystem : DiagramPlugin
         , IToolbarQuery
         , IContextMenuQuery
@@ -50,7 +53,7 @@ namespace Invert.Core.GraphDesigner
                     })
                 });
             }
-            else
+            //else
             {
                 ui.AddCommand(new ToolbarItem()
                 {
@@ -174,6 +177,15 @@ namespace Invert.Core.GraphDesigner
 
 
             var repository = InvertGraphEditor.Container.Resolve<IRepository>();
+            var remove = repository.AllOf<IDiagramNode>().Where(p => p.Graph == null).ToArray();
+            var remove2 = repository.AllOf<IDiagramNodeItem>().Where(p => p.Node == null).ToArray();
+
+            foreach (var item in remove)
+                repository.Remove(item);
+
+            foreach (var item in remove2)
+                repository.Remove(item);
+
             repository.Commit();
             var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
             var items = GetItems(repository, command.ForceCompileAll).Distinct().ToArray();
@@ -189,8 +201,9 @@ namespace Invert.Core.GraphDesigner
                 Signal<INotify>(_ => _.Notify("Please, fix all errors before compiling.", NotificationIcon.Error));
                 yield break;
             }
+            Signal<ICompilingStarted>(_=>_.CompilingStarted(repository));
             // Grab all the file generators
-            var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items,true).ToArray();
+            var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items, true).ToArray();
             var length = 100f / (fileGenerators.Length + 1);
             var index = 0;
 
@@ -201,12 +214,6 @@ namespace Invert.Core.GraphDesigner
                 // Grab the information for the file
                 var fileInfo = new FileInfo(codeFileGenerator.SystemPath);
                 // Make sure we are allowed to generate the file
-                if (!codeFileGenerator.CanGenerate(fileInfo))
-                {
-                    var fileGenerator = codeFileGenerator;
-                    InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileSkipped(fileGenerator));
-                    continue;
-                }
                 if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate && !p.IsValid()))
                 {
                     fileInfo.Delete();
@@ -217,6 +224,7 @@ namespace Invert.Core.GraphDesigner
                     CodeFileGenerator generator = codeFileGenerator;
                     InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
                 }
+
 
                 
             

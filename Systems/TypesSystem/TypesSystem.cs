@@ -114,7 +114,7 @@ namespace Invert.Core.GraphDesigner
         public void QueryTypes(List<ITypeInfo> typeInfo)
         {
             if (Repository != null)
-            foreach (var item in Repository.AllOf<IClassNode>().OfType<ITypeInfo>())
+            foreach (var item in Repository.AllOf<IDataRecord>().OfType<ITypeInfo>())
             {
                 typeInfo.Add(item);
             }
