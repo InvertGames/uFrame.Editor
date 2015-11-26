@@ -35,23 +35,23 @@ namespace Invert.Core.GraphDesigner
             var databaseService = Container.Resolve<DatabaseService>();
             if (databaseService.CurrentConfiguration.BuildNumber < CURRENT_BUILD_NUMBER)
             {
-                ui.AddCommand(new ToolbarItem()
-                {
-                    Title = "Upgrade",
-                    Position = ToolbarPosition.Right,
-                    Description = "Upgrade the database and process any code fixes.",
-                    Command = new LambdaCommand("UpgradeDB", () =>
-                    {
-                        var cfg = databaseService.CurrentConfiguration;
-                        Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(cfg));
-                        cfg.MajorVersion = uFrameVersion.MajorVersion;
-                        cfg.MinorVersion = uFrameVersion.MinorVersion;
-                        cfg.BuildVersion = uFrameVersion.BuildVersion;
-                        cfg.BuildVersion = CURRENT_BUILD_NUMBER;
-                        cfg.Database.Commit();
+                //ui.AddCommand(new ToolbarItem()
+                //{
+                //    Title = "Upgrade",
+                //    Position = ToolbarPosition.Right,
+                //    Description = "Upgrade the database and process any code fixes.",
+                //    Command = new LambdaCommand("UpgradeDB", () =>
+                //    {
+                //        var cfg = databaseService.CurrentConfiguration;
+                //        Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(cfg));
+                //        cfg.MajorVersion = uFrameVersion.MajorVersion;
+                //        cfg.MinorVersion = uFrameVersion.MinorVersion;
+                //        cfg.BuildVersion = uFrameVersion.BuildVersion;
+                //        cfg.BuildVersion = CURRENT_BUILD_NUMBER;
+                //        cfg.Database.Commit();
 
-                    })
-                });
+                //    })
+                //});
             }
             //else
             {
@@ -201,9 +201,11 @@ namespace Invert.Core.GraphDesigner
                 Signal<INotify>(_ => _.Notify("Please, fix all errors before compiling.", NotificationIcon.Error));
                 yield break;
             }
-            Signal<ICompilingStarted>(_=>_.CompilingStarted(repository));
+            Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(config as uFrameDatabaseConfig));
+            Signal<ICompilingStarted>(_ => _.CompilingStarted(repository));
             // Grab all the file generators
             var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items, true).ToArray();
+
             var length = 100f / (fileGenerators.Length + 1);
             var index = 0;
 
@@ -214,20 +216,22 @@ namespace Invert.Core.GraphDesigner
                 // Grab the information for the file
                 var fileInfo = new FileInfo(codeFileGenerator.SystemPath);
                 // Make sure we are allowed to generate the file
-                if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate && !p.IsValid()))
+                if (!codeFileGenerator.CanGenerate(fileInfo))
                 {
-                    fileInfo.Delete();
-                }
-                else
-                {
-                    GenerateFile(fileInfo, codeFileGenerator);
-                    CodeFileGenerator generator = codeFileGenerator;
-                    InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
+                    var fileGenerator = codeFileGenerator;
+                    InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileSkipped(fileGenerator));
+
+                    if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate))
+                    {
+                        File.Delete(fileInfo.FullName);
+                    }
+
+                    continue;
                 }
 
-
-                
-            
+                GenerateFile(fileInfo, codeFileGenerator);
+                CodeFileGenerator generator = codeFileGenerator;
+                InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileGenerated(generator));
             }
             ChangedRecrods.Clear();
             InvertApplication.SignalEvent<ICompileEvents>(_ => _.PostCompile(config, items));
