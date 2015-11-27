@@ -29,32 +29,13 @@ namespace Invert.Core.GraphDesigner
         {
             get { return Container.Resolve<ValidationSystem>(); }
         }
-        public static int CURRENT_BUILD_NUMBER = 1;
+        public const int CURRENT_BUILD_NUMBER = 1;
         public void QueryToolbarCommands(ToolbarUI ui)
         {
             var databaseService = Container.Resolve<DatabaseService>();
-            if (databaseService.CurrentConfiguration.BuildNumber < CURRENT_BUILD_NUMBER)
-            {
-                ui.AddCommand(new ToolbarItem()
-                {
-                    Title = "Upgrade",
-                    Position = ToolbarPosition.Right,
-                    Description = "Upgrade the database and process any code fixes.",
-                    Command = new LambdaCommand("UpgradeDB", () =>
-                    {
-                        var cfg = databaseService.CurrentConfiguration;
-                        Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(cfg));
-                        cfg.MajorVersion = uFrameVersion.MajorVersion;
-                        cfg.MinorVersion = uFrameVersion.MinorVersion;
-                        cfg.BuildVersion = uFrameVersion.BuildVersion;
-                        cfg.BuildVersion = CURRENT_BUILD_NUMBER;
-                        cfg.Database.Commit();
+            if (databaseService.CurrentConfiguration == null) return;
 
-                    })
-                });
-            }
-            //else
-            {
+        
                 ui.AddCommand(new ToolbarItem()
                 {
                     Command = new SaveAndCompileCommand(),
@@ -70,7 +51,6 @@ namespace Invert.Core.GraphDesigner
                     Description = "Start code generation process. This forces all code to regenerate for everything in the database."
                 });
 
-            }
           
             
         
@@ -177,15 +157,18 @@ namespace Invert.Core.GraphDesigner
 
 
             var repository = InvertGraphEditor.Container.Resolve<IRepository>();
-            var remove = repository.AllOf<IDiagramNode>().Where(p => p.Graph == null).ToArray();
-            var remove2 = repository.AllOf<IDiagramNodeItem>().Where(p => p.Node == null).ToArray();
 
-            foreach (var item in remove)
-                repository.Remove(item);
+            var allRecords = repository.AllOf<IDataRecord>().ToArray();
+            var allIds = allRecords.Select(p => p.Identifier).ToArray();
 
-            foreach (var item in remove2)
-                repository.Remove(item);
-
+            foreach (var item in allRecords)
+            {
+                if (item.ForeignKeys.Any(p =>!allIds.Contains(p)))
+                {
+                    InvertApplication.Log(string.Format("{0} : {1} was removed due to invalid foreign key.", item.Identifier, item.GetType().Name));
+                    repository.Remove(item);
+                }
+            }
             repository.Commit();
             var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
             var items = GetItems(repository, command.ForceCompileAll).Distinct().ToArray();
@@ -201,7 +184,8 @@ namespace Invert.Core.GraphDesigner
                 Signal<INotify>(_ => _.Notify("Please, fix all errors before compiling.", NotificationIcon.Error));
                 yield break;
             }
-            Signal<ICompilingStarted>(_=>_.CompilingStarted(repository));
+            Signal<IUpgradeDatabase>(_ => _.UpgradeDatabase(config as uFrameDatabaseConfig));
+            Signal<ICompilingStarted>(_ => _.CompilingStarted(repository));
             // Grab all the file generators
             var fileGenerators = InvertGraphEditor.GetAllFileGenerators(config, items, true).ToArray();
 
@@ -222,9 +206,10 @@ namespace Invert.Core.GraphDesigner
 
                     if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate))
                     {
+                        if (File.Exists(fileInfo.FullName))
                         File.Delete(fileInfo.FullName);
                     }
-                  
+
                     continue;
                 }
 

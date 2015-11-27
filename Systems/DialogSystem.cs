@@ -21,7 +21,7 @@ public class DialogSystem : DiagramPlugin
 
     public void Execute(ShowOpenFileDialog command)
     {
-        command.Result = EditorUtility.OpenFilePanelWithFilters(command.Title, command.Directory, command.Filters);
+        command.Result = EditorUtility.OpenFilePanel(command.Title, command.Directory, command.Extension);
     }
 
     public void Execute(ShowOpenFolderDialog command)
@@ -46,6 +46,7 @@ public class ShowOpenFileDialog : Command {
     public string Directory { get; set; }
     public string[] Filters { get; set; }
     public string Result { get; set; }
+    public string Extension { get; set; }
 }
 public class ShowOpenFolderDialog : Command {
     public string Result { get; set; }
