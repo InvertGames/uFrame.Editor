@@ -158,7 +158,7 @@ namespace Invert.Core.GraphDesigner
 
             var repository = InvertGraphEditor.Container.Resolve<IRepository>();
 
-            var remove  = repository.AllOf<IDiagramNodeItem>().Where(p => string.IsNullOrEmpty(p.Name)).ToArray();
+            var remove  = repository.AllOf<IClassNode>().Where(p => string.IsNullOrEmpty(p.Name)).ToArray();
             foreach (var item in remove)
             {
                 repository.Remove(item);
