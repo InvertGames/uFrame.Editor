@@ -158,17 +158,21 @@ namespace Invert.Core.GraphDesigner
 
             var repository = InvertGraphEditor.Container.Resolve<IRepository>();
 
-            var allRecords = repository.AllOf<IDataRecord>().ToArray();
-            var allIds = allRecords.Select(p => p.Identifier).ToArray();
-
-            foreach (var item in allRecords)
+            var remove  = repository.AllOf<IClassNode>().Where(p => string.IsNullOrEmpty(p.Name)).ToArray();
+            foreach (var item in remove)
             {
-                if (item.ForeignKeys.Any(p =>!allIds.Contains(p)))
-                {
-                    InvertApplication.Log(string.Format("{0} : {1} was removed due to invalid foreign key.", item.Identifier, item.GetType().Name));
-                    repository.Remove(item);
-                }
+                repository.Remove(item);
             }
+            //var allIds = allRecords.Select(p => p.Identifier).ToArray();
+
+            //foreach (var item in allRecords)
+            //{
+            //    if (item.ForeignKeys.Where(p=>!string.IsNullOrEmpty(p)).Any(p =>!allIds.Contains(p)))
+            //    {
+            //        InvertApplication.Log(string.Format("{0} : {1} was removed due to invalid foreign key.", item.Identifier, item.GetType().Name));
+            //        repository.Remove(item);
+            //    }
+            //}
             repository.Commit();
             var config = InvertGraphEditor.Container.Resolve<IGraphConfiguration>();
             var items = GetItems(repository, command.ForceCompileAll).Distinct().ToArray();

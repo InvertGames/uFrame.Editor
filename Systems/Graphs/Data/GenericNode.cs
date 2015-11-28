@@ -239,9 +239,10 @@ namespace Invert.Core.GraphDesigner
         {
             base.Validate(errors);
 
-            if (Repository.AllOf<IClassNode>().Any(p => p != this && p.FullName == this.FullName))
+            if (this is IClassNode)//Repository.AllOf<IClassNode>().Any(p => p != this && p.FullName == this.FullName))
             {
-                errors.AddError(string.Format("The name {0} is already taken", this.Name), this);
+                if (Repository.AllOf<IClassNode>().Any(p => p != this && p.FullName == this.FullName))
+                errors.AddError(string.Format("The name {0} is already taken", this.FullName + ":" + this.GetType().Name), this);
             }
             foreach (var slot in AllInputSlots)
             {
