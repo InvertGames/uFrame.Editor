@@ -42,7 +42,7 @@ namespace Invert.Core.GraphDesigner
 
         public IRepository Repository { get; set; }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string CurrentGraphId
         {
             get { return _currentGraphId; }

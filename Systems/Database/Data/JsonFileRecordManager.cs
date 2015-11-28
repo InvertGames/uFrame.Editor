@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Invert.Json;
 
 namespace Invert.Data
@@ -55,6 +56,11 @@ namespace Invert.Data
         public FileSystemWatcher Watcher { get; set; }
 
         public Type For { get; set; }
+        public PropertyInfo[] ForiegnKeys
+        {
+            get { return _foriegnKeys ?? (_foriegnKeys = For.GetProperties(BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public).Where(p => p.IsDefined(typeof(KeyProperty), true)).ToArray()); }
+            set { _foriegnKeys = value; }
+        }
 
         public string RecordsPath
         {
@@ -76,6 +82,8 @@ namespace Invert.Data
         }
 
         private bool _loadedCached;
+        private PropertyInfo[] _foriegnKeys;
+
         private void LoadRecordsIntoCache()
         {
             if (_loadedCached) return;
@@ -143,7 +151,7 @@ namespace Invert.Data
             }
         }
 
-        public void Commit()
+        public virtual void Commit()
         {
             _isCommiting = true;
             if (!DirectoryInfo.Exists)

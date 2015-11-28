@@ -122,7 +122,7 @@ public abstract class DiagramNodeItem : IDiagramNodeItem, IDataRecordRemoved
 
     public virtual bool IsSelectable { get { return true; } }
 
-    [JsonProperty]
+    [JsonProperty, KeyProperty]
     public string NodeId
     {
         get { return _nodeId; }

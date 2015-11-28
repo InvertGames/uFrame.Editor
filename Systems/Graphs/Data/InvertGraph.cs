@@ -248,7 +248,7 @@ namespace Invert.Core.GraphDesigner
         //    set { _filterState = value; }
         //}
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string RootFilterId
         {
             get { return _rootFilterId; }

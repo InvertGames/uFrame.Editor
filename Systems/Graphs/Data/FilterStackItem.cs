@@ -24,7 +24,7 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string GraphId
         {
             get { return _graphId; }
@@ -34,7 +34,7 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string FilterId
         {
             get { return _filterId; }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Invert.Data;
 using Invert.Json;
@@ -58,6 +59,11 @@ namespace Invert.Data
 
         public Type For { get; set; }
 
+        public PropertyInfo[] ForiegnKeys
+        {
+            get { return _foriegnKeys ?? (_foriegnKeys = For.GetProperties(BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public).Where(p=>p.IsDefined(typeof(KeyProperty),true)).ToArray()); }
+            set { _foriegnKeys = value; }
+        }
 
         //Caching value of Records path to reduce Path.Combine invokations
         public string RecordsPath
@@ -81,6 +87,7 @@ namespace Invert.Data
 
         private bool _loadedCached;
         private string _recordsPath;
+        private PropertyInfo[] _foriegnKeys;
 
         private void LoadRecordsIntoCache()
         {

@@ -26,21 +26,21 @@ namespace Invert.Core.GraphDesigner
         }
 
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string NodeId
         {
             get { return _nodeId; }
             set { this.Changed("NodeId", ref _nodeId, value); }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string ItemId
         {
             get { return _itemId; }
             set { this.Changed("ItemId", ref _itemId, value); }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string ValueId
         {
             get { return _valueId; }

@@ -9,7 +9,7 @@ namespace Invert.Core.GraphDesigner
         private string _workspaceId;
         private string _graphId;
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string GraphId
         {
             get { return _graphId; }
@@ -18,7 +18,7 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string WorkspaceId
         {
             get { return _workspaceId; }

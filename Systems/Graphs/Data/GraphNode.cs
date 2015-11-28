@@ -347,7 +347,7 @@ namespace Invert.Core.GraphDesigner
             get { return _location; }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string GraphId
         {
             get { return _graphId; }

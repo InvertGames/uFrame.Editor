@@ -22,7 +22,7 @@ namespace Invert.Core.GraphDesigner
             get { yield return ParentIdentifier; }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string ParentIdentifier
         {
             get { return _parentIdentifier; }
@@ -33,7 +33,7 @@ namespace Invert.Core.GraphDesigner
             }
         }
 
-        [JsonProperty]
+        [JsonProperty, KeyProperty]
         public string Name
         {
             get { return _name; }

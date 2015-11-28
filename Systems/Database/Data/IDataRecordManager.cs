@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Invert.Data
 {
@@ -7,6 +8,7 @@ namespace Invert.Data
     {
         void Initialize(IRepository repository);
         Type For { get; }
+        PropertyInfo[] ForiegnKeys { get; set; }
         IDataRecord GetSingle(string identifier);
         IEnumerable<IDataRecord> GetAll();
         void Add(IDataRecord o);
