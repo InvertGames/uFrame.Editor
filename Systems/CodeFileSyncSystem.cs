@@ -22,14 +22,31 @@ namespace Invert.Core.GraphDesigner
         {
 
             var items = record.GetCodeGeneratorsForNode(Container.Resolve<DatabaseService>().CurrentConfiguration).ToArray();
+            var deleteList = new List<string>();
             foreach (var item in items)
             {
                 var fullpath = Path.Combine(Application.dataPath, item.RelativeFullPathName);
                 if (File.Exists(fullpath))
                 {
-                    File.Delete(fullpath);
+                    deleteList.Add(fullpath);
                 }
             }
+            if (deleteList.Count > 0)
+            {
+                if (InvertGraphEditor.Platform.MessageBox("Warning",
+               string.Format("You've deleted a record that has {0} file(s) associated with it.  Would you like to remove them?", deleteList.Count),
+               "YES (Recommended)", "NO they are special!"))
+                {
+                    foreach (var item in deleteList)
+                    {
+                        File.Delete(item);
+                    }
+                }
+                this.Execute(new SaveAndCompileCommand() {ForceCompileAll = true});
+            }
+           
+
+            
         }
 
         public struct GenFileInfo
@@ -61,15 +78,16 @@ namespace Invert.Core.GraphDesigner
                 if (!gensNow.ContainsKey(key))
                     gensNow.Add(key, new GenFileInfo(Path.Combine(Application.dataPath, p.RelativeFullPathName), p));
             }
-             
-       
+
+            var deleteList = new List<string>();
             foreach (var item in Gens)
             {
                 if (!gensNow.ContainsKey(item.Key))
                 {
                     // Its been removed or renamed
+                    
                     if (File.Exists(item.Value.FullPath))
-                        File.Delete(item.Value.FullPath);
+                        deleteList.Add(item.Value.FullPath);
                 }
                 else
                 {
@@ -82,10 +100,23 @@ namespace Invert.Core.GraphDesigner
                     }
                 }
             }
-
+          
             Gens.Clear();
             GC.Collect();
             IsRename = false;
+            if (deleteList.Count > 0)
+            {
+                if (InvertGraphEditor.Platform.MessageBox("Warning", 
+                    string.Format("You've deleted a record that has {0} file(s) associated with it.  Would you like to remove them?", deleteList.Count), 
+                    "YES (Recommended)", "NO they are special!"))
+                {
+                    foreach (var item in deleteList)
+                    {
+                        File.Delete(item);
+                    }
+                }
+                this.Execute(new SaveAndCompileCommand() { ForceCompileAll = true });
+            }
 
         }
         private void RenameApplying(ApplyRenameCommand applyRenameCommand)

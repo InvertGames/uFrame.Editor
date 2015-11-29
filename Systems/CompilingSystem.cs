@@ -208,10 +208,10 @@ namespace Invert.Core.GraphDesigner
                     var fileGenerator = codeFileGenerator;
                     InvertApplication.SignalEvent<ICompileEvents>(_ => _.FileSkipped(fileGenerator));
 
-                    if (codeFileGenerator.Generators.Any(p => p.AlwaysRegenerate))
+                    if (codeFileGenerator.Generators.All(p => p.AlwaysRegenerate))
                     {
                         if (File.Exists(fileInfo.FullName))
-                        File.Delete(fileInfo.FullName);
+                            File.Delete(fileInfo.FullName);
                     }
 
                     continue;

@@ -34,7 +34,7 @@ namespace Invert.Core.GraphDesigner
             Unit = new CodeCompileUnit();
             Unit.Namespaces.Add(Namespace);
       
-            foreach (var codeGenerator in Generators)
+            foreach (var codeGenerator in Generators.Where(p=>p.IsValid()))
             {
                // UnityEngine.Debug.Log(codeGenerator.GetType().Name + " is generating");
                 codeGenerator.Initialize(this);
@@ -56,8 +56,8 @@ namespace Invert.Core.GraphDesigner
         public override bool CanGenerate(FileInfo fileInfo)
         {
          
-            if (Generators.Any(p => !p.IsValid())) return false;
-            if (Generators.Any(p => p.AlwaysRegenerate)) return true;
+            if (Generators.All(p => !p.IsValid())) return false;
+            if (Generators.All(p => p.AlwaysRegenerate)) return true;
 
             //var doesAnyTypeExist = Generators.Any(p => p.DoesTypeExist(fileInfo));
             if (fileInfo.Exists)
