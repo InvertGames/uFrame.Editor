@@ -323,6 +323,15 @@ namespace Invert.Core.GraphDesigner
 
         public void Execute(DeleteCommand command)
         {
+            if (command.Item.Length > 1)
+            {
+                var message = command.Item.Aggregate("", (msg, item) => msg + item.Identifier + "\n");
+                if (!EditorUtility.DisplayDialog("Confirm Delete", message, "Yes, Remove", "Cancel"))
+                {
+                    return;
+                }
+            }
+
             foreach (var item in command.Item)
                 item.Repository.Remove(item);
         }
