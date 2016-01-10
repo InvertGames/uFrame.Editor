@@ -424,12 +424,12 @@ namespace Invert.Core.GraphDesigner {
 
         public bool KeyUp(bool control, bool alt, bool shift, KeyCode character)
         {
-            if (character == KeyCode.Minus)
+            if (alt && character == KeyCode.Minus)
             {
                 Execute(new NavigateBackCommand());
                 return true;
             }
-            if (character == KeyCode.Plus)
+            if (alt && character == KeyCode.Equals)
             {
                 Execute(new NavigateForwardCommand());
                 return true;
