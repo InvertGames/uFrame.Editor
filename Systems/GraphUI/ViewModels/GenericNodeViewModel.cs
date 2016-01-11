@@ -350,22 +350,37 @@ namespace Invert.Core.GraphDesigner
             if (section.AddCommandType != null)
             {
             }
+
+            var menu = new SelectionMenu();
+
+
             if (section1.AllowDuplicates)
             {
-                InvertGraphEditor.WindowManager.InitItemWindow(section1.GenericSelector(GraphItem).ToArray(),
-                    (selected) => { GraphItem.AddReferenceItem(selected, section1); });
+
+                menu.ConvertAndAdd(section1.GenericSelector(GraphItem).ToArray().OfType<IItem>(), _ =>
+                {
+                    GraphItem.AddReferenceItem(_ as TData, section1);
+                });
+
+
+                //InvertGraphEditor.WindowManager.InitItemWindow(section1.GenericSelector(GraphItem).ToArray(),
+                //    (selected) => { GraphItem.AddReferenceItem(selected, section1); });
             }
             else
             {
-                InvertGraphEditor.WindowManager.InitItemWindow(
-                    section1.GenericSelector(GraphItem).ToArray()
-                        .Where(
+                menu.ConvertAndAdd(section1.GenericSelector(GraphItem).Where(
                             p =>
                                 !GraphItem.PersistedItems.OfType<GenericReferenceItem>()
                                     .Select(x => x.SourceIdentifier)
-                                    .Contains(p.Identifier)),
-                    (selected) => { GraphItem.AddReferenceItem(selected, section1); });
-            }
+                                    .Contains(p.Identifier)).ToArray().OfType<IItem>(), _ =>
+                {
+                    GraphItem.AddReferenceItem(_ as TData, section1);
+                });
+
+            } 
+
+            InvertApplication.SignalEvent<IShowSelectionMenu>(_ => _.ShowSelectionMenu(menu));
+
         }
 
 

@@ -260,6 +260,12 @@ namespace Invert.Data
             
         }
 
+        public bool IsRemoved(IDataRecord record)
+        {
+            var repo = GetRepositoryFor(record.GetType());
+            return repo.IsRemoved(record);
+        }
+
         public string GetUniqueName(string s)
         {
             // TODO 2.0 ??? Unique Names

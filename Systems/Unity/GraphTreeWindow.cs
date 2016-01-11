@@ -14,7 +14,7 @@ namespace Assets.UnderConstruction.Editor
 
         private Vector2 _scrollPosition;
 
-        [MenuItem("Window/uFrame/Graph Explorer %T")]
+        [MenuItem("Window/uFrame/Graph Explorer &T")]
 
         internal static void ShowWindow()
         {

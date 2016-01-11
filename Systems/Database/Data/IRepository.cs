@@ -23,6 +23,8 @@ namespace Invert.Data
         void RemoveAll<TObjectType>(Predicate<TObjectType> expression) where TObjectType : class;
         void MarkDirty(IDataRecord graphData);
 
+        bool IsRemoved(IDataRecord record);
+
         string GetUniqueName(string s);
         void Signal<TEventType>(Action<TEventType> perform);
         void AddListener<TEventType>(TEventType instance);

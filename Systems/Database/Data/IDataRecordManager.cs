@@ -14,6 +14,7 @@ namespace Invert.Data
         void Add(IDataRecord o);
         void Commit();
         void Remove(IDataRecord item);
+        bool IsRemoved(IDataRecord item);
         void Import(ExportedRecord record);
     }
 }

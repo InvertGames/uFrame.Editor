@@ -186,6 +186,11 @@ namespace Invert.Data
             Repository.Signal<IDataRecordRemoved>(_ => _.RecordRemoved(item));
         }
 
+        public bool IsRemoved(IDataRecord item)
+        {
+            return Removed.Contains(item.Identifier);
+        }
+
         public void Import(ExportedRecord record)
         {
             throw new NotImplementedException();

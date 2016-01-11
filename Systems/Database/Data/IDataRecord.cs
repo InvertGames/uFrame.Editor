@@ -14,7 +14,8 @@ namespace Invert.Data
         
         bool Changed { get; set; }
 
-        IEnumerable<string> ForeignKeys { get; } 
+        IEnumerable<string> ForeignKeys { get; }
+
     }
 
     public interface IDataHeirarchy : IDataRecord
@@ -25,5 +26,13 @@ namespace Invert.Data
     public interface IDynamicDataRecord : IDataRecord
     {
         
+    }
+
+    public static class IDataRecordExtensions
+    {
+        public static bool IsRemoved(this IDataRecord record)
+        {
+            return record.Repository.IsRemoved(record);
+        }
     }
 }
